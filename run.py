@@ -1,5 +1,5 @@
 from apps import create_app, db
-from apps.models import User
+from apps.models import User, OpsItem, OpsInfoVss, OpsInfoCl, OpsInfoIms, OpsInfoSec, OpsInfoVpmn
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
 

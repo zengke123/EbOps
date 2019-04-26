@@ -44,8 +44,20 @@
                     <i class="fa fa-coffee" style="width: 14px"></i> <span class="nav-label">作业计划</span><span class="fa arrow"></span>
                 </a>
                 <ul class="nav nav-second-level">
-                    <li id="task-vpmn"><a href="#">智能网</a></li>
-                    <li id="task-cl"><a href="#">彩铃</a></li>
+                    {% for items in ops_items %}
+                    <li id="{{ items[0] }}"><a href="#">{{ items[1] }}</a></li>
+                    {% endfor %}
+                </ul>
+            </li>
+
+            <li id="check">
+                <a>
+                    <i class="fa fa-history" style="width: 14px"></i> <span class="nav-label">自动例检</span><span class="fa arrow"></span>
+                </a>
+                <ul class="nav nav-second-level">
+                    <li id="c-set"><a href="#">例检配置</a></li>
+                    <li id="c-task"><a href="#">例检任务</a></li>
+                    <li id="c-history"><a href="#">例检记录</a></li>
                 </ul>
             </li>
         </ul>
