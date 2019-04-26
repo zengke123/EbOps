@@ -13,7 +13,7 @@
             </li>
 
             <li id="index">
-                <a href="#">
+                <a href="{{ url_for('main.index') }}">
                     <i class="fa fa-dashboard" style="width: 14px"></i> <span class="nav-label">主页</span>
                     <span class="label label-info pull-right"></span>
                 </a>
@@ -44,9 +44,11 @@
                     <i class="fa fa-coffee" style="width: 14px"></i> <span class="nav-label">作业计划</span><span class="fa arrow"></span>
                 </a>
                 <ul class="nav nav-second-level">
-                    {% for items in ops_items %}
-                    <li id="{{ items[0] }}"><a href="#">{{ items[1] }}</a></li>
-                    {% endfor %}
+                    <li id="ops_sec"><a href="{{ url_for('ops.sec') }}">安全维护</a></li>
+                    <li id="ops_ims"><a href="{{ url_for('ops.ims') }}">IMS业务平台</a></li>
+                    <li id="ops_vpmn"><a href="{{ url_for('ops.vpmn') }}">省网管中心智能网</a></li>
+                    <li id="ops_vss"><a href="{{ url_for('ops.vss') }}">短号短（彩）信维护</a></li>
+                    <li id="ops_cl"><a href="{{ url_for('ops.cl') }}">网维中心彩铃维护</a></li>
                 </ul>
             </li>
 

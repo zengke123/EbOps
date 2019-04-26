@@ -4,20 +4,10 @@
             <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
         </div>
         <ul class="nav navbar-top-links navbar-right">
-{#            <li>#}
-{#                <span class="m-r-sm text-muted welcome-message">Welcome to use Jumpserver system</span>#}
-{#            </li>#}
+            <li>
+                <span class="m-r-sm text-muted welcome-message">Welcome to EB Ops</span>
+            </li>
 
-{#            <li class="dropdown">#}
-{#                <a class="count-info" href="https://market.aliyun.com/products/53690006/cmgj026011.html?spm=5176.730005.0.0.cY2io1" target="_blank">#}
-{#                    <span class="m-r-sm text-muted welcome-message">Supports</span>#}
-{#                </a>#}
-{#            </li>#}
-{#            <li class="dropdown">#}
-{#                <a class="count-info"  href="http://docs.jumpserver.org/" target="_blank">#}
-{#                     <span class="m-r-sm text-muted welcome-message">Docs</span>#}
-{#                </a>#}
-{#            </li>#}
 
             <li class="dropdown">
                 <a class="count-info dropdown-toggle" data-toggle="dropdown" href="#" target="_blank">
@@ -65,12 +55,18 @@
         <h2></h2>
         <ol class="breadcrumb">
             <li>
-                <a href="">Dashboard</a>
+                <a href="{{ url_for('main.index') }}">主页</a>
             </li>
-                <a>app</a>
+            {% if app %}
+            <li>
+                <a>{{ app }}</a>
+            </li>
+            {% endif %}
+            {% if action %}
             <li class="active">
-                <strong>action</strong>
+                <strong>{{ action }}</strong>
             </li>
+            {% endif %}
         </ol>
     </div>
     <div class="col-sm-2">

@@ -1,8 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from jinja2 import Environment
-
 import config
 
 # 创建SQLAlchemy实例
@@ -25,8 +23,8 @@ def create_app():
     # 蓝本注册
     from .auth import auth as auth_blueprint
     from .main import main as main_blueprint
-    from .operation import operation as op_blueprint
+    from .ops import ops as ops_blueprint
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
     app.register_blueprint(main_blueprint, url_prefix='')
-    app.register_blueprint(op_blueprint, url_prefix='/operation')
+    app.register_blueprint(ops_blueprint, url_prefix='/ops')
     return app
