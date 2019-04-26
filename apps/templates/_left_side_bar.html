@@ -1,0 +1,53 @@
+<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul class="nav" id="side-menu">
+            <li class="nav-header">
+                <div class="profile-element" style="height: 65px">
+                    <div href="#" style="width: 100%">
+                         <img alt="logo" height="55" width="185" style="margin-right: 5px" src="{{ url_for('static',filename='img/logo_text.png') }}"/>
+                    </div>
+                </div>
+                <div class="logo-element">
+                    <img alt="image" height="40" src="{{ url_for('static',filename='img/logo.png') }}"/>
+                </div>
+            </li>
+
+            <li id="index">
+                <a href="#">
+                    <i class="fa fa-dashboard" style="width: 14px"></i> <span class="nav-label">主页</span>
+                    <span class="label label-info pull-right"></span>
+                </a>
+            </li>
+            <li id="users">
+                <a href="#">
+                    <i class="fa fa-group" style="width: 14px"></i> <span class="nav-label">用户管理</span><span class="fa arrow"></span>
+                </a>
+                <ul class="nav nav-second-level active">
+                    <li id="user"><a href="#">用户列表</a></li>
+                    <li id="user-group"><a href="#">用户组</a></li>
+                </ul>
+            </li>
+            <li id="assets">
+                <a>
+                    <i class="fa fa-inbox" style="width: 14px"></i> <span class="nav-label">资产管理</span><span class="fa arrow"></span>
+                </a>
+                <ul class="nav nav-second-level">
+                    <li id="asset"><a href="#">资产列表</a></li>
+                    <li id="domain"><a href="#">资产统计</a></li>
+                    <li id="admin-user"><a href="#">资产查询</a></li>
+                </ul>
+            </li>
+
+
+            <li id="ops">
+                <a>
+                    <i class="fa fa-coffee" style="width: 14px"></i> <span class="nav-label">作业计划</span><span class="fa arrow"></span>
+                </a>
+                <ul class="nav nav-second-level">
+                    <li id="task-vpmn"><a href="#">智能网</a></li>
+                    <li id="task-cl"><a href="#">彩铃</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>

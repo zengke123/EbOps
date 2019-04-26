@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EB-Ops | Login</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap.min.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/animate.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}"/>
+    <script src="{{ url_for('static',filename='js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
+</head>
+
+<body class="gray-bg">
+
+    <div class="middle-box text-center loginscreen animated fadeInDown">
+        <div>
+            <div>
+
+                <h1 class="logo-name">EB</h1>
+
+            </div>
+            <h3>运维平台</h3>
+            <p>Login in. To see it in action.</p>
+            <form class="m-t" role="form" method="post">
+            	 {{ form.csrf_token }}
+                <div class="form-group">
+                     {{ form.username(class='form-control',placeholder="Username",required="") }}
+                </div>
+                <div class="form-group">
+                    {{ form.password(class='form-control', placeholder="Password",type="password",required="") }}
+                </div>
+                <div class="form-group">
+                {{ form.remember_me(class="main-checkbox") }}
+                <span class="text">记住我</span>
+                </div>
+                {{ form.submit(class="btn btn-primary block full-width m-b") }}
+                <a class="btn btn-sm btn-white btn-block" href="#">创建用户</a>
+            </form>
+            <p class="m-t"> <small>杭州东信北邮信息技术有限公司 &copy; 2019</small> </p>
+        </div>
+    </div>
+
+</body>
+
+</html>

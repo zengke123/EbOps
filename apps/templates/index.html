@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-success pull-right">Users</span>
+                    <h5>Total users</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins"><a href=""></a></h1>
+                    <small>All users</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-info pull-right">Hosts</span>
+                    <h5>Total hosts</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins"><a href=""></a></h1>
+                    <small>All hosts</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-primary pull-right">Online</span>
+                    <h5>Online users</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins"><a href="#"> <span id="online_users"></span>online_user_count</a></h1>
+                    <small>Online users</small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-sm-2 border-bottom white-bg dashboard-header" style="margin-left:15px;height: 346px">
+            <h2>Top 5 Active user</h2>
+
+            <ul class="list-group clear-list m-t">
+                    <li class="list-group-item fist-item">
+                        <span class="pull-right">
+                        </span>
+                        <span class="label ">test</span>
+                    </li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
