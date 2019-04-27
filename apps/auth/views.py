@@ -1,4 +1,5 @@
 from . import auth
+from .. import db
 from ..models import User
 from .forms import LoginForm
 from flask import render_template, request, url_for, flash, redirect
@@ -24,3 +25,10 @@ def logout():
     logout_user()
     flash("您已退出登录")
     return redirect(url_for('main.index'))
+
+
+@auth.route('/users')
+@login_required
+def users():
+    users = User.query.all()
+    return render_template("user_list.html", app='用户管理', action='用户列表', users=users)

@@ -352,7 +352,7 @@ function orgDelete(obj, name, url, redirectTo){
                 swal(gettext("Error"),  "[ " + name + " ] " + gettext("The organization contains undeleted information. Please try again after deleting"), "error");
             }
             else if (status === 405){
-                swal(gettext("Error"), " [ "+ name + " ] " + gettext("Do not perform this operation under this organization. Try again after switching to another organization"), "error");
+                swal(gettext("Error"), " [ "+ name + " ] " + gettext("Do not perform this ops under this organization. Try again after switching to another organization"), "error");
             }
         };
         APIUpdateAttr({

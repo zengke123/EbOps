@@ -3,9 +3,16 @@
         <div class="navbar-header">
             <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
         </div>
+
+{#        <form role="search" class="navbar-form-custom" action="#">#}
+{#        <div class="form-group">#}
+{#            <input type="text" placeholder="Search for..." class="form-control" name="top-search" id="top-search">#}
+{#        </div>#}
+{#        </form>#}
+
         <ul class="nav navbar-top-links navbar-right">
             <li>
-                <span class="m-r-sm text-muted welcome-message">Welcome to EB Ops</span>
+                <span class="m-r-sm text-muted welcome-message">EB 运维平台</span>
             </li>
 
 
@@ -25,26 +32,10 @@
                 </ul>
 
             </li>
-            <li class="dropdown">
-                {% if current_user.is_authenticated %}
-                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                    <span class="m-r-sm text-muted welcome-message">
-                        <img alt="image" class="img-circle" width="30" height="30" src="{{ url_for('static',filename='img/avatar/user.png') }}"/>
-                        <span style="font-size: 13px;font-weight: 400"> {{ current_user.username }}
-                            <b class="caret"></b>
-                        </span>
-                    </span>
-                </a>
-                <ul class="dropdown-menu animated fadeInRight m-t-xs profile-dropdown">
-                    <li><a href="#"><i class="fa fa-cogs"> </i><span> 用户信息</span></a></li>
-                    <li><a href="#"><i class="fa fa-exchange"></i><span> 管理页面</span></a></li>
-                    <li><a href="{{ url_for('auth.logout') }}"><i class="fa fa-sign-out"></i> 注销</a></li>
-                </ul>
-                {% else %}
-                <a href="{{ url_for('auth.login') }}">
-                    <i class="fa fa-sign-in"></i>登录
-                </a>
-                {% endif %}
+              <li>
+                  <a href="{{ url_for('auth.logout') }}">
+                      <i class="fa fa-sign-out"></i> Log out
+                  </a>
             </li>
         </ul>
     </nav>

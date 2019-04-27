@@ -9296,7 +9296,7 @@ Pointer.prototype = {
 	},
 
 	/**
-	 * Start a drag operation
+	 * Start a drag ops
 	 */
 	dragStart: function (e) {
 		var chart = this.chart;
@@ -9309,7 +9309,7 @@ Pointer.prototype = {
 	},
 
 	/**
-	 * Perform a drag operation in response to a mousemove event while the mouse is down
+	 * Perform a drag ops in response to a mousemove event while the mouse is down
 	 */
 	drag: function (e) {
 
@@ -12895,7 +12895,7 @@ Series.prototype = {
 	 */
 	processData: function (force) {
 		var series = this,
-			processedXData = series.xData, // copied during slice operation below
+			processedXData = series.xData, // copied during slice ops below
 			processedYData = series.yData,
 			dataLength = processedXData.length,
 			croppedData,
@@ -17080,7 +17080,7 @@ extend(Chart.prototype, {
 	/**
 	 * Pan the chart by dragging the mouse across the pane. This function is called
 	 * on mouse move, and the distance to pan is computed from chartX compared to
-	 * the first chartX position in the dragging operation.
+	 * the first chartX position in the dragging ops.
 	 */
 	pan: function (e, panning) {
 

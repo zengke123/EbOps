@@ -1944,7 +1944,7 @@
   var operationGroup = null;
 
   var nextOpId = 0;
-  // Start a new operation.
+  // Start a new ops.
   function startOperation(cm) {
     cm.curOp = {
       cm: cm,
@@ -1988,7 +1988,7 @@
     } while (i < callbacks.length);
   }
 
-  // Finish an operation, updating the display and signalling delayed events
+  // Finish an ops, updating the display and signalling delayed events
   function endOperation(cm) {
     var op = cm.curOp, group = op.ownsGroup;
     if (!group) return;
@@ -2002,7 +2002,7 @@
     }
   }
 
-  // The DOM updates done when an operation finishes are batched so
+  // The DOM updates done when an ops finishes are batched so
   // that the minimum number of relayouts are required.
   function endOperations(group) {
     var ops = group.ops;
@@ -2131,14 +2131,14 @@
       signal(cm, "changes", cm, op.changeObjs);
   }
 
-  // Run the given function in an operation
+  // Run the given function in an ops
   function runInOp(cm, f) {
     if (cm.curOp) return f();
     startOperation(cm);
     try { return f(); }
     finally { endOperation(cm); }
   }
-  // Wraps a function in an operation. Returns the wrapped function.
+  // Wraps a function in an ops. Returns the wrapped function.
   function operation(cm, f) {
     return function() {
       if (cm.curOp) return f.apply(cm, arguments);
@@ -2652,7 +2652,7 @@
 
   // Called when the window resizes
   function onResize(cm) {
-    // Might be a text scaling operation, clear size caches.
+    // Might be a text scaling ops, clear size caches.
     var d = cm.display;
     d.cachedCharWidth = d.cachedTextHeight = d.cachedPaddingH = null;
     cm.setSize();
@@ -3781,7 +3781,7 @@
   }
 
   // Store a relative adjustment to the scroll position in the current
-  // operation (to be applied when the operation finishes).
+  // ops (to be applied when the ops finishes).
   function addToScrollPos(cm, left, top) {
     if (left != null || top != null) resolveScrollToPos(cm);
     if (left != null)
@@ -3790,7 +3790,7 @@
       cm.curOp.scrollTop = (cm.curOp.scrollTop == null ? cm.doc.scrollTop : cm.curOp.scrollTop) + top;
   }
 
-  // Make sure that at the end of the operation the current cursor is
+  // Make sure that at the end of the ops the current cursor is
   // shown.
   function ensureCursorVisible(cm) {
     resolveScrollToPos(cm);
@@ -3802,8 +3802,8 @@
     cm.curOp.scrollToPos = {from: from, to: to, margin: cm.options.cursorScrollMargin, isCursor: true};
   }
 
-  // When an operation has its scrollToPos property set, and another
-  // scroll action is applied before the end of the operation, this
+  // When an ops has its scrollToPos property set, and another
+  // scroll action is applied before the end of the ops, this
   // 'simulates' scrolling that position into view in a cheap way, so
   // that the effect of intermediate scroll commands is not ignored.
   function resolveScrollToPos(cm) {
@@ -4001,7 +4001,7 @@
   // EDITOR METHODS
 
   // The publicly visible API. Note that methodOp(f) means
-  // 'wrap f in an operation, performed on its `this` parameter'.
+  // 'wrap f in an ops, performed on its `this` parameter'.
 
   // This is not the complete set of editor methods. Most of the
   // methods defined on the Doc type are also injected into
@@ -5211,7 +5211,7 @@
     // (markTextShared will call out to this again, once per
     // document).
     if (options && options.shared) return markTextShared(doc, from, to, options, type);
-    // Ensure we are in an operation.
+    // Ensure we are in an ops.
     if (doc.cm && !doc.cm.curOp) return operation(doc.cm, markText)(doc, from, to, options, type);
 
     var marker = new TextMarker(doc, type), diff = cmp(from, to);
@@ -6870,7 +6870,7 @@
   }
 
   // Register a change in the history. Merges changes that are within
-  // a single operation, ore are close together with an origin that
+  // a single ops, ore are close together with an origin that
   // allows merging (starting with "+") into a single event.
   function addChangeToHistory(doc, change, selAfter, opId) {
     var hist = doc.history;
@@ -7136,8 +7136,8 @@
   // other methods on the editor, which might be in an inconsistent
   // state or simply not expect any other events to happen.
   // signalLater looks whether there are any handlers, and schedules
-  // them to be executed when the last operation ends, or, if no
-  // operation is active, when a timeout fires.
+  // them to be executed when the last ops ends, or, if no
+  // ops is active, when a timeout fires.
   function signalLater(emitter, type /*, values...*/) {
     var arr = emitter._handlers && emitter._handlers[type];
     if (!arr) return;

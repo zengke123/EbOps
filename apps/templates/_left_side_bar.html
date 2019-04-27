@@ -1,16 +1,33 @@
 <nav class="navbar-default navbar-static-side" role="navigation">
     <div class="sidebar-collapse">
-        <ul class="nav" id="side-menu">
+        <ul class="nav metismenu" id="side-menu">
+
             <li class="nav-header">
-                <div class="profile-element" style="height: 65px">
-                    <div href="#" style="width: 100%">
-                         <img alt="logo" height="55" width="185" style="margin-right: 5px" src="{{ url_for('static',filename='img/logo_text.png') }}"/>
-                    </div>
+                <div class="dropdown profile-element"> <span>
+                    <img alt="image" class="img-circle" src="{{ url_for('static',filename='img/profile_small.jpg') }}">
+                     </span>
+                {% if current_user.is_authenticated %}
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                    <span class="clear"> <span class="block m-t-sm"> <strong class="font-bold">{{ current_user.username }}</strong>
+                     </span> <span class="text-muted text-xs block">用户信息 <b class="caret"></b></span> </span> </a>
+                    <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                        <li><a href="#">用户信息</a></li>
+                        <li><a href="#">更改密码</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{{ url_for('auth.logout') }}">退出</a></li>
+                    </ul>
+                {% else %}
+                    <a href="{{ url_for('auth.login') }}">
+                        <i class="fa fa-sign-in"></i>登录
+                    </a>
+                {% endif %}
                 </div>
-                <div class="logo-element">
-                    <img alt="image" height="40" src="{{ url_for('static',filename='img/logo.png') }}"/>
-                </div>
+                <div class="logo-element">EB</div>
             </li>
+
+
+
+
 
             <li id="index">
                 <a href="{{ url_for('main.index') }}">
@@ -23,7 +40,7 @@
                     <i class="fa fa-group" style="width: 14px"></i> <span class="nav-label">用户管理</span><span class="fa arrow"></span>
                 </a>
                 <ul class="nav nav-second-level active">
-                    <li id="user"><a href="#">用户列表</a></li>
+                    <li id="user"><a href="{{ url_for('auth.users') }}">用户列表</a></li>
                     <li id="user-group"><a href="#">用户组</a></li>
                 </ul>
             </li>
