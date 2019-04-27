@@ -40,41 +40,25 @@ class OpsItem(db.Model):
     c_name = db.Column(db.String(64), unique=True)
 
 
-# IMS作业计划明细
-class OpsInfoIms(db.Model):
-    __tablename__ = 'ops_ims_info'
+# 作业计划明细
+class OpsInfo(db.Model):
+    __tablename__ = 'ops_info'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    content = db.Column(db.String(255), unique=True)
+    t_name = db.Column(db.String(64), index=True)
+    item_id = db.Column(db.String(64), index=True, unique=True)
+    content = db.Column(db.Text)
     cycle = db.Column(db.String(64))
 
 
-# 安全作业计划明细
-class OpsInfoSec(db.Model):
-    __tablename__ = 'ops_sec_info'
+# 作业计划明细
+class OpsResult(db.Model):
+    __tablename__ = 'ops_result'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    content = db.Column(db.String(255), unique=True)
-    cycle = db.Column(db.String(64))
+    item_id = db.Column(db.String(64), index=True)
+    date = db.Column(db.DATE, index=True)
+    time = db.Column(db.Time, index=True)
+    s_times = db.Column(db.SmallInteger, default=0)
+    f_times = db.Column(db.SmallInteger, default=0)
+    result = db.Column(db.String(255))
+    log_id = db.Column(db.String(64))
 
-
-# 智能网作业计划明细
-class OpsInfoVpmn(db.Model):
-    __tablename__ = 'ops_vpmn_info'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    content = db.Column(db.String(255), unique=True)
-    cycle = db.Column(db.String(64))
-
-
-# 短号短信作业计划明细
-class OpsInfoVss(db.Model):
-    __tablename__ = 'ops_vss_info'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    content = db.Column(db.String(255), unique=True)
-    cycle = db.Column(db.String(64))
-
-
-# 彩铃作业计划明细
-class OpsInfoCl(db.Model):
-    __tablename__ = 'ops_cl_info'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    content = db.Column(db.String(255), unique=True)
-    cycle = db.Column(db.String(64))
