@@ -11,7 +11,7 @@
                     <span class="clear"> <span class="block m-t-sm"> <strong class="font-bold">{{ current_user.username }}</strong>
                      </span> <span class="text-muted text-xs block">用户信息 <b class="caret"></b></span> </span> </a>
                     <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                        <li><a href="#">用户信息</a></li>
+                        <li><a href="{{ url_for('auth.profile') }}">用户信息</a></li>
                         <li><a href="#">更改密码</a></li>
                         <li class="divider"></li>
                         <li><a href="{{ url_for('auth.logout') }}">退出</a></li>
