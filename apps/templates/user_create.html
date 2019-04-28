@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="row">
+      <div class="col-sm-12">
+          <div class="ibox float-e-margins">
+              <div class="ibox-title">
+                  <h5>创建用户</h5>
+                  <div class="ibox-tools">
+                      <a class="collapse-link">
+                          <i class="fa fa-chevron-up"></i>
+                      </a>
+                      <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                          <i class="fa fa-wrench"></i>
+                      </a>
+                      <a class="close-link">
+                          <i class="fa fa-times"></i>
+                      </a>
+                  </div>
+              </div>
+              <div class="ibox-content" style="display: block;">
+
+                    <form method="post" class="form-horizontal" action="" enctype="multipart/form-data">
+                        <input type="hidden" name="csrfmiddlewaretoken">
+                        <h3>账户信息</h3>
+
+                        <div class="form-group required">
+                            <label class="col-md-2 control-label" for="id_name">用户名</label>
+                            <div class="col-md-9"><input type="text" name="username" maxlength="128" class="form-control" title="" required="" id="id_name">
+                                </div>
+                        </div>
+
+                        <div class="form-group required">
+                            <label class="col-md-2 control-label" for="id_username">密码</label>
+                            <div class="col-md-9"><input type="password" name="password1" maxlength="128" class="form-control" title="" required="" id="password1">
+                            </div>
+                        </div>
+
+                        <div class="form-group required">
+                            <label class="col-md-2 control-label" for="id_username">确认密码</label>
+                            <div class="col-md-9"><input type="password" name="password2" maxlength="128" class="form-control" title="" required="" id="password2">
+                            </div>
+                        </div>
+
+                        <div class="form-group required">
+                            <label class="col-md-2 control-label" for="id_role">角色</label>
+                            <div class="col-md-9">
+                                <select name="role" class="form-control" title="" id="id_role">
+                                    <option value="User" selected="">用户</option>
+                                    <option value="Admin" selected="">管理员</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group required">
+                            <label class="col-md-2 control-label" for="id_role">状态</label>
+                            <div class="col-md-9">
+                                <select name="status" class="form-control" title="" id="id_status">
+                                    <option value="normal" selected="">正常</option>
+                                    <option value="locked" selected="">锁定</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-2">
+                              <button class="btn btn-white" type="reset">重置</button>
+                              <button id="submit_button" class="btn btn-primary" type="submit">提交</button>
+                            </div>
+                        </div>
+                    </form>
+                  {% if error %}
+                    <div class="alert alert-info alert-dismissible" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <strong>创建失败!</strong>{{ error }}.
+                    </div>
+                  {% endif %}
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+{% endblock %}
