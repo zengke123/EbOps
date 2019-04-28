@@ -9,8 +9,11 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(64), index=True, unique=True)
     password = db.Column(db.String(64))
+    mail = db.Column(db.String(64))
     role = db.Column(db.SmallInteger, default=2)
     status = db.Column(db.SmallInteger, default=0)
+    create_time = db.Column(db.DateTime)
+    last_time = db.Column(db.DateTime)
 
 
     def verify_password(self, password):
