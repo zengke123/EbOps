@@ -1,0 +1,85 @@
+<head>
+    <title>Task log</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='js/plugins/xterm/xterm.css') }}"/>
+    <script src="{{ url_for('static',filename='js/jquery-2.1.1.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/plugins/xterm/xterm.js') }}"></script>
+    <style>
+        body {
+            background-color: black;
+        }
+        .xterm-rows {
+            font-family: "Bitstream Vera Sans Mono", Monaco, "Consolas", Courier, monospace;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<div id="term" style="height: 100%;width: 100%">
+</div>
+
+<script>
+    var rowHeight = 18;
+    var colWidth = 10;
+    var mark = '';
+    var url = "/ops/req";
+    var term;
+    var end = false;
+    var error = false;
+    var interval = 200;
+    var success = true;
+
+    function calWinSize() {
+        var t = $('#marker');
+
+    }
+    function resize() {
+
+    }
+    function requestAndWrite() {
+        if (!end && success) {
+            success = false;
+            $.ajax({
+                url: url + '?log_id=' + mark,
+                method: "GET",
+                contentType: "application/json; charset=utf-8"
+            }).done(function(data, textStatue, jqXHR) {
+                success = true;
+                if (jqXHR.status === 203) {
+                    error = true;
+                    term.write('.');
+                    interval = 500;
+                }
+                if (jqXHR.status === 200){
+                    term.write(data.data);
+                    mark = data.mark;
+                    if (data.end){
+                        end = true
+                    }
+                }
+            })
+        }
+    }
+    $(document).ready(function () {
+        term = new Terminal({
+            cursorBlink: false,
+            screenKeys: false,
+            fontFamily: '"Monaco", "Consolas", "monospace"',
+            fontSize: 12,
+            rightClickSelectsWord: true,
+            disableStdin: true
+        });
+        term.open(document.getElementById('term'));
+        term.resize(90, 32);
+        resize();
+        term.on('data', function (data) {
+
+            term.write(data);
+        });
+        window.onresize = function () {
+            resize()
+        };
+
+        setInterval(function () {
+            requestAndWrite()
+        }, interval)
+    });
+</script>
