@@ -24,6 +24,14 @@
             <p>Login in. To see it in action.</p>
             <form class="m-t" role="form" method="post">
             	 {{ form.csrf_token }}
+                {% if error %}
+                <div class="form-group">
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <strong>{{ error }}.</strong>
+                    </div>
+                {% endif %}
+                </div>
                 <div class="form-group">
                      {{ form.username(class='form-control',placeholder="Username",required="") }}
                 </div>
