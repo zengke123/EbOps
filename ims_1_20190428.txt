@@ -1,0 +1,43 @@
+---------- 任务开始 ----------
+$ ls (2019-04-27 20:03:50) *****************************************************
+114.115.2.2 | FAILED! =>
+Failed to connect to the host via ssh: ssh: connect to host 114.115.2.2 port 22: No route to host
+192.168.10.12 | FAILED! =>
+Failed to connect to the host via ssh: ssh: connect to host 192.168.10.12 port 22: Connection timed out
+192.168.10.11 | FAILED! =>
+Failed to connect to the host via ssh: ssh: connect to host 192.168.10.11 port 22: Connection timed out
+1.1.1.1 | FAILED! =>
+Failed to connect to the host via ssh: ssh: connect to host 1.1.1.1 port 22: Connection timed out
+---------- 任务结束 ----------
+
+测试
+
+---------- 任务开始 ----------
+$ ls (2019-04-27 20:03:50) *****************************************************
+114.115.2.2 | FAILED! =>
+Failed to connect to the host via ssh: ssh: connect to host 114.115.2.2 port 22: No route to host
+192.168.10.12 | FAILED! =>
+Failed to connect to the host via ssh: ssh: connect to host 192.168.10.12 port 22: Connection timed out
+192.168.10.11 | FAILED! =>
+Failed to connect to the host via ssh: ssh: connect to host 192.168.10.11 port 22: Connection timed out
+1.1.1.1 | FAILED! =>
+Failed to connect to the host via ssh: ssh: connect to host 1.1.1.1 port 22: Connection timed out
+---------- 任务结束 ----------
+
+测试
+
+
+---------- 任务开始 ----------
+$ ls (2019-04-27 20:03:50) *****************************************************
+114.115.2.2 | FAILED! =>
+Failed to connect to the host via ssh: ssh: connect to host 114.115.2.2 port 22: No route to host
+192.168.10.12 | FAILED! =>
+Failed to connect to the host via ssh: ssh: connect to host 192.168.10.12 port 22: Connection timed out
+192.168.10.11 | FAILED! =>
+Failed to connect to the host via ssh: ssh: connect to host 192.168.10.11 port 22: Connection timed out
+1.1.1.1 | FAILED! =>
+Failed to connect to the host via ssh: ssh: connect to host 1.1.1.1 port 22: Connection timed out
+---------- 任务结束 ----------
+
+测试
+
