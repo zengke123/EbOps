@@ -16,8 +16,10 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
         error = '用户或密码错误'
         if user is not None and user.verify_password(form.password.data):
+            # 用户状态正常
             if user.status == 1:
                 login_user(user, form.remember_me.data)
+                # 记录登录时间
                 login_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 user.last_time = login_time
                 db.session.commit()
@@ -39,6 +41,7 @@ def logout():
 @auth.route('/users')
 @login_required
 def users():
+    # 返回用户列表
     users = User.query.all()
     return render_template("user_list.html", app='用户管理', action='用户列表', users=users)
 
@@ -46,6 +49,7 @@ def users():
 @auth.route('/create', methods=['GET','POST'])
 @login_required
 def create():
+    # 创建新用户
     if request.method == "GET":
         return render_template('user_create.html', app='用户管理', action='创建用户')
     else:
@@ -75,5 +79,6 @@ def create():
 @auth.route('/profile')
 @login_required
 def profile():
+    # 返回个人信息
     user =  User.query.filter(User.username == current_user.username).first()
     return render_template('user_profile.html', app='用户信息', user=user)

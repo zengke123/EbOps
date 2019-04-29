@@ -28,7 +28,7 @@
                             <div class="form-group" id="date">
                                 <div class="input-daterange input-group" id="datepicker">
                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                    <input type="text" class="input-sm form-control" style="width: 120px;" name="date_from" value="20190428">
+                                    <input type="text" class="input-sm form-control" style="width: 120px;" name="date_from" value="">
                                 </div>
                             </div>
                             <div class="input-group">
@@ -63,25 +63,40 @@
                               </tr>
                           </thead>
                         <tbody>
-                        {% for info in ops_infos %}
-                            {% if info[0]/2 == 0 %}
+                        {% for item, result in ops_results %}
+                            {% if item.id/2 == 0 %}
                                 <tr class="gradeX odd" role="row">
                             {% else %}
                                 <tr class="gradeX odd" role="row">
                             {% endif %}
                                 <td class="text-center"><input type="checkbox" class="cbx-term"> </td>
-                                <td class="text-left"><a href="#">{{ info[1] }}</a></td>
-                                <td class="text-center">{{ info[2] }}</td>
+                                <td class="text-left"><a href="#">{{ item.content }}</a></td>
+                                <td class="text-center">{{ item.cycle }}</td>
+                            {% if result %}
                                 <td class="text-center">
-                                   <span class="text-danger">0</span>/<span class="text-navy">3</span>/3
+                                   <span class="text-danger">{{ result.s_times }}</span>/<span class="text-navy">{{ result.f_times }}</span>/{{ result.s_times+result.f_times }}
                                 </td>
                                 <td class="text-center"><i class="fa fa-check text-navy"></i></td>
-                                <td class="text-center">2019年4月26日 18:27</td>
-                                <td class="text-center"><a href="/ops/log/ims_1_20190428" target="_blank">查看</a></td>
+                                <td class="text-center">{{ result.date }} {{ result.time }}</td>
+                                <td class="text-center"><a href="/ops/log/{{ result.log_id }}" target="_blank">查看</a></td>
                                 <td class="text-center">
-                                    <a data-uid="ed5bd5d5-3a4c-45e3-a2f3-dcc06d4bc6ba" class="btn btn-xs btn-primary btn-run">执行</a>
-                                    <a data-uid="ed5bd5d5-3a4c-45e3-a2f3-dcc06d4bc6ba" class="btn btn-xs btn-danger btn-del">删除</a>
+                                    <a data-uid="" class="btn btn-xs btn-primary btn-run">执行</a>
+                                    <a data-uid="" class="btn btn-xs btn-danger btn-del">删除</a>
                                 </td>
+                            {% else %}
+
+                                <td class="text-center">
+                                   <span class="text-danger">0</span>/<span class="text-navy">0</span>/0
+                                </td>
+                                <td class="text-center"><i class="fa fa-times text-danger"></i></td>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
+                                <td class="text-center">
+                                    <a data-uid="" class="btn btn-xs btn-primary btn-run">执行</a>
+                                    <a data-uid="" class="btn btn-xs btn-danger btn-del">删除</a>
+                                </td>
+
+                            {% endif %}
                              </tr>
                         {% endfor %}
                         </tbody>
