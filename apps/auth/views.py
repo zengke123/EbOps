@@ -82,3 +82,26 @@ def profile():
     # 返回个人信息
     user =  User.query.filter(User.username == current_user.username).first()
     return render_template('user_profile.html', app='用户信息', user=user)
+
+
+
+@auth.route('/password', methods=['GET','POST'])
+@login_required
+def password():
+    if request.method == "GET":
+        return render_template('user_password.html', app='用户信息', action='密码更新')
+    elif request.method == "POST":
+        old_password = request.form.get('old_password')
+        user = User.query.filter(User.username==current_user.username).first()
+        if old_password == user.password:
+            new_password = request.form.get('new_password')
+            confirm_password = request.form.get('confirm_password')
+            if new_password == confirm_password:
+                user.password = new_password
+                db.session.commit()
+                return redirect(url_for('auth.login'))
+            else:
+                error = "两次输入密码不一致"
+        else:
+            error = "原密码错误!"
+        return render_template('user_password.html', app='用户信息', action='密码更新', error=error)
