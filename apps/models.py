@@ -65,3 +65,20 @@ class OpsResult(db.Model):
     result = db.Column(db.String(255))
     log_id = db.Column(db.String(64))
 
+
+# 例检主机
+class CheckHost(db.Model):
+    __tablename__ = 'c_host'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    node = db.Column(db.String(32), index=True, nullable=False)
+    cluster = db.Column(db.String(32), index=True, nullable=False)
+    hostname = db.Column(db.String(32), unique=True, nullable=False)
+
+
+# 例检历史记录
+class CheckHistory(db.Model):
+    __tablename__ = 'c_history'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    checktime = db.Column(db.String(64), nullable=False)
+    hostname = db.Column(db.String(32), index=True, nullable=False)
+    type = db.Column(db.String(32), nullable=False)
