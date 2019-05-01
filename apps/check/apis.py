@@ -2,7 +2,7 @@ from . import check
 from .. import db
 from ..models import CheckHost
 from sqlalchemy import distinct
-from flask import jsonify
+from flask import jsonify, request
 from flask_login import login_required
 
 
@@ -26,3 +26,12 @@ def get_nodes():
         }
         zNodes.append(p1_data)
     return jsonify(zNodes)
+
+
+@check.route("/get_hosts", methods=['GET','POST'])
+def get_hosts():
+    cluester = request.form.get('cluster')
+    print(cluester)
+    hosts_temp = CheckHost.query.filter(CheckHost.cluster == cluester).all()
+    hosts = [{'id': i, 'name': x.hostname} for i,x in enumerate(hosts_temp)]
+    return jsonify(hosts)

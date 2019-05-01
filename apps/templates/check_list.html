@@ -61,7 +61,7 @@
 
            <div class="mail-box-header">
                <div>
-                   <a class="btn btn-sm btn-primary" id="#" href="#"> 例检集群 </a>
+                   <a class="btn btn-sm btn-primary" id="check_nodes" href="#"> 例检集群 </a>
                </div>
                <table class="table table-striped table-bordered table-hover dataTable no-footer" id="asset_list_table" style="width: 100%;" role="grid">
                <thead>
@@ -72,27 +72,18 @@
                        <th class="text-center">最近例检时间</th>
                        <th class="text-center">动作</th></tr>
                </thead>
-               <tbody>
-                    <tr role="row" class="odd">
-                        <td class=" text-center"><input type="checkbox" class="text-center ipt_check" id=""></td>
-                        <td class=" text-center"><a href="#">BEP171</a></td>
-                        <td class="text-center">192.168.1.1</td>
-                        <td class=" text-center">2019-04-30 14:44:12</td>
-                        <td class=" text-center">
-                            <a href="#" class="btn btn-xs btn-info">例检</a>
-                            <a class="btn btn-xs btn-danger m-l-xs btn_asset_delete" data-uid="">删除</a>
-                        </td>
-                    </tr>
-                    <tr role="row" class="even">
-                        <td class=" text-center"><input type="checkbox" class="text-center ipt_check" id=""></td>
-                        <td class=" text-center"><a href="#">BEP172</a></td>
-                        <td class="text-center">192.168.1.2</td>
-                        <td class=" text-center">2019-04-30 14:44:12</td>
-                        <td class=" text-center">
-                            <a href="#" class="btn btn-xs btn-info">例检</a>
-                            <a class="btn btn-xs btn-danger m-l-xs btn_asset_delete" data-uid="">删除</a>
-                        </td>
-                    </tr>
+               <tbody id="hosts">
+{#                    <tr role="row" class="odd">#}
+{#                        <td class=" text-center"><input type="checkbox" class="text-center ipt_check" id=""></td>#}
+{#                        <td class=" text-center"><a href="#">BEP171</a></td>#}
+{#                        <td class="text-center">192.168.1.1</td>#}
+{#                        <td class=" text-center">2019-04-30 14:44:12</td>#}
+{#                        <td class=" text-center">#}
+{#                            <a href="#" class="btn btn-xs btn-info">例检</a>#}
+{#                            <a class="btn btn-xs btn-danger m-l-xs btn_asset_delete" data-uid="">删除</a>#}
+{#                        </td>#}
+{#                    </tr>#}
+
 
                </tbody>
                </table>
@@ -124,7 +115,40 @@
 <script type="text/javascript">
 
         function zTreeOnClick(event, treeId, treeNode) {
-            alert(treeNode.tId + ", " + treeNode.name);
+            $("#hosts").html("");
+            document.getElementById("check_nodes").setAttribute('href',"/check/" + treeNode.name);
+            $.ajax({
+                url: "{{ url_for("check.get_hosts") }}",
+                type: 'POST',
+                async: true,
+                dataType: "json",
+                data: {
+                    cluster: treeNode.name
+                },
+                success: function (data) {
+                    $.each(data, function (i, n) {
+                        var tbBody = "";
+                        var trColor;
+                        if (i % 2 === 0) {
+                            trColor = "even";
+                        } else {
+                            trColor = "odd";
+                        }
+                        tbBody += "<tr role=\"row\" class='" + trColor + "'>" + "<td class=\" text-center\">" +
+                            "<input type=\"checkbox\" class=\"text-center ipt_check\" id=\"\"></td>\n" +
+                            "<td class=\" text-center\"><a href=\"#\">" + n.name + "</a></td>\n" +
+                            "<td class=\"text-center\">" + "IP" + "</td>\n<td class=\" text-center\">" + "时间" +
+                            "</td>\n" +
+                            "<td class=\" text-center\">\n" +
+                            "<a href=\"#\" class=\"btn btn-xs btn-info\">例检</a>\n" +
+                            "<a class=\"btn btn-xs btn-danger m-l-xs btn_asset_delete\" data-uid=\"\">删除</a>\n" +
+                            "</td>\n" +
+                            "</tr>";
+                        $("#hosts").append(tbBody);
+                    })
+
+                }
+            });
         }
 
 		var setting = {
@@ -145,8 +169,6 @@
         };
 
 
-
-		{#var zNodes ={{ zNodes }};#}
 
 		$(document).ready(function(){
 			$.fn.zTree.init($("#treeDemo"), setting);
