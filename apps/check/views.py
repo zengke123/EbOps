@@ -1,5 +1,5 @@
 from . import check
-from flask import render_template, request, jsonify
+from flask import render_template, request
 from flask_login import login_required
 
 
