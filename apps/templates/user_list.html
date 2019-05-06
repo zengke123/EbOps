@@ -21,6 +21,7 @@
                     </div>
                 </div>
                 <div class="ibox-content">
+                    {% if current_user.is_admin %}
                     <div>
                         <a href="{{ url_for('auth.create') }}" class="btn btn-sm btn-primary"> 创建用户 </a>
                     </div>
@@ -81,7 +82,6 @@
                                 <div class="input-group">
                                     <select class="form-control m-b" style="width: auto" id="slct_bulk_update">
                                         <option value="delete">批量删除</option>
-                                        <option value="update">批量更新</option>
                                         <option value="deactive">禁用所选</option>
                                         <option value="active">激活所选</option>
                                     </select>
@@ -94,22 +94,11 @@
                             </div>
                         </div>
                     </div>
+                    {% else %}
+                        <p>无访问权限</p>
+                    {% endif %}
                 </div>
-                <div id="actions" class="hide">
-                    <div class="input-group">
-                        <select class="form-control m-b" style="width: auto" id="slct_bulk_update">
-                            <option value="delete">批量删除</option>
-                            <option value="update">批量更新</option>
-                            <option value="deactive">禁用所选</option>
-                            <option value="active">激活所选</option>
-                        </select>
-                        <div class="input-group-btn pull-left" style="padding-left: 5px;">
-                            <button id="btn_bulk_update" style="height: 32px;" class="btn btn-sm btn-primary">
-                             提交
-                            </button>
-                        </div>
-                    </div>
-                </div>
+
 
                 <style>
                 .modal-body {
