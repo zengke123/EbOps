@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>更新资产</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+
+
+                    <form action="" method="post" class="form-horizontal">
+
+                    <input type="hidden" name="csrfmiddlewaretoken" value="">
+                    <h3>基本</h3>
+                    <div class="form-group required"><label class="col-md-2 control-label" for="id_hostname">主机名</label><div class="col-md-9"><input type="text" name="hostname" value="111" maxlength="128" class="form-control" title="" required="" id="id_hostname"></div></div>
+                    <div class="form-group required"><label class="col-md-2 control-label" for="id_ip">IP</label><div class="col-md-9"><input type="text" name="ip" value="192.168.2.1" class="form-control" title="" required="" id="id_ip"></div></div>
+                    <div class="form-group required"><label class="col-md-2 control-label" for="id_port">端口</label><div class="col-md-9"><input type="text" name="port" value="22" class="form-control" title="" required="" id="id_port"></div></div>
+
+
+                    <div class="hr-line-dashed"></div>
+                    <h3>软件信息</h3>
+                        <div class="form-group required"><label class="col-md-2 control-label" for="id_hostname">业务版本</label><div class="col-md-9"><input type="text" name="version" value="111" maxlength="128" class="form-control" title="" required="" id="id_hostname"></div></div>
+                    <div class="form-group required"><label class="col-md-2 control-label" for="id_ip">软件模块版本号</label><div class="col-md-9"><input type="text" name="software_version" value="192.168.2.1" class="form-control" title="" required="" id="id_ip"></div></div>
+
+
+                    <div class="hr-line-dashed"></div>
+                    <h3>硬件信息</h3>
+                    <div class="form-group required"><label class="col-md-2 control-label" for="id_hostname">设备类型</label><div class="col-md-9"><input type="text" name="device_type" value="111" maxlength="128" class="form-control" title="" required="" id="id_hostname"></div></div>
+                    <div class="form-group required"><label class="col-md-2 control-label" for="id_ip">设备厂家</label><div class="col-md-9"><input type="text" name="manufacturer" value="192.168.2.1" class="form-control" title="" required="" id="id_ip"></div></div>
+
+                    <div class="hr-line-dashed"></div>
+                    <h3>机房信息</h3>
+
+                  <div class="form-group required"><label class="col-md-2 control-label" for="id_hostname">机房</label><div class="col-md-9"><input type="text" name="engine_room" value="111" maxlength="128" class="form-control" title="" required="" id="id_hostname"></div></div>
+                    <div class="form-group required"><label class="col-md-2 control-label" for="id_ip">机架</label><div class="col-md-9"><input type="text" name="frame_number" value="192.168.2.1" class="form-control" title="" required="" id="id_ip"></div></div>
+                    <div class="hr-line-dashed"></div>
+
+                    <h3>其它</h3>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_comment">备注</label><div class="col-md-9"><textarea name="comment" cols="40" rows="5" maxlength="128" class="form-control" title="" id="id_comment"></textarea></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_is_active">&nbsp;</label><div class="col-md-9"><div class="checkbox"><label for="id_is_active"><input type="checkbox" name="is_active" class="" id="id_is_active" checked=""> 激活</label></div></div></div>
+
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-2">
+                            <button class="btn btn-white" type="reset">重置</button>
+                            <button id="submit_button" class="btn btn-primary" type="submit">提交</button>
+                        </div>
+                    </div>
+
+                </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
