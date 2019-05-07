@@ -1,6 +1,168 @@
 {% extends 'base.html' %}
 {% block content %}
+<div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="panel-options">
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a href="#" class="text-center"><i class="fa fa-laptop"></i> 资产详情 </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tab-content">
+                        <div class="col-sm-8" style="padding-left: 0">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <span class="label"><b>{{ host.hostname }}</b></span>
+                                    <div class="ibox-tools">
+                                        <a class="collapse-link">
+                                            <i class="fa fa-chevron-up"></i>
+                                        </a>
+                                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                            <i class="fa fa-wrench"></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-user">
+                                        </ul>
+                                        <a class="close-link">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="ibox-content">
+                                    <table class="table">
+                                        <tbody>
+                                        <tr class="no-borders-tr">
+                                            <td width="20%">主机名:</td>
+                                            <td><b>{{ host.hostname }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>网元名称:</td>
+                                            <td><b>{{ host.cluster }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>设备类型:</td>
+                                            <td><b>{{ host.device_type }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>设备厂家:</td>
+                                            <td><b>{{ host.manufacturer }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>设备型号:</td>
+                                            <td><b>{{ host.device_model }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>序列号:</td>
+                                            <td><b>{{ host.serial }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>账户:</td>
+                                            <td><b>{{ host.account }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>业务版本:</td>
+                                            <td><b>{{ host.version }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>软件模块版本号:</td>
+                                            <td><b>{{ host.software_version }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>内网IP:</td>
+                                            <td><b>{{ host.local_ip }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>映射IP:</td>
+                                            <td><b>{{ host.nat_ip }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>操作系统:</td>
+                                            <td><b>{{ host.os_version }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>机房:</td>
+                                            <td><b>{{ host.engine_room }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>机架:</td>
+                                            <td><b>{{ host.frame_number }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>电源柜:</td>
+                                            <td><b>{{ host.power_frame_number }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>入网时间:</td>
+                                            <td><b>{{ host.net_time }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>软件过保时间:</td>
+                                            <td><b>{{ host.s_period }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>硬件过保时间:</td>
+                                            <td><b>{{ host.h_period }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>功率:</td>
+                                            <td><b>{{ host.power }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>状态:</td>
+                                            <td><b>{{ host.status }}</b></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
 
+                        <div class="col-sm-4" style="padding-left: 0;padding-right: 0">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <i class="fa fa-info-circle"></i> 快速修改
+                                </div>
+                                <div class="panel-body">
+                                    <table class="table">
+                                        <tbody>
+                                        <tr class="no-borders-tr">
+                                          <td width="50%">在网:</td>
+                                            <td>
+                                              <span class="pull-right">
+                                                  <div class="switch">
+                                                      <div class="onoffswitch">
+                                                          <input type="checkbox" checked="" class="onoffswitch-checkbox" id="is_active">
+                                                          <label class="onoffswitch-label" for="is_active">
+                                                              <span class="onoffswitch-inner"></span>
+                                                              <span class="onoffswitch-switch"></span>
+                                                          </label>
+                                                      </div>
+                                                  </div>
+                                              </span>
+                                          </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>更新硬件信息:</td>
+                                            <td>
+                                                <span class="pull-right">
+                                                    <button type="button" class="btn btn-primary btn-xs" id="btn_refresh_asset" style="width: 54px">刷新</button>
+                                                </span>
+                                            </td>
+                                        </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 {% endblock %}
