@@ -25,8 +25,10 @@ def create_app():
     from .main import main as main_blueprint
     from .ops import ops as ops_blueprint
     from .check import check as check_blueprint
+    from .assets import assets as assets_blueprint
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
     app.register_blueprint(main_blueprint, url_prefix='')
     app.register_blueprint(ops_blueprint, url_prefix='/ops')
     app.register_blueprint(check_blueprint, url_prefix='/check')
+    app.register_blueprint(assets_blueprint, url_prefix='/assets')
     return app

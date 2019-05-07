@@ -87,7 +87,7 @@ class CheckHistory(db.Model):
 class Host(db.Model):
     """
     表名: host
-    id: 业务平台
+    id: id
     platform: 平台
     cluster: 集群名称
     hostname: 主机名称

@@ -31,7 +31,6 @@ def get_nodes():
 @check.route("/get_hosts", methods=['GET','POST'])
 def get_hosts():
     cluester = request.form.get('cluster')
-    print(cluester)
     hosts_temp = CheckHost.query.filter(CheckHost.cluster == cluester).all()
     hosts = [{'id': i, 'name': x.hostname} for i,x in enumerate(hosts_temp)]
     return jsonify(hosts)
