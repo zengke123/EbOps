@@ -26,32 +26,44 @@
 
                     <input type="hidden" name="csrfmiddlewaretoken" value="">
                     <h3>基本</h3>
+                    <div class="form-group required"><label class="col-md-2 control-label" for="id_platform">业务平台</label><div class="col-md-9"><input type="text" name="platform" value="" maxlength="128" class="form-control" title="" required="" id="id_platform"></div></div>
+                     <div class="form-group required"><label class="col-md-2 control-label" for="id_cluster">集群名称</label><div class="col-md-9"><input type="text" name="cluster" value="" maxlength="128" class="form-control" title="" required="" id="id_cluster"></div></div>
                     <div class="form-group required"><label class="col-md-2 control-label" for="id_hostname">主机名</label><div class="col-md-9"><input type="text" name="hostname" value="111" maxlength="128" class="form-control" title="" required="" id="id_hostname"></div></div>
-                    <div class="form-group required"><label class="col-md-2 control-label" for="id_ip">IP</label><div class="col-md-9"><input type="text" name="ip" value="192.168.2.1" class="form-control" title="" required="" id="id_ip"></div></div>
-                    <div class="form-group required"><label class="col-md-2 control-label" for="id_port">端口</label><div class="col-md-9"><input type="text" name="port" value="22" class="form-control" title="" required="" id="id_port"></div></div>
+
+
+
 
 
                     <div class="hr-line-dashed"></div>
                     <h3>软件信息</h3>
-                        <div class="form-group required"><label class="col-md-2 control-label" for="id_hostname">业务版本</label><div class="col-md-9"><input type="text" name="version" value="111" maxlength="128" class="form-control" title="" required="" id="id_hostname"></div></div>
-                    <div class="form-group required"><label class="col-md-2 control-label" for="id_ip">软件模块版本号</label><div class="col-md-9"><input type="text" name="software_version" value="192.168.2.1" class="form-control" title="" required="" id="id_ip"></div></div>
-
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_local_ip">内网IP地址</label><div class="col-md-9"><input type="text" name="local_ip" value="192.168.2.1" class="form-control" title="" id="id_nat_ip"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_nat_ip">映射IP地址</label><div class="col-md-9"><input type="text" name="nat_ip" value="" class="form-control" title="" id="id_nat_ip"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_version">业务版本</label><div class="col-md-9"><input type="text" name="version" value="" maxlength="128" class="form-control" title="" id="id_version"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_software_version">软件模块版本</label><div class="col-md-9"><input type="text" name="software_version" value="192.168.2.1" class="form-control" title="" id="id_software_version"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_os_version">操作系统</label><div class="col-md-9"><input type="text" name="os_version" value="Linux" class="form-control" title="" id="id_os_version"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_account">账户</label><div class="col-md-9"><input type="text" name="account" value="Linux" class="form-control" title="" id="id_account"></div></div>
 
                     <div class="hr-line-dashed"></div>
                     <h3>硬件信息</h3>
-                    <div class="form-group required"><label class="col-md-2 control-label" for="id_hostname">设备类型</label><div class="col-md-9"><input type="text" name="device_type" value="111" maxlength="128" class="form-control" title="" required="" id="id_hostname"></div></div>
-                    <div class="form-group required"><label class="col-md-2 control-label" for="id_ip">设备厂家</label><div class="col-md-9"><input type="text" name="manufacturer" value="192.168.2.1" class="form-control" title="" required="" id="id_ip"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_device_type">设备类型</label><div class="col-md-9"><input type="text" name="device_type" value="111" maxlength="128" class="form-control" title="" id="id_device_type"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_manufacturer">设备厂家</label><div class="col-md-9"><input type="text" name="manufacturer" value="192.168.2.1" class="form-control" title="" id="id_manufacturer"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_device_model">设备型号</label><div class="col-md-9"><input type="text" name="device_model" value="192.168.2.1" class="form-control" title="" id="id_device_model"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_serial">序列号</label><div class="col-md-9"><input type="text" name="serial" value="192.168.2.1" class="form-control" title="" id="id_serial"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_power">功率</label><div class="col-md-9"><input type="text" name="power" value="192.168.2.1" class="form-control" title="" id="id_power"></div></div>
 
                     <div class="hr-line-dashed"></div>
                     <h3>机房信息</h3>
 
-                  <div class="form-group required"><label class="col-md-2 control-label" for="id_hostname">机房</label><div class="col-md-9"><input type="text" name="engine_room" value="111" maxlength="128" class="form-control" title="" required="" id="id_hostname"></div></div>
-                    <div class="form-group required"><label class="col-md-2 control-label" for="id_ip">机架</label><div class="col-md-9"><input type="text" name="frame_number" value="192.168.2.1" class="form-control" title="" required="" id="id_ip"></div></div>
+                    <div class="form-group required"><label class="col-md-2 control-label" for="id_engine_room">机房</label><div class="col-md-9"><input type="text" name="engine_room" value="111" maxlength="128" class="form-control" title="" required="" id="id_engine_room"></div></div>
+                    <div class="form-group required"><label class="col-md-2 control-label" for="id_frame_number">机架</label><div class="col-md-9"><input type="text" name="frame_number" value="192.168.2.1" class="form-control" title="" required="" id="id_frame_number"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_power_frame_number">电源柜</label><div class="col-md-9"><input type="text" name="power_frame_number" value="192.168.2.1" class="form-control" title="" id="id_power_frame_number"></div></div>
                     <div class="hr-line-dashed"></div>
 
                     <h3>其它</h3>
-                    <div class="form-group"><label class="col-md-2 control-label" for="id_comment">备注</label><div class="col-md-9"><textarea name="comment" cols="40" rows="5" maxlength="128" class="form-control" title="" id="id_comment"></textarea></div></div>
-                    <div class="form-group"><label class="col-md-2 control-label" for="id_is_active">&nbsp;</label><div class="col-md-9"><div class="checkbox"><label for="id_is_active"><input type="checkbox" name="is_active" class="" id="id_is_active" checked=""> 激活</label></div></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_net_time">入网时间</label><div class="col-md-9"><input type="text" name="net_time" value="192.168.2.1" class="form-control" title="" id="id_net_time"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_s_period">软件过保时间</label><div class="col-md-9"><input type="text" name="s_period" value="192.168.2.1" class="form-control" title="" id="id_s_period"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_h_period">硬件过保时间</label><div class="col-md-9"><input type="text" name="h_period" value="192.168.2.1" class="form-control" title="" id="id_h_period"></div></div>
+                    <div class="form-group required"><label class="col-md-2 control-label" for="id_status">状态</label><div class="col-md-9"><input type="text" name="status" value="192.168.2.1" class="form-control" title="" id="id_status"></div></div>
 
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
