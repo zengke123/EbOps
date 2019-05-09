@@ -1,382 +1,121 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="wrapper wrapper-content animated fadeInRight">
-                <div class="row">
-                    <div class="col-lg-3">
-                        <div class="ibox">
-                            <div class="ibox-content">
-                                <h5 class="m-b-md">Server status Q12</h5>
-                                <h2 class="text-navy">
-                                    <i class="fa fa-play fa-rotate-270"></i> Up
-                                </h2>
-                                <small>Last down 42 days ago</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="ibox">
-                            <div class="ibox-content ">
-                                <h5 class="m-b-md">Server status Q13</h5>
-                                <h2 class="text-navy">
-                                    <i class="fa fa-play fa-rotate-270"></i> Up
-                                </h2>
-                                <small>Last down 42 days ago</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="ibox">
-                            <div class="ibox-content">
-                                <h5 class="m-b-md">Server status Q42</h5>
-                                <h2 class="text-danger">
-                                    <i class="fa fa-play fa-rotate-90"></i> Down
-                                </h2>
-                                <small>Server down since 4 days</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="ibox">
-                            <div class="ibox-content">
-                                <h5 class="m-b-md">Server status Q43</h5>
-                                <h2 class="text-danger">
-                                    <i class="fa fa-play fa-rotate-90"></i> Down
-                                </h2>
-                                <small>Server down since 4:32 pm.</small>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="row">
-                    <div class="col-lg-3">
-                        <div class="ibox">
-                            <div class="ibox-content">
-                                <h5>Visits in last 24h</h5>
-                                <h2>198 009</h2>
-                                <div id="sparkline1"><canvas width="345" height="60" style="display: inline-block; width: 345.75px; height: 60px; vertical-align: top;"></canvas></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="ibox">
-                            <div class="ibox-content">
-                                <h5>Visits week</h5>
-                                <h2>65 000</h2>
-                                <div id="sparkline2"><canvas width="345" height="60" style="display: inline-block; width: 345.75px; height: 60px; vertical-align: top;"></canvas></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="ibox">
-                            <div class="ibox-content">
-                                <h5>Last month</h5>
-                                <h2>680 900</h2>
-                                <div id="sparkline3"><canvas width="345" height="60" style="display: inline-block; width: 345.75px; height: 60px; vertical-align: top;"></canvas></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="ibox">
-                            <div class="ibox-content">
-                                <h5>Avarage time</h5>
-                                <h2>00:06:40</h2>
-                                <div id="sparkline4"><canvas width="345" height="60" style="display: inline-block; width: 345.75px; height: 60px; vertical-align: top;"></canvas></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-3">
-                        <div class="ibox">
-                            <div class="ibox-content">
-                                <h5>Usage</h5>
-                                <h2>65%</h2>
-                                <div class="progress progress-mini">
-                                    <div style="width: 68%;" class="progress-bar"></div>
-                                </div>
-
-                                <div class="m-t-sm small">Server down since 4:32 pm.</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3">
-                        <div class="ibox">
-                            <div class="ibox-content">
-                                <h5>Usage</h5>
-                                <h2>50%</h2>
-                                <div class="progress progress-mini">
-                                    <div style="width: 78%;" class="progress-bar"></div>
-                                </div>
-
-                                <div class="m-t-sm small">Server down since 4:32 pm.</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3">
-                        <div class="ibox">
-                            <div class="ibox-content">
-                                <h5>Usage</h5>
-                                <h2>14%</h2>
-                                <div class="progress progress-mini">
-                                    <div style="width: 38%;" class="progress-bar progress-bar-danger"></div>
-                                </div>
-
-                                <div class="m-t-sm small">Server down since 4:32 pm.</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3">
-                        <div class="ibox">
-                            <div class="ibox-content">
-                                <h5>Usage</h5>
-                                <h2>20%</h2>
-                                <div class="progress progress-mini">
-                                    <div style="width: 28%;" class="progress-bar progress-bar-danger"></div>
-                                </div>
-
-                                <div class="m-t-sm small">Server down since 4:32 pm.</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-lg-3">
-                        <div class="ibox">
-                            <div class="ibox-content">
-                                <h5>Percentage distribution</h5>
-                                <h2>42/20</h2>
-                                <div class="text-center">
-                                    <div id="sparkline5"><canvas width="140" height="140" style="display: inline-block; width: 140px; height: 140px; vertical-align: top;"></canvas></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="ibox">
-                            <div class="ibox-content">
-                                <h5>Percentage division</h5>
-                                <h2>100/54</h2>
-                                <div class="text-center">
-                                    <div id="sparkline6"><canvas width="140" height="140" style="display: inline-block; width: 140px; height: 140px; vertical-align: top;"></canvas></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="ibox">
-                            <div class="ibox-content">
-                                <h5>Percentage distribution</h5>
-                                <h2>685/211</h2>
-                                <div class="text-center">
-                                    <div id="sparkline7"><canvas width="140" height="140" style="display: inline-block; width: 140px; height: 140px; vertical-align: top;"></canvas></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="ibox">
-                            <div class="ibox-content">
-                                <h5>Percentage division</h5>
-                                <h2>240/32</h2>
-                                <div class="text-center">
-                                    <div id="sparkline8"><canvas width="140" height="140" style="display: inline-block; width: 140px; height: 140px; vertical-align: top;"></canvas></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-3">
-                        <div class="ibox">
-                            <div class="ibox-content">
-                                <h5>Income</h5>
-                                <h1 class="no-margins">886,200</h1>
-                                <div class="stat-percent font-bold text-navy">98% <i class="fa fa-bolt"></i></div>
-                                <small>Total income</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="ibox">
-                            <div class="ibox-content">
-                                <h5>Income last month</h5>
-                                <h1 class="no-margins">1 738,200</h1>
-                                <div class="stat-percent font-bold text-navy">98% <i class="fa fa-bolt"></i></div>
-                                <small>Total income</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="ibox">
-                            <div class="ibox-content">
-                                <h5>Income last day</h5>
-                                <h1 class="no-margins">-200,100</h1>
-                                <div class="stat-percent font-bold text-danger">12% <i class="fa fa-level-down"></i></div>
-                                <small>Total income</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="ibox">
-                            <div class="ibox-content">
-                                <h5>Income all</h5>
-                                <h1 class="no-margins">54,200</h1>
-                                <div class="stat-percent font-bold text-danger">24% <i class="fa fa-level-down"></i></div>
-                                <small>Total income</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-3">
-                        <div class="ibox">
-                            <div class="ibox-content">
-                                <h5>All new alerts</h5>
-                                <table class="table table-stripped small m-t-md">
-                                    <tbody>
-                                    <tr>
-                                        <td class="no-borders">
-                                            <i class="fa fa-circle text-navy"></i>
-                                        </td>
-                                        <td class="no-borders">
-                                            Example element 1
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <i class="fa fa-circle text-navy"></i>
-                                        </td>
-                                        <td>
-                                            Example element 2
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <i class="fa fa-circle text-navy"></i>
-                                        </td>
-                                        <td>
-                                            Example element 3
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="ibox">
-                            <div class="ibox-content">
-                                <h5>Alerts</h5>
-                                <table class="table table-stripped small m-t-md">
-                                    <tbody>
-                                    <tr>
-                                        <td class="no-borders">
-                                            <i class="fa fa-circle text-navy"></i>
-                                        </td>
-                                        <td class="no-borders">
-                                            Example element 1
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <i class="fa fa-circle text-navy"></i>
-                                        </td>
-                                        <td>
-                                            Example element 2
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <i class="fa fa-circle text-navy"></i>
-                                        </td>
-                                        <td>
-                                            Example element 3
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="ibox">
-                            <div class="ibox-content">
-                                <h5>All messages</h5>
-                                <table class="table table-stripped small m-t-md">
-                                    <tbody>
-                                    <tr>
-                                        <td class="no-borders">
-                                            <i class="fa fa-circle text-danger"></i>
-                                        </td>
-                                        <td class="no-borders">
-                                            Example element 1
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <i class="fa fa-circle text-danger"></i>
-                                        </td>
-                                        <td>
-                                            Example element 2
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <i class="fa fa-circle text-danger"></i>
-                                        </td>
-                                        <td>
-                                            Example element 3
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="ibox">
-                            <div class="ibox-content">
-                                <h5>Last notification</h5>
-                                <table class="table table-stripped small m-t-md">
-                                    <tbody>
-                                    <tr>
-                                        <td class="no-borders">
-                                            <i class="fa fa-circle text-danger"></i>
-                                        </td>
-                                        <td class="no-borders">
-                                            Example element 1
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <i class="fa fa-circle text-danger"></i>
-                                        </td>
-                                        <td>
-                                            Example element 2
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <i class="fa fa-circle text-danger"></i>
-                                        </td>
-                                        <td>
-                                            Example element 3
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
 
+<div class="row">
+      <div class="col-lg-3">
+          <div class="ibox float-e-margins">
+              <div class="ibox-title">
+                  <span class="label label-success pull-right">用户数</span>
+                  <h5>Volte 智能网</h5>
+              </div>
+              <div class="ibox-content">
+                  <h1 class="no-margins">40 886,200</h1>
+                  <div class="stat-percent font-bold text-success">98% <i class="fa fa-bolt"></i></div>
+                  <small>同比</small>
+              </div>
+          </div>
+      </div>
+      <div class="col-lg-3">
+          <div class="ibox float-e-margins">
+              <div class="ibox-title">
+                  <span class="label label-info pull-right">用户数</span>
+                  <h5>Volte 彩铃</h5>
+              </div>
+              <div class="ibox-content">
+                  <h1 class="no-margins">275,800</h1>
+                  <div class="stat-percent font-bold text-info">20% <i class="fa fa-level-up"></i></div>
+                  <small>同比</small>
+              </div>
+          </div>
+      </div>
+      <div class="col-lg-3">
+          <div class="ibox float-e-margins">
+              <div class="ibox-title">
+                  <span class="label label-primary pull-right">用户数</span>
+                  <h5>同比</h5>
+              </div>
+              <div class="ibox-content">
+                  <h1 class="no-margins">106,120</h1>
+                  <div class="stat-percent font-bold text-navy">44% <i class="fa fa-level-up"></i></div>
+                  <small>同比</small>
+              </div>
+          </div>
+      </div>
+      <div class="col-lg-3">
+          <div class="ibox float-e-margins">
+              <div class="ibox-title">
+                  <span class="label label-danger pull-right">用户数</span>
+                  <h5>Centrex</h5>
+              </div>
+              <div class="ibox-content">
+                  <h1 class="no-margins">80,600</h1>
+                  <div class="stat-percent font-bold text-danger">38% <i class="fa fa-level-down"></i></div>
+                  <small>总用户数</small>
+              </div>
+          </div>
+</div>
+</div>
 
-            </div>
+<div class="row">
+  <div class="col-lg-12">
+      <div class="ibox float-e-margins">
+          <div class="ibox-title">
+              <h5>SCPAS CAPS</h5>
+              <div class="pull-right">
+                  <div class="btn-group">
+                      <button type="button" class="btn btn-xs btn-white active">昨天</button>
+                      <button type="button" class="btn btn-xs btn-white">上周</button>
+                      <button type="button" class="btn btn-xs btn-white">周平均</button>
+                  </div>
+              </div>
+          </div>
+          <div class="ibox-content">
+              <div class="row">
+              <div class="col-lg-9">
+                  <div class="flot-chart">
+                      <div class="flot-chart-content" id="flot-dashboard-chart" style="padding: 0px; position: relative;"><canvas class="flot-base" width="684" height="200" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 684px; height: 200px;"></canvas><div class="flot-text" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; font-size: smaller; color: rgb(84, 84, 84);">
+                      	<div class="flot-x-axis flot-x1-axis xAxis x1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px;"><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 57px; top: 183px; left: 68px; text-align: center;">Jan 03</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 57px; top: 183px; left: 130px; text-align: center;">Jan 06</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 57px; top: 183px; left: 191px; text-align: center;">Jan 09</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 57px; top: 183px; left: 253px; text-align: center;">Jan 12</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 57px; top: 183px; left: 314px; text-align: center;">Jan 15</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 57px; top: 183px; left: 376px; text-align: center;">Jan 18</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 57px; top: 183px; left: 437px; text-align: center;">Jan 21</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 57px; top: 183px; left: 499px; text-align: center;">Jan 24</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 57px; top: 183px; left: 561px; text-align: center;">Jan 27</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 57px; top: 183px; left: 622px; text-align: center;">Jan 30</div></div><div class="flot-y-axis flot-y1-axis yAxis y1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px;"><div class="flot-tick-label tickLabel" style="position: absolute; top: 170px; left: 20px; text-align: right;">0</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 130px; left: 7px; text-align: right;">250</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 91px; left: 7px; text-align: right;">500</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 51px; left: 7px; text-align: right;">750</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 12px; left: 0px; text-align: right;">1000</div></div><div class="flot-y-axis flot-y2-axis yAxis y2Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px;"><div class="flot-tick-label tickLabel" style="position: absolute; top: 170px; left: 671px;">0</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 141px; left: 671px;">5</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 113px; left: 671px;">10</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 85px; left: 671px;">15</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 57px; left: 671px;">20</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 29px; left: 671px;">25</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 1px; left: 671px;">30</div></div></div><canvas class="flot-overlay" width="684" height="200" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 684px; height: 200px;"></canvas><div class="legend"><div style="position: absolute; width: 113px; height: 34px; top: 14px; left: 37px; background-color: rgb(255, 255, 255); opacity: 0.85;"> </div><table style="position:absolute;top:14px;left:37px;;font-size:smaller;color:#545454"><tbody><tr><td class="legendColorBox"><div style="border:1px solid #000000;padding:1px"><div style="width:4px;height:0;border:5px solid #1ab394;overflow:hidden"></div>																	</div></td><td class="legendLabel">Number of orders</td></tr><tr><td class="legendColorBox"><div style="border:1px solid #000000;padding:1px"><div style="width:4px;height:0;border:5px solid #1C84C6;overflow:hidden"></div></div></td><td class="legendLabel">Payments</td></tr></tbody></table></div></div>
+                  </div>
+              </div>
+              <div class="col-lg-3">
+                  <ul class="stat-list">
+                      <li>
+                          <h2 class="no-margins">2,346</h2>
+                          <small>Total orders in period</small>
+                          <div class="stat-percent">48% <i class="fa fa-level-up text-navy"></i></div>
+                          <div class="progress progress-mini">
+                              <div style="width: 48%;" class="progress-bar"></div>
+                          </div>
+                      </li>
+                      <li>
+                          <h2 class="no-margins ">4,422</h2>
+                          <small>Orders in last month</small>
+                          <div class="stat-percent">60% <i class="fa fa-level-down text-navy"></i></div>
+                          <div class="progress progress-mini">
+                              <div style="width: 60%;" class="progress-bar"></div>
+                          </div>
+                      </li>
+                      <li>
+                          <h2 class="no-margins ">9,180</h2>
+                          <small>Monthly income from orders</small>
+                          <div class="stat-percent">22% <i class="fa fa-bolt text-navy"></i></div>
+                          <div class="progress progress-mini">
+                              <div style="width: 22%;" class="progress-bar"></div>
+                          </div>
+                      </li>
+                      </ul>
+                  </div>
+              </div>
+              </div>
+
+          </div>
+      </div>
+  </div>
+</div>
+
+
+</div>
 
 {% endblock %}
