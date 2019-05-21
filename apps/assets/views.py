@@ -10,10 +10,10 @@ from flask_login import login_required
 @login_required
 def get_host_info(hostname):
     host = Host.query.filter(Host.hostname == hostname).first()
-    return render_template('assets_info.html',app="资产管理", action="资产详情", host=host)
+    return render_template('assets_info.html', app="资产管理", action="资产详情", host=host)
 
 
 @assets.route("/update/<hostname>", methods=['GET','POST'])
 @login_required
 def update_host_info(hostname):
-    return render_template('assets_update.html',app="资产管理", action="资产更新")
+    return render_template('assets_update.html', app="资产管理", action="资产更新")

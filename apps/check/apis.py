@@ -6,7 +6,7 @@ from flask import jsonify, request
 from flask_login import login_required
 
 
-@check.route("/get_nodes", methods=['GET','POST'])
+@check.route("/get_nodes", methods=['GET', 'POST'])
 @login_required
 def get_nodes():
     cluste_type = db.session.query(distinct(CheckHost.node)).all()
@@ -21,14 +21,14 @@ def get_nodes():
         childrens = [{'name': cluster} for cluster in clusters]
         p1_data = {
             'name': node + " ({})".format(len(clusters)),
-            'open': 'true' if i==0 else 'false',
+            'open': 'true' if i == 0 else 'false',
             'children': childrens
         }
         zNodes.append(p1_data)
     return jsonify(zNodes)
 
 
-@check.route("/get_hosts", methods=['GET','POST'])
+@check.route("/get_hosts", methods=['GET', 'POST'])
 def get_hosts():
     cluester = request.form.get('cluster')
     hosts_temp = CheckHost.query.filter(CheckHost.cluster == cluester).all()

@@ -11,13 +11,13 @@ def get_result(ops_infos, date):
     results = []
     for item in ops_infos:
         # 根据item_id和date匹配执行结果，并按时间排序，取当天最后执行时间
-        result = OpsResult.query.filter(and_(OpsResult.item_id==item.item_id,
-                                             OpsResult.date==date)).order_by(OpsResult.time.desc()).first()
+        result = OpsResult.query.filter(and_(OpsResult.item_id == item.item_id,
+                                             OpsResult.date == date)).order_by(OpsResult.time.desc()).first()
         results.append((item, result))
     return results
 
 
-@ops.route("/<ops_type>", methods=['GET','POST'])
+@ops.route("/<ops_type>", methods=['GET', 'POST'])
 @login_required
 def index(ops_type):
     # 查找ims对应的作业计划名称
@@ -92,7 +92,7 @@ def request_log():
                 result += line + '\r\n'
             f.close()
     except Exception as e:
-        result="\n日志文件不存在"
+        result = "\n日志文件不存在"
     logs = {
         "data": result,
         "end": True,
