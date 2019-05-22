@@ -80,7 +80,7 @@ def create():
 @login_required
 def profile():
     # 返回个人信息
-    user =  User.query.filter(User.username == current_user.username).first()
+    user = User.query.filter(User.username == current_user.username).first()
     return render_template('user_profile.html', app='用户信息', user=user)
 
 
