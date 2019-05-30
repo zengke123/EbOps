@@ -12,7 +12,7 @@ def get_nodes():
     cluste_type = db.session.query(distinct(CheckHost.node)).all()
     nodes = [x[0] for x in cluste_type]
     # ztree 一级节点
-    zNodes = []
+    z_nodes = []
     for i, node in enumerate(nodes):
         cluste_temps = db.session.query(distinct(CheckHost.cluster)).filter(CheckHost.node == node).order_by(
             CheckHost.cluster).all()
@@ -24,8 +24,8 @@ def get_nodes():
             'open': 'true' if i == 0 else 'false',
             'children': childrens
         }
-        zNodes.append(p1_data)
-    return jsonify(zNodes)
+        z_nodes.append(p1_data)
+    return jsonify(z_nodes)
 
 
 @check.route("/get_hosts", methods=['GET', 'POST'])
