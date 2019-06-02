@@ -6,6 +6,7 @@ from flask import jsonify, render_template, request
 from flask_login import login_required
 
 
+# 主机详细信息
 @assets.route("/info/<hostname>", methods=['GET', 'POST'])
 @login_required
 def get_host_info(hostname):
@@ -13,6 +14,7 @@ def get_host_info(hostname):
     return render_template('assets_info.html', app="资产管理", action="资产详情", host=host)
 
 
+# 更新主机信息
 @assets.route("/update/<hostname>", methods=['GET', 'POST'])
 @login_required
 def update_host_info(hostname):
@@ -28,3 +30,55 @@ def update_host_info(hostname):
         except Exception as e:
             print(str(e))
             return "fail"
+
+
+# 按业务平台分类获取节点信息
+@assets.route("/get_nodes", methods=['GET', 'POST'])
+@login_required
+def get_nodes():
+    cluste_type = db.session.query(distinct(Host.platform)).all()
+    nodes = [x[0] for x in cluste_type]
+    # ztree 一级节点
+    z_nodes = []
+    for i, node in enumerate(nodes):
+        cluste_temps = db.session.query(distinct(Host.cluster)).filter(Host.platform == node).order_by(
+            Host.cluster).all()
+        clusters = [x[0] for x in cluste_temps]
+        # 二级节点
+        childrens = [{'name': cluster} for cluster in clusters]
+        p1_data = {
+            'name': node + " ({})".format(len(clusters)),
+            'open': 'true' if i == 0 else 'false',
+            'children': childrens
+        }
+        z_nodes.append(p1_data)
+    return jsonify(z_nodes)
+
+
+# 获取对应集群下的主机清单，集群名称通过post参数传递
+@assets.route("/get_hosts", methods=['GET', 'POST'])
+def get_hosts():
+    cluester = request.form.get('cluster')
+    hosts_temp = Host.query.filter(Host.cluster == cluester).all()
+    # hosts = [x.hostname for x in hosts_temp]
+    result = []
+    for i, host in enumerate(hosts_temp):
+        # result.append({
+        #     'id': i,
+        #     'name': host.hostname,
+        #     'ip': host.local_ip,
+        #     'device_type': host.device_type,
+        #     'device_model': host.device_model,
+        #     'engine_room': host.engine_room,
+        #     'frame_number': host.frame_number
+        # })
+        result.append(host.to_json())
+    # result = [{'id': i, 'name': x.hostname} for i, x in enumerate(hosts_temp)]
+    return jsonify(result)
+
+
+# 资产列表主页
+@assets.route("/asset", methods=['GET', 'POST'])
+@login_required
+def asset():
+    return render_template('assets_list.html', app="资产管理", action="资产列表")

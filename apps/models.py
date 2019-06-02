@@ -154,6 +154,8 @@ class Host(db.Model):
                 "frame_number": self.frame_number,
                 "power_frame_number": self.power_frame_number,
                 "net_time": self.net_time,
-                "period": self.period,
+                "s_period": self.s_period,
+                "h_period": self.h_period,
+                "power": self.power,
                 "status": self.status
                 }
