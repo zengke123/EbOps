@@ -98,8 +98,6 @@
                        <th class="text-center">主机名</th>
                        <th class="text-center">IP</th>
                        <th class="text-center">设备类型</th>
-                       <th class="text-center">设备型号</th>
-                       <th class="text-center">序列号</th>
                        <th class="text-center">机房</th>
                        <th class="text-center">机架</th>
                        <th class="text-center">动作</th></tr>
@@ -150,7 +148,7 @@
             $("#hosts").html("");
             document.getElementById("check_nodes").setAttribute('href',"/check/" + treeNode.name);
             $.ajax({
-                url: "{{ url_for("assets.get_hosts") }}",
+                url: "{{ url_for('assets.get_hosts') }}",
                 type: 'POST',
                 async: true,
                 dataType: "json",
@@ -171,8 +169,6 @@
                             "<td class=\" text-center\"><a href=\"/assets/info/" + n.hostname + "\">" + n.hostname + "</a></td>\n" +
                             "<td class=\"text-center\">" + n.local_ip + "</td>\n<td class=\" text-center\">" + n.device_type +
                             "</td>\n" +
-                            "<td class=\" text-center\">" + n.device_model + "</td>\n" +
-                            "<td class=\" text-center\">" + n.serial + "</td>\n" +
                             "<td class=\" text-center\">" + n.engine_room + "</td>\n" +
                             "<td class=\" text-center\">" + n.frame_number + "</td>\n" +
                             "<td class=\" text-center\">\n" +

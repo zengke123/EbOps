@@ -1,7 +1,7 @@
 from . import assets
 from .. import db
 from ..models import Host
-from sqlalchemy import distinct
+from sqlalchemy import distinct, func, or_
 from flask import jsonify, render_template, request
 from flask_login import login_required
 
@@ -82,3 +82,31 @@ def get_hosts():
 @login_required
 def asset():
     return render_template('assets_list.html', app="资产管理", action="资产列表")
+
+
+# 资产统计
+@assets.route("/dashboard", methods=['GET', 'POST'])
+@login_required
+def dashboard():
+    # 按业务平台分类汇总数量
+    result = db.session.query(Host.platform, func.count('*').label("count")).filter(Host.status=="在网").group_by(Host.platform).all()
+    platforms = [x[0] for x in result]
+    platforms_counts = [x[1] for x in result]
+    device_nums = sum(platforms_counts)
+    # 按机房分类获取数量
+    result_jf = db.session.query(Host.engine_room, func.count('*').label("count")).filter(Host.status=="在网").group_by(Host.engine_room).all()
+    engine_rooms = [x[0] for x in result_jf]
+    engine_rooms_values= [{"value": v, "name": k} for k, v in result_jf]
+    # 按设备类型分类获取数量
+    result_type = db.session.query(Host.device_type, func.count('*').label("count")).filter(Host.status=="在网").group_by(Host.device_type).all()
+    device_types = [x[0] for x in result_type]
+    device_types_nums = [x[1] for x in result_type]
+    # device_types_values = [{"value": v, "name": k} for k, v in result_type]
+    # 统计操作系统
+    linux_nums = db.session.query(func.count('*').label("count")).filter(
+        or_(Host.os_version.like("linux%"), Host.os_version.like("redhat%"))).all()
+    hpux_nums = db.session.query(func.count('*').label("count")).filter(
+        or_(Host.os_version.like("HP%"), Host.os_version.like("hp%"))).all()
+    aix_nums = db.session.query(func.count('*').label("count")).filter(
+        or_(Host.os_version.like("AIX%"), Host.os_version.like("aix%"))).all()
+    return render_template('assets_dashboard.html', app="资产管理", action="资产统计",  **locals())
