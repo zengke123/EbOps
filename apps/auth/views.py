@@ -143,6 +143,7 @@ def get_user_info():
         "flag": "success",
         "user_info": user_info.to_json()
     }
+    print(result)
     return jsonify(result)
 
 
@@ -153,11 +154,17 @@ def modify_user_info():
     datas = request.get_json()
     try:
         user_id = datas.get('id')
-        # update数据库表数据
-        db.session.query(User).filter(User.id == user_id).update(datas)
-        db.session.commit()
+        # 管理员状态不能更改为锁定
+        to_update = User.query.filter(User.id == user_id).first()
+        if to_update.username == current_user.username and datas.get('status') == '0':
+            result = {"flag": "fail"}
+        else:
+            # update数据库表数据
+            db.session.query(User).filter(User.id == user_id).update(datas)
+            db.session.commit()
+            result = {"flag": "success"}
     except Exception as e:
         print(str(e))
+        result = {"flag": "fail"}
     # request中要求的数据格式为json，为其他会导致前端执行success不成功
-    result = {"flag": "success"}
     return jsonify(result)

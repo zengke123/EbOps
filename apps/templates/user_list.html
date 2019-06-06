@@ -233,19 +233,16 @@
                     modal.find('.modal-body #username').val(obj.username);
                     modal.find('.modal-body #password').val(obj.password);
                     modal.find('.modal-body #mail').val(obj.mail);
-
                     if(String(obj.role)==="1"){
                         modal.find(".modal-body #role option[value='1']").attr("selected","selected");
                     }else{
                         modal.find(".modal-body #role option[value='0']").attr("selected","selected");
                     }
-
                     if(String(obj.status)==="1"){
                         modal.find(".modal-body #status option[value='1']").attr("selected","selected");
                     }else{
                         modal.find(".modal-body #status option[value='0']").attr("selected","selected");
                     }
-
                 }
                 else alert("查询失败")
 
