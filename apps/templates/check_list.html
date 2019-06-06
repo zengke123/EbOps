@@ -87,6 +87,16 @@
 
                </tbody>
                </table>
+               <script type="text/javascript">
+                    $('.ipt_check_all').on('click', function() {
+                      if ($(this).prop("checked")) {
+                          $(this).closest('table').find('.ipt_check').prop('checked', true);
+                      } else {
+                          $(this).closest('table').find('.ipt_check').prop('checked', false);
+                      }
+                    });
+               </script>
+
                <div id="asset_list_table_processing" class="dataTables_processing panel panel-default" style="display: none;">加载中 ...</div>
                <div class="row m-t">
                    <div class="col-md-8">

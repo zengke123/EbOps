@@ -117,6 +117,17 @@
 
                </tbody>
                </table>
+
+               <script type="text/javascript">
+                    $('.ipt_check_all').on('click', function() {
+                      if ($(this).prop("checked")) {
+                          $(this).closest('table').find('.ipt_check').prop('checked', true);
+                      } else {
+                          $(this).closest('table').find('.ipt_check').prop('checked', false);
+                      }
+                    });
+               </script>
+
                <div id="asset_list_table_processing" class="dataTables_processing panel panel-default" style="display: none;">加载中 ...</div>
                <div class="row m-t">
                    <div class="col-md-8">
@@ -165,7 +176,7 @@
                             trColor = "odd";
                         }
                         tbBody += "<tr role=\"row\" class='" + trColor + "'>" + "<td class=\" text-center\">" +
-                            "<input type=\"checkbox\" class=\"text-center ipt_check\" id=\"\"></td>\n" +
+                            "<input type=\"checkbox\" class=\"text-center ipt_check\" id=\"" + n.hostname  + "\"></td>" +
                             "<td class=\" text-center\"><a href=\"/assets/info/" + n.hostname + "\">" + n.hostname + "</a></td>\n" +
                             "<td class=\"text-center\">" + n.local_ip + "</td>\n<td class=\" text-center\">" + n.device_type +
                             "</td>\n" +

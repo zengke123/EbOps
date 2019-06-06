@@ -70,10 +70,16 @@ def create():
                 'status': status,
                 'create_time': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }
-            add_user = User(**new_user)
-            db.session.add(add_user)
-            db.session.commit()
-            return redirect(url_for('auth.users'))
+            _all_users = db.session.query(User.username).all()
+            all_users = [x[0] for x in _all_users]
+            if user.get('username') in all_users:
+                error = "用户名已存在.."
+                return render_template('user_create.html', app='用户管理', action='创建用户', error=error)
+            else:
+                add_user = User(**new_user)
+                db.session.add(add_user)
+                db.session.commit()
+                return redirect(url_for('auth.users'))
 
 
 @auth.route('/profile')
@@ -84,7 +90,6 @@ def profile():
     return render_template('user_profile.html', app='用户信息', user=user)
 
 
-
 @auth.route('/password', methods=['GET','POST'])
 @login_required
 def password():
@@ -92,7 +97,7 @@ def password():
         return render_template('user_password.html', app='用户信息', action='密码更新')
     elif request.method == "POST":
         old_password = request.form.get('old_password')
-        user = User.query.filter(User.username==current_user.username).first()
+        user = User.query.filter(User.username == current_user.username).first()
         if old_password == user.password:
             new_password = request.form.get('new_password')
             confirm_password = request.form.get('confirm_password')
