@@ -3,18 +3,16 @@ from flask_login import UserMixin
 from . import login_manager
 
 
-
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(64), index=True, unique=True)
     password = db.Column(db.String(64))
     mail = db.Column(db.String(64))
-    role = db.Column(db.SmallInteger, default=2)
+    role = db.Column(db.SmallInteger, default=0)
     status = db.Column(db.SmallInteger, default=0)
     create_time = db.Column(db.DateTime)
     last_time = db.Column(db.DateTime)
-
 
     def verify_password(self, password):
         if password == self.password:
@@ -28,6 +26,18 @@ class User(UserMixin, db.Model):
             return True
         else:
             return False
+
+    def to_json(self):
+        return {
+            "id": self.id,
+            "username": self.username,
+            "password": self.password,
+            "mail": self.mail,
+            "role": self.role,
+            "status": self.status,
+            "create_time": self.create_time,
+            "last_time": self.last_time
+        }
 
 
 @login_manager.user_loader

@@ -3,7 +3,7 @@ from .. import db
 from ..models import User
 from .forms import LoginForm
 from datetime import datetime
-from flask import render_template, request, url_for, flash, redirect
+from flask import render_template, request, url_for, flash, redirect, jsonify
 from flask_login import login_user, login_required, logout_user, current_user
 
 
@@ -42,8 +42,8 @@ def logout():
 @login_required
 def users():
     # 返回用户列表
-    users = User.query.all()
-    return render_template("user_list.html", app='用户管理', action='用户列表', users=users)
+    all_users = User.query.all()
+    return render_template("user_list.html", app='用户管理', action='用户列表', users=all_users)
 
 
 @auth.route('/create', methods=['GET','POST'])
@@ -90,6 +90,7 @@ def profile():
     return render_template('user_profile.html', app='用户信息', user=user)
 
 
+# 修改密码
 @auth.route('/password', methods=['GET','POST'])
 @login_required
 def password():
@@ -110,3 +111,53 @@ def password():
         else:
             error = "原密码错误!"
         return render_template('user_password.html', app='用户信息', action='密码更新', error=error)
+
+
+# 删除用户
+# 根据id 删除设备信息
+@auth.route('/delete', methods=["GET", "POST"])
+@login_required
+def delete():
+    user_id = request.form.get('id')
+    try:
+        to_delete = User.query.filter(User.id == user_id).first()
+        # 不能删除当前登录的管理员账户
+        if to_delete.username == current_user.username:
+            result = {"flag": "fail"}
+        else:
+            db.session.delete(to_delete)
+            db.session.commit()
+            result = {"flag": "success"}
+    except Exception as e:
+        print(str(e))
+        result = {"flag": "fail"}
+    return jsonify(result)
+
+
+@auth.route('/get_uesr_info', methods=["GET", "POST"])
+@login_required
+def get_user_info():
+    user_id = request.form.get('id')
+    user_info = db.session.query(User).filter(User.id == user_id).one()
+    result = {
+        "flag": "success",
+        "user_info": user_info.to_json()
+    }
+    return jsonify(result)
+
+
+@auth.route('/modify_user_info', methods=["GET", "POST"])
+@login_required
+def modify_user_info():
+    # 获取前端提交的json数据
+    datas = request.get_json()
+    try:
+        user_id = datas.get('id')
+        # update数据库表数据
+        db.session.query(User).filter(User.id == user_id).update(datas)
+        db.session.commit()
+    except Exception as e:
+        print(str(e))
+    # request中要求的数据格式为json，为其他会导致前端执行success不成功
+    result = {"flag": "success"}
+    return jsonify(result)

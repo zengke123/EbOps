@@ -68,28 +68,19 @@
                             {% endif %}
                                 <td class=" text-center">{{ user.last_time }}</td>
                                 <td class=" text-center">
-                                    <a href="#" class="btn btn-xs btn-info" >更新</a>
-                                    <a class="btn btn-xs btn-danger m-l-xs btn_user_delete" data-uid="" data-name="abc">删除</a>
+                                    <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#myModal" data-whatever="{{ user.id }}">更新</button>
+                                    <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myDelModal" data-whatever="{{ user.id }}">删除</button>
                                 </td>
                             </tr>
                         {% endfor %}
                         </tbody>
                         </table>
-                       <script type="text/javascript">
-                            $('.ipt_check_all').on('click', function() {
-                              if ($(this).prop("checked")) {
-                                  $(this).closest('table').find('.ipt_check').prop('checked', true);
-                              } else {
-                                  $(this).closest('table').find('.ipt_check').prop('checked', false);
-                              }
-                            });
-                       </script>
+
                     <div class="row m-t">
                         <div class="col-md-8">
                             <div id="op" class="col-md-6">
                                 <div class="input-group">
                                     <select class="form-control m-b" style="width: auto" id="slct_bulk_update">
-                                        <option value="delete">批量删除</option>
                                         <option value="deactive">禁用所选</option>
                                         <option value="active">激活所选</option>
                                     </select>
@@ -108,11 +99,6 @@
                 </div>
 
 
-                <style>
-                .modal-body {
-                    padding: 0px 20px 0px 20px;
-                }
-                </style>
 
                 <div class="row">
                     <div class="col-sm-4">
@@ -124,4 +110,173 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">修改</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" id="UserUpdateForm">
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">用户名</label>
+                <div class="col-sm-10">
+                <input type="text" class="form-control" id="username" name="username" disabled>
+                </div>
+            </div>
+
+            <div class="form-group required">
+                <label class="col-sm-2 control-label">密码</label>
+                <div class="col-sm-10">
+                <input type="text" class="form-control" id="password" name="password">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">邮箱</label>
+                <div class="col-sm-10">
+                <input type="text" class="form-control" id="mail" name="mail">
+                </div>
+            </div>
+
+            <div class="form-group required">
+                <label class="col-sm-2 control-label">用户组</label>
+                <div class="col-sm-10">
+                    <select name="role" class="form-control" id="role">
+                        <option value="1">管理员</option>
+                        <option value="0">普通用户</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group required">
+                <label class="col-sm-2 control-label">状态</label>
+                <div class="col-sm-10">
+                    <select name="status" class="form-control" id="status">
+                        <option value="1">正常</option>
+                        <option value="0">锁定</option>
+                    </select>
+                </div>
+            </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" id="SAVE" data-dismiss="modal">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="myDelModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        确定删除该用户
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">否</button>
+        <button type="button" class="btn btn-primary" id="DEL" data-dismiss="modal">是</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+    $('.ipt_check_all').on('click', function() {
+      if ($(this).prop("checked")) {
+          $(this).closest('table').find('.ipt_check').prop('checked', true);
+      } else {
+          $(this).closest('table').find('.ipt_check').prop('checked', false);
+      }
+    });
+
+    $('#myDelModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id_no = button.data('whatever');
+        var modal = $(this);
+        modal.find('#DEL').attr("value",id_no);
+    });
+
+    $("#DEL").click(function () {
+        var user_id = this.value;
+        $.ajax({
+            url: "{{ url_for('auth.delete') }}",
+            type: "post",
+            data: {"id":user_id},
+            success:function(data) {
+                if(data["flag"]==="success"){
+                    alert("删除成功");
+                    location.reload();
+                }
+                else alert("删除失败");
+            }
+        });
+    });
+
+
+    $('#myModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id_no = button.data('whatever');
+        var modal = $(this);
+        modal.find('.modal-title').text(id_no);
+        $.ajax({   //2、发送给后端
+            url: "{{ url_for('auth.get_user_info') }}",
+            type: 'POST',
+            data: {"id": id_no},
+            success:function(data) {
+                if(data["flag"]==="success"){
+                    var obj = data["user_info"];
+                    modal.find('.modal-body #username').val(obj.username);
+                    modal.find('.modal-body #password').val(obj.password);
+                    modal.find('.modal-body #mail').val(obj.mail);
+
+                    if(String(obj.role)==="1"){
+                        modal.find(".modal-body #role option[value='1']").attr("selected","selected");
+                    }else{
+                        modal.find(".modal-body #role option[value='0']").attr("selected","selected");
+                    }
+
+                    if(String(obj.status)==="1"){
+                        modal.find(".modal-body #status option[value='1']").attr("selected","selected");
+                    }else{
+                        modal.find(".modal-body #status option[value='0']").attr("selected","selected");
+                    }
+
+                }
+                else alert("查询失败")
+
+            }
+        });
+
+    });
+
+    $("#SAVE").click(function () {
+        var user_id = $(".modal-title").text();
+        var formSerial = {};
+        formSerial["id"] = user_id;
+		 $($("#UserUpdateForm").serializeArray()).each(function(){
+		    formSerial[this.name] = this.value;
+		 });
+        $.ajax({
+            url: "{{ url_for('auth.modify_user_info') }}",
+            type: "post",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(formSerial),
+            dataType: "json",
+            success:function(data) {
+                if(data["flag"]==="success"){
+                    alert("修改成功");
+                    location.reload();
+                }
+                else alert("修改失败");
+            }
+        });
+    });
+
+
+</script>
 {% endblock %}

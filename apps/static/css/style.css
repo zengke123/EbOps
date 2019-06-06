@@ -3409,7 +3409,8 @@ video {
   z-index: 2200;
 }
 .modal-body {
-  padding: 20px 30px 30px 30px;
+  position: relative;
+  padding: 15px;
 }
 .inmodal .modal-body {
   background: #f8fafb;
