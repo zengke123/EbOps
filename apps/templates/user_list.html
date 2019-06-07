@@ -3,6 +3,7 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-sm-12">
+            <div class="alert alert-danger" role="alert">当前登录的管理员用户无法删除和禁用</div>
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <h5>
@@ -52,7 +53,7 @@
                             {% else %}
                                 <tr role="row" class="even">
                             {% endif %}
-                                <td class=" text-center"><input type="checkbox" class="text-center ipt_check"></td>
+                                <td class=" text-center"><input type="checkbox" class="text-center ipt_check" value="{{ user.username }}"></td>
                                 <td class=" text-center"><a href="#">{{ user.username }}</a></td>
                                 <td class=" text-center">{{ user.password }}</td>
                                 <td class=" text-center">{{ user.mail }}</td>
@@ -81,11 +82,12 @@
                             <div id="op" class="col-md-6">
                                 <div class="input-group">
                                     <select class="form-control m-b" style="width: auto" id="slct_bulk_update">
+                                        <option>选择</option>
                                         <option value="deactive">禁用所选</option>
                                         <option value="active">激活所选</option>
                                     </select>
-                                    <div class="input-group-btn pull-left" style="padding-left: 5px;">
-                                        <button id="btn_bulk_update" style="height: 32px;" class="btn btn-sm btn-primary">
+                                    <div class="input-group-btn pull-left" style="padding-left: 5px;" id="btn_bulk_update">
+                                        <button style="height: 32px;" class="btn btn-sm btn-primary">
                                             提交
                                         </button>
                                     </div>
@@ -273,6 +275,74 @@
             }
         });
     });
+
+    function active(){
+        var str=$("input[type='checkbox']:checked");
+        var objarray=str.length;
+        var users = "";
+        for (i=0;i<objarray;i++) {
+            if(str[i].checked === true) {
+                users+=str[i].value+",";
+            }
+        }
+        $.post("{{ url_for('auth.active') }}",
+            {
+                users: users
+            },
+            function (data) {
+                if(data==="success"){
+                    alert("激活成功");
+                    location.reload();
+                }
+                else alert("激活失败")
+            });
+    }
+
+    function deactive() {
+        var str=$("input[type='checkbox']:checked");
+        var objarray=str.length;
+        var users = "";
+        for (i=0;i<objarray;i++) {
+            if(str[i].checked === true) {
+                users+=str[i].value+",";
+            }
+        }
+        $.post("{{ url_for('auth.deactive') }}",
+            {
+                users: users
+            },
+            function (data) {
+                if(data==="success"){
+                    alert("禁用成功");
+                    location.reload();
+                }
+                else alert("禁用失败")
+            });
+    }
+
+
+
+    $("#slct_bulk_update").change(function() {
+        var checkText=$("#slct_bulk_update").find("option:selected").text();
+        $("#btn_bulk_update").empty();
+        if(checkText!=="选择") {
+            if(checkText==="禁用所选"){
+                var content_de="<button type=\"button\" style=\"height: 32px;\" class=\"btn btn-sm btn-primary\" onclick='deactive()'>提交</button>";
+                $("#btn_bulk_update").append(content_de);
+            }
+            if(checkText==="激活所选"){
+                var content_ac="<button type=\"button\" style=\"height: 32px;\" class=\"btn btn-sm btn-primary\" onclick='active()'>提交</button>";
+                $("#btn_bulk_update").append(content_ac);
+            }
+        }else {
+            var content="<button type=\"button\" style=\"height: 32px;\" class=\"btn btn-sm btn-primary\">提交</button>";
+            $("#btn_bulk_update").append(content);
+        }
+
+    });
+
+
+
 
 
 </script>

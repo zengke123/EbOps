@@ -168,3 +168,38 @@ def modify_user_info():
         result = {"flag": "fail"}
     # request中要求的数据格式为json，为其他会导致前端执行success不成功
     return jsonify(result)
+
+
+def change_user_status(user_list, status):
+    if user_list:
+        for username in user_list:
+            to_update = db.session.query(User).filter(User.username == username).one()
+            to_update.status = status
+            db.session.commit()
+        return "success"
+    else:
+        return "fail"
+
+
+# 激活用户
+@auth.route('/active', methods=["GET", "POST"])
+@login_required
+def active():
+    _users = request.form.get('users')
+    _users_temp = _users.split(',')
+    # 去除checkbox选择的无效选项，包括当前登录用户
+    _users_list = [x for x in _users_temp if x != '' and x != 'on' and x != current_user.username]
+    result = change_user_status(_users_list, '1')
+    return result
+
+
+# 禁用用户
+@auth.route('/deactive', methods=["GET", "POST"])
+@login_required
+def deactive():
+    _users = request.form.get('users')
+    _users_temp = _users.split(',')
+    _users_list = [x for x in _users_temp if x != '' and x != 'on' and x != current_user.username]
+    result = change_user_status(_users_list, '0')
+    return result
+
