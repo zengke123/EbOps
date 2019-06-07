@@ -134,11 +134,12 @@
                        <div id="op" class="col-md-6">
                            <div class="input-group">
                                <select class="form-control m-b" style="width: auto" id="slct_bulk_update">
+                                    <option >选择类型</option>
                                     <option value="delete">批量删除</option>
                                     <option value="update">批量更新</option>
                                </select>
-                                <div class="input-group-btn pull-left" style="padding-left: 5px;">
-                                    <button id="btn_bulk_update" style="height: 32px;" class="btn btn-sm btn-primary">提交</button>
+                                <div class="input-group-btn pull-left" style="padding-left: 5px;" id="btn_bulk_update">
+                                    <button style="height: 32px;" class="btn btn-sm btn-primary">提交</button>
                                 </div>
                             </div>
                        </div>
@@ -148,7 +149,19 @@
        </div>
    </div>
 </div>
-
+<div class="modal fade" id="myDelModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        确定删除该设备
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">否</button>
+        <button type="button" class="btn btn-primary" id="DEL" data-dismiss="modal">是</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
 {% block custom_foot_js %}
@@ -176,7 +189,7 @@
                             trColor = "odd";
                         }
                         tbBody += "<tr role=\"row\" class='" + trColor + "'>" + "<td class=\" text-center\">" +
-                            "<input type=\"checkbox\" class=\"text-center ipt_check\" id=\"" + n.hostname  + "\"></td>" +
+                            "<input type=\"checkbox\" class=\"text-center ipt_check\" value=\"" + n.hostname  + "\"></td>" +
                             "<td class=\" text-center\"><a href=\"/assets/info/" + n.hostname + "\">" + n.hostname + "</a></td>\n" +
                             "<td class=\"text-center\">" + n.local_ip + "</td>\n<td class=\" text-center\">" + n.device_type +
                             "</td>\n" +
@@ -184,7 +197,7 @@
                             "<td class=\" text-center\">" + n.frame_number + "</td>\n" +
                             "<td class=\" text-center\">\n" +
                             "<a href=\"/assets/update/" + n.hostname + "\" class=\"btn btn-xs btn-info\">更新</a>\n" +
-                            "<a class=\"btn btn-xs btn-danger m-l-xs btn_asset_delete\" data-uid=\"\">删除</a>\n" +
+                            "<button type=\"button\" class=\"btn btn-danger btn-xs\" data-toggle=\"modal\" data-target=\"#myDelModal\" data-whatever=\""+ n.hostname + "\">删除</button>" +
                             "</td>\n" +
                             "</tr>";
                         $("#hosts").append(tbBody);
@@ -216,5 +229,70 @@
 		$(document).ready(function(){
 			$.fn.zTree.init($("#treeDemo"), setting);
 		});
+
+	$('#myDelModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id_no = button.data('whatever');
+        var modal = $(this);
+        modal.find('#DEL').attr("value",id_no);
+    });
+
+	$("#DEL").click(function () {
+        var host_id = this.value;
+        $.ajax({
+            url: "{{ url_for('assets.delete') }}",
+            type: "post",
+            data: {"id":host_id},
+            success:function(data) {
+                if(data["flag"]==="success"){
+                    alert("删除成功");
+                    location.reload();
+                }
+                else alert("删除失败");
+            }
+        });
+    });
+
+	function multi_delete(){
+        var str=$("input[type='checkbox']:checked");
+        var objarray=str.length;
+        var hosts = "";
+        for (i=0;i<objarray;i++) {
+            if(str[i].checked === true) {
+                hosts+=str[i].value+",";
+            }
+        }
+        $.post("{{ url_for('assets.multi_delete') }}",
+            {
+                hosts: hosts
+            },
+            function (data) {
+                if(data==="success"){
+                    alert("删除成功");
+                    location.reload();
+                }
+                else alert("删除失败")
+            });
+    }
+
+    $("#slct_bulk_update").change(function() {
+        var checkText=$("#slct_bulk_update").find("option:selected").text();
+        $("#btn_bulk_update").empty();
+        if(checkText!=="选择") {
+            if(checkText==="批量删除"){
+                var content_de="<button type=\"button\" style=\"height: 32px;\" class=\"btn btn-sm btn-primary\" onclick='multi_delete()'>提交</button>";
+                $("#btn_bulk_update").append(content_de);
+            }
+            if(checkText==="批量更新"){
+                var content_ac="<button type=\"button\" style=\"height: 32px;\" class=\"btn btn-sm btn-primary\" onclick='active()'>提交</button>";
+                $("#btn_bulk_update").append(content_ac);
+            }
+        }else {
+            var content="<button type=\"button\" style=\"height: 32px;\" class=\"btn btn-sm btn-primary\">提交</button>";
+            $("#btn_bulk_update").append(content);
+        }
+
+    });
+
 </script>
 {% endblock %}

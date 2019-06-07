@@ -175,7 +175,7 @@ def change_user_status(user_list, status):
         for username in user_list:
             to_update = db.session.query(User).filter(User.username == username).one()
             to_update.status = status
-            db.session.commit()
+        db.session.commit()
         return "success"
     else:
         return "fail"

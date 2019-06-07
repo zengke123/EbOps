@@ -110,3 +110,37 @@ def dashboard():
     aix_nums = db.session.query(func.count('*').label("count")).filter(
         or_(Host.os_version.like("AIX%"), Host.os_version.like("aix%"))).all()
     return render_template('assets_dashboard.html', app="资产管理", action="资产统计",  **locals())
+
+
+# 删除设备
+@assets.route('/delete', methods=["GET", "POST"])
+@login_required
+def delete():
+    hostname = request.form.get('id')
+    try:
+        to_delete = Host.query.filter(Host.hostname == hostname).first()
+        db.session.delete(to_delete)
+        db.session.commit()
+        result = {"flag": "success"}
+    except Exception as e:
+        print(str(e))
+        result = {"flag": "fail"}
+    return jsonify(result)
+
+
+# 批量删除设备
+@assets.route('/multi_delete', methods=["GET", "POST"])
+@login_required
+def multi_delete():
+    _hosts = request.form.get('hosts')
+    _hosts_temp = _hosts.split(',')
+    # 去除checkbox选择的无效选项
+    _hosts_list = [x for x in _hosts_temp if x != '' and x != 'on']
+    if _hosts_list:
+        for hostname in _hosts_list:
+            to_delete = Host.query.filter(Host.hostname == hostname).first()
+            db.session.delete(to_delete)
+        db.session.commit()
+        return "success"
+    else:
+        return "fail"
