@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>创建资产</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+
+
+                    <form action="" method="post" class="form-horizontal">
+
+                    <!--input type="hidden" name="csrfmiddlewaretoken" value=""-->
+                    <h3>基本</h3>
+                    <div class="form-group required"><label class="col-md-2 control-label" for="id_platform">业务平台</label><div class="col-md-9"><input type="text" name="platform" value="{{ platform }}" maxlength="128" class="form-control" title="" required="" id="id_platform"></div></div>
+                     <div class="form-group required"><label class="col-md-2 control-label" for="id_cluster">集群名称</label><div class="col-md-9"><input type="text" name="cluster" value="{{ cluster }}" maxlength="128" class="form-control" title="" required="" id="id_cluster"></div></div>
+                    <div class="form-group required"><label class="col-md-2 control-label" for="id_hostname">主机名</label><div class="col-md-9"><input type="text" name="hostname" value="" maxlength="128" class="form-control" title="" required="" id="id_hostname"></div></div>
+
+
+
+
+
+                    <div class="hr-line-dashed"></div>
+                    <h3>软件信息</h3>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_local_ip">内网IP地址</label><div class="col-md-9"><input type="text" name="local_ip" value="" class="form-control" title="" id="id_local_ip"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_nat_ip">映射IP地址</label><div class="col-md-9"><input type="text" name="nat_ip" value="" class="form-control" title="" id="id_nat_ip"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_version">业务版本</label><div class="col-md-9"><input type="text" name="version" value="" maxlength="128" class="form-control" title="" id="id_version"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_software_version">软件模块版本</label><div class="col-md-9"><input type="text" name="software_version" value="" class="form-control" title="" id="id_software_version"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_os_version">操作系统</label><div class="col-md-9"><input type="text" name="os_version" value="" class="form-control" title="" id="id_os_version"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_account">账户</label><div class="col-md-9"><input type="text" name="account" value="" class="form-control" title="" id="id_account"></div></div>
+
+                    <div class="hr-line-dashed"></div>
+                    <h3>硬件信息</h3>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_device_type">设备类型</label><div class="col-md-9"><input type="text" name="device_type" value="" maxlength="128" class="form-control" title="" id="id_device_type"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_manufacturer">设备厂家</label><div class="col-md-9"><input type="text" name="manufacturer" value="" class="form-control" title="" id="id_manufacturer"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_device_model">设备型号</label><div class="col-md-9"><input type="text" name="device_model" value="" class="form-control" title="" id="id_device_model"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_serial">序列号</label><div class="col-md-9"><input type="text" name="serial" value="" class="form-control" title="" id="id_serial"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_power">功率</label><div class="col-md-9"><input type="text" name="power" value="" class="form-control" title="" id="id_power"></div></div>
+
+                    <div class="hr-line-dashed"></div>
+                    <h3>机房信息</h3>
+
+                    <div class="form-group required"><label class="col-md-2 control-label" for="id_engine_room">机房</label><div class="col-md-9"><input type="text" name="engine_room" value="" maxlength="128" class="form-control" title="" required="" id="id_engine_room"></div></div>
+                    <div class="form-group required"><label class="col-md-2 control-label" for="id_frame_number">机架</label><div class="col-md-9"><input type="text" name="frame_number" value="" class="form-control" title="" required="" id="id_frame_number"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_power_frame_number">电源柜</label><div class="col-md-9"><input type="text" name="power_frame_number" value="" class="form-control" title="" id="id_power_frame_number"></div></div>
+                    <div class="hr-line-dashed"></div>
+
+                    <h3>其它</h3>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_net_time">入网时间</label><div class="col-md-9"><input type="text" name="net_time" value="" class="form-control" title="" id="id_net_time"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_s_period">软件过保时间</label><div class="col-md-9"><input type="text" name="s_period" value="" class="form-control" title="" id="id_s_period"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_h_period">硬件过保时间</label><div class="col-md-9"><input type="text" name="h_period" value="" class="form-control" title="" id="id_h_period"></div></div>
+                    <div class="form-group required"><label class="col-md-2 control-label" for="id_status">状态</label><div class="col-md-9"><input type="text" name="status" value="" class="form-control" title="" id="id_status"></div></div>
+
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-2">
+                            <button class="btn btn-white" type="reset">重置</button>
+                            <button id="submit_button" class="btn btn-primary" type="submit">提交</button>
+                        </div>
+                    </div>
+
+                </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -112,6 +112,28 @@ def dashboard():
     return render_template('assets_dashboard.html', app="资产管理", action="资产统计",  **locals())
 
 
+# 添加设备
+@assets.route('/create', methods=["GET", "POST"])
+@login_required
+def create():
+    if request.method == "GET":
+        platform = request.args.get('platform', '')
+        cluster = request.args.get('cluster', '')
+        return render_template('assets_create.html', app="资产管理", action="创建资产",
+                               platform=platform, cluster=cluster)
+    elif request.method == "POST":
+        _host = request.form
+        host = _host.to_dict()
+        try:
+            add_host = Host(**host)
+            db.session.add(add_host)
+            db.session.commit()
+            info = "创建成功"
+        except Exception as e:
+            info = str(e)
+        return render_template('assets_success.html', app="资产管理", action="创建资产", info=info)
+
+
 # 删除设备
 @assets.route('/delete', methods=["GET", "POST"])
 @login_required

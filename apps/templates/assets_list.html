@@ -61,7 +61,7 @@
 
            <div class="mail-box-header">
                <div class="uc pull-left m-r-5">
-                   <a class="btn btn-sm btn-primary" id="check_nodes" href="#"> 创建资产 </a>
+                   <a class="btn btn-sm btn-primary" id="check_nodes" href="{{ url_for('assets.create') }}"> 创建资产 </a>
                </div>
 
                <div class="" style="float: right">
@@ -170,7 +170,12 @@
 
         function zTreeOnClick(event, treeId, treeNode) {
             $("#hosts").html("");
-            document.getElementById("check_nodes").setAttribute('href',"/check/" + treeNode.name);
+            pNode=treeNode.getParentNode();
+            if(pNode){
+                document.getElementById("check_nodes").setAttribute('href',"/assets/create?cluster=" + treeNode.name + '&&platform=' + pNode.name);
+            } else{
+                document.getElementById("check_nodes").setAttribute('href',"/assets/create?platform=" + treeNode.name);
+            }
             $.ajax({
                 url: "{{ url_for('assets.get_hosts') }}",
                 type: 'POST',
