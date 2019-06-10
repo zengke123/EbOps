@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% block custom_head_css_js %}
+<link rel="stylesheet" href="{{ url_for('static',filename='css/plugins/select2/select2.min.css') }}"/>
+{% endblock %}
+{% block content %}
+<div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>批量更新资产</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+
+                    <div class="ydxbd" id="formlists" style="display: block;">
+                        <p id="tags_p" class="mgl-5 c02">选择需要修改属性</p>
+                        <div class="tagBtnList">
+                            <a class="label label-primary" id="change_all" value="1">全选</a>
+                                 <a data-id="id_version" class="label label-default label-primary field-tag" value="1">业务版本</a>
+                                 <a data-id="id_software" class="label label-default label-primary field-tag" value="1">软件模块版本</a>
+                                 <a data-id="id_net_time" class="label label-default label-primary field-tag" value="1">入网时间</a>
+                                 <a data-id="id_s_period" class="label label-default label-primary field-tag" value="1">软件过保时间</a>
+                                 <a data-id="id_h_period" class="label label-default label-primary field-tag" value="1">硬件过保时间</a>
+                                 <a data-id="id_status" class="label label-default label-primary field-tag" value="1">状态</a>
+                        </div>
+                    </div>
+                    <form method="post" class="form-horizontal" id="add_form">
+<!--                        <input type="hidden" name="csrfmiddlewaretoken" value="TsaDXZPjar2iCDtPUNWCYWpDu6ipbHlocXkwwHSjzpVC3ShA02Tegnr6yqFJBrrK">-->
+                        <div class="form-group required"><label class="col-md-2 control-label" for="id_assets">选择资产</label>
+                            <div class="col-md-9">
+                                <span class="select2 select2-container select2-container--default" dir="ltr" style="width: 917px;">
+                                    <span class="selection">
+                                        <span class="select2-selection select2-selection--multiple" role="combobox" aria-haspopup="true" aria-expanded="false" title="" tabindex="-1">
+                                            <ul class="select2-selection__rendered">
+                                                {% for host in hosts %}
+                                                <li class="select2-selection__choice">{{ host }}</li>
+                                                {% endfor %}
+
+                                                <li class="select2-search select2-search--inline">
+                                                <input class="select2-search__field" type="search" tabindex="0" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="textbox" aria-autocomplete="list" placeholder="" style="width: 0.75em;"></li>
+                                            </ul>
+                                        </span>
+                                    </span>
+                                    <span class="dropdown-wrapper" aria-hidden="true"></span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group"><label class="col-md-2 control-label" for="id_version">业务版本</label><div class="col-md-9"><input  type="text" name="version" value="" class="form-control" title="" id="id_version"></div></div>
+                        <div class="form-group"><label class="col-md-2 control-label" for="id_software">软件模块版本</label><div class="col-md-9"><input type="text" name="software_version" value="" class="form-control" title="" id="id_software"></div></div>
+                        <div class="form-group"><label class="col-md-2 control-label" for="id_net_time">入网时间</label><div class="col-md-9"><input type="date" name="net_time" value="" class="form-control" title="" id="id_net_time"></div></div>
+                        <div class="form-group"><label class="col-md-2 control-label" for="id_s_period">软件过保时间</label><div class="col-md-9"><input type="date" name="s_period" value="" class="form-control" title="" id="id_s_period"></div></div>
+                        <div class="form-group"><label class="col-md-2 control-label" for="id_h_period">硬件过保时间</label><div class="col-md-9"><input type="date" name="h_period" value="" class="form-control" title="" id="id_h_period"></div></div>
+
+
+                        <div class="form-group"><label class="col-md-2 control-label" for="id_status">状态</label>
+                            <div class="col-md-9">
+                            <select name="status" class="form-control" title="" id="id_status">
+                              <option value="在网" selected="">在网</option>
+                              <option value="退网">退网</option>
+                            </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group abc">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <button class="btn btn-white" type="reset">重置</button>
+                                <button class="btn btn-primary" type="submit">提交</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block custom_foot_js %}
+<script>
+    $(document).ready(function () {
+        $('.select2').select2();
+    }).on('click', '.field-tag', function() {
+        changeField(this);
+    }).on('click', '#change_all', function () {
+        var tag_fields = $('.field-tag');
+        var $this = $(this);
+        var active = '1';
+        if ($this.attr('value') == '0'){
+            active = '0';
+            $this.attr('value', '1').addClass('label-primary')
+        } else {
+            active = '1';
+            $this.attr('value', '0').removeClass('label-primary')
+        }
+        $.each(tag_fields, function (k, v) {
+            changeField(v, active)
+        })
+    });
+
+    function changeField(obj, active) {
+        var $this = $(obj);
+        var field_id = $this.data('id');
+        if (!active) {
+            active = $this.attr('value');
+        }
+        if (active == '0') {
+            $this.attr('value', '1').addClass('label-primary');
+            var form_groups = $('#add_form .form-group:not(.abc)');
+            form_groups.filter(':has(#'  + field_id + ')').show().find('select,input').prop('disabled', false)
+        } else {
+            $this.attr('value', '0').removeClass('label-primary');
+            var form_groups = $('#add_form .form-group:not(.abc)');
+            form_groups.filter(':has(#'  + field_id + ')').hide().find('select,input').prop('disabled', true)
+        }
+    }
+</script>
+{% endblock %}

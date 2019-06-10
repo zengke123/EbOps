@@ -2,7 +2,7 @@ from . import assets
 from .. import db
 from ..models import Host
 from sqlalchemy import distinct, func, or_
-from flask import jsonify, render_template, request
+from flask import jsonify, render_template, request, redirect, url_for, g
 from flask_login import login_required
 
 
@@ -26,10 +26,10 @@ def update_host_info(hostname):
         try:
             db.session.query(Host).filter(Host.hostname == hostname).update(m_host)
             db.session.commit()
-            return "success"
+            return render_template('assets_success.html', app="资产管理", action="资产更新", info='更新成功')
         except Exception as e:
             print(str(e))
-            return "fail"
+            return render_template('assets_success.html', app="资产管理", action="资产更新", info='更新失败')
 
 
 # 按业务平台分类获取节点信息
@@ -47,7 +47,8 @@ def get_nodes():
         # 二级节点
         childrens = [{'name': cluster} for cluster in clusters]
         p1_data = {
-            'name': node + " ({})".format(len(clusters)),
+            # 'name': node + " ({})".format(len(clusters)),
+            'name': node,
             'open': 'true' if i == 0 else 'false',
             'children': childrens
         }
@@ -112,7 +113,7 @@ def dashboard():
     return render_template('assets_dashboard.html', app="资产管理", action="资产统计",  **locals())
 
 
-# 添加设备
+# 创建资产
 @assets.route('/create', methods=["GET", "POST"])
 @login_required
 def create():
@@ -166,3 +167,38 @@ def multi_delete():
         return "success"
     else:
         return "fail"
+
+
+# 全局缓存字典，临时存放变量
+assets_cache = {}
+# 资产批量更新
+@assets.route('/multi_update', methods=["GET", "POST"])
+@login_required
+def multi_update():
+    if request.method == "GET":
+        _hosts = request.args.get('hosts')
+        _hosts_temp = _hosts.split(',')
+        # 去除checkbox选择的无效选项
+        _hosts_list = [x for x in _hosts_temp if x != '' and x != 'on']
+        if _hosts_list:
+            assets_cache['hosts'] = _hosts_list
+            return render_template('assets_multi_update.html', app="资产管理", action="资产更新", hosts=_hosts_list)
+        else:
+            return redirect(url_for('assets.asset'))
+    elif request.method == "POST":
+        hosts = assets_cache.get('hosts')
+        # 清空
+        assets_cache['hosts'] = None
+        _update_datas = request.form.to_dict()
+        update_datas = {k: v for k, v in _update_datas.items() if v}
+        for host in hosts:
+            db.session.query(Host).filter(Host.hostname == host).update(update_datas)
+        db.session.commit()
+        return render_template('assets_success.html', app="资产管理", action="资产更新", info='更新成功')
+
+
+# 资产查询
+@assets.route('/query', methods=["GET", "POST"])
+@login_required
+def query():
+    return render_template('assets_query.html', app="资产管理", action="资产查询")

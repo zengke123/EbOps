@@ -289,7 +289,15 @@
                 $("#btn_bulk_update").append(content_de);
             }
             if(checkText==="批量更新"){
-                var content_ac="<button type=\"button\" style=\"height: 32px;\" class=\"btn btn-sm btn-primary\" onclick='active()'>提交</button>";
+                var str=$("input[type='checkbox']:checked");
+                var objarray=str.length;
+                var hosts = "";
+                for (i=0;i<objarray;i++) {
+                    if(str[i].checked === true) {
+                        hosts+=str[i].value+",";
+                    }
+                }
+                var content_ac="<a type=\"button\" style=\"height: 32px;\" class=\"btn btn-sm btn-primary\" href=\'/assets/multi_update?hosts=" + hosts +"\'>提交</a>";
                 $("#btn_bulk_update").append(content_ac);
             }
         }else {

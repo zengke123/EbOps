@@ -60,10 +60,25 @@
                     <div class="hr-line-dashed"></div>
 
                     <h3>其它</h3>
-                    <div class="form-group"><label class="col-md-2 control-label" for="id_net_time">入网时间</label><div class="col-md-9"><input type="text" name="net_time" value="{{ host.net_time }}" class="form-control" title="" id="id_net_time"></div></div>
-                    <div class="form-group"><label class="col-md-2 control-label" for="id_s_period">软件过保时间</label><div class="col-md-9"><input type="text" name="s_period" value="{{ host.s_period }}" class="form-control" title="" id="id_s_period"></div></div>
-                    <div class="form-group"><label class="col-md-2 control-label" for="id_h_period">硬件过保时间</label><div class="col-md-9"><input type="text" name="h_period" value="{{ host.h_period }}" class="form-control" title="" id="id_h_period"></div></div>
-                    <div class="form-group required"><label class="col-md-2 control-label" for="id_status">状态</label><div class="col-md-9"><input type="text" name="status" value="{{ host.status }}" class="form-control" title="" id="id_status"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_net_time">入网时间</label><div class="col-md-9"><input type="date" name="net_time" value="{{ host.net_time }}" class="form-control" title="" id="id_net_time"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_s_period">软件过保时间</label><div class="col-md-9"><input type="date" name="s_period" value="{{ host.s_period }}" class="form-control" title="" id="id_s_period"></div></div>
+                    <div class="form-group"><label class="col-md-2 control-label" for="id_h_period">硬件过保时间</label><div class="col-md-9"><input type="date" name="h_period" value="{{ host.h_period }}" class="form-control" title="" id="id_h_period"></div></div>
+                    <div class="form-group required"><label class="col-md-2 control-label" for="id_status">状态</label>
+                        <div class="col-md-9">
+                            <select name="status" class="form-control" title="" id="id_status">
+                              {% if host.status == "在网" %}
+                              <option value="在网" selected="selected">在网</option>
+                              <option value="退网">退网</option>
+                              {% elif host.status == "退网" %}
+                              <option value="在网">在网</option>
+                              <option value="退网" selected="selected">退网</option>
+                              {% else %}
+                              <option value="在网" selected="">在网</option>
+                              <option value="退网" selected="">退网</option>
+                              {% endif %}
+                            </select>
+                            </div>
+                        </div>
 
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
