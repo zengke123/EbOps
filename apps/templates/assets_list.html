@@ -66,7 +66,7 @@
 
                <div class="" style="float: right">
                    <div class=" btn-group">
-                        <button data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle">CSV <span class="caret"></span></button>
+                        <button data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle">EXCEL <span class="caret"></span></button>
                         <ul class="dropdown-menu">
                             <li>
                                 <a class=" btn_export" tabindex="0">
@@ -171,12 +171,12 @@
 
     <form method="post" id="fm_import">
         <div class="form-group">
-            <label class="control-label">下载导入的模板或使用导出的csv格式</label>
+            <label class="control-label">下载导入的模板或使用导出的xlsx格式</label>
             <a href="{{ url_for('assets.down_templates') }}" style="display: block">下载导入模版</a>
         </div>
 
         <div class="form-group">
-            <label class="control-label" for="id_file">请选择csv文件导入</label>
+            <label class="control-label" for="id_file">请选择Excel文件导入</label>
             <input id="id_file" type="file" name="file">
         </div>
     </form>
@@ -365,6 +365,22 @@
         }
       });
     })
+
+    show = 0;
+    function toggle() {
+        if (show === 0) {
+            $("#split-left").hide(500, function () {
+                $("#split-right").attr("class", "col-lg-12");
+                $("#toggle-icon").attr("class", "fa fa-angle-right fa-x");
+                show = 1;
+            });
+        } else {
+            $("#split-right").attr("class", "col-lg-9");
+            $("#toggle-icon").attr("class", "fa fa-angle-left fa-x");
+            $("#split-left").show(500);
+            show = 0;
+        }
+    }
 
 </script>
 {% endblock %}

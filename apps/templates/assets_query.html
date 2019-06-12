@@ -1,6 +1,222 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-3" id="split-left" style="padding-left: 3px">
+            <form id="OSMNRForm" name="OSMNRForm" method="post" enctype="multipart/form-data">
+        <div class="container-fluid">
+        <div class="row-fluid">
+        <div class="span12">
+        <table class="table table-hover">
+        	<tbody>
+        	<tr>
+            <td>
+            <select id="value1" name="fieldvalue" class="form-control" onchange="">
+            <option value="">选择平台</option>
+
+                <option value="">CSP</option>
+
+                <option value="">CTD</option>
+
+                <option value="">CTX</option>
+
+                <option value="">INSA</option>
+
+                <option value="">OMS</option>
+
+                <option value="">SAP</option>
+
+                <option value="">SCP</option>
+
+                <option value="">SCPAS</option>
+
+                <option value="">SICP</option>
+
+                <option value="">SMP</option>
+
+                <option value="">VC</option>
+
+                <option value="">volte彩铃</option>
+
+                <option value="">VSS</option>
+
+                <option value="">咪咕</option>
+
+                <option value="">彩印</option>
+
+                <option value="">彩宣</option>
+
+                <option value="">彩铃</option>
+
+                <option value="">来电提醒</option>
+
+                <option value="">视频彩铃</option>
+
+                <option value="">集中备份</option>
+
+            </select>
+            <input type="hidden" id="fieldvalue1" name="fieldvalue1" size="0" value="">
+            </td>
+          </tr>
+          <tr>
+	            <td>
+	            <select id="value2" name="fieldvalue" class="form-control" onchange=""><option value="">选择机房</option><option value="">高新西区二枢纽3楼301机房</option><option value="">成都多媒体呼叫中心3楼综合机房</option></select>
+	            <input type="hidden" id="fieldvalue2" name="fieldvalue2" size="0" value="">
+	            </td>
+          </tr>
+          <tr>
+          	<td>
+            <select id="value3" name="fieldvalue" class="form-control" onchange=""><option value="">选择网元</option><option value="">LDTX2</option><option value="">LDTX1</option></select>
+            <input type="hidden" id="fieldvalue3" name="fieldvalue3" size="0" value="">
+            </td>
+
+          </tr>
+
+        	<tr>
+            <td>
+            <select id="value4" name="fieldvalue" class="form-control" onchange="">
+            <option value="">选择设备类型</option>
+
+                <option value="">小型机</option>
+
+                <option value="">磁带机</option>
+
+                <option value="">存储设备</option>
+
+                <option value="">存储光纤交换机</option>
+
+                <option value="">交换机</option>
+
+                <option value="">KVM</option>
+
+                <option value="">东信OMS</option>
+
+                <option value="">IPS</option>
+
+                <option value="">防火墙</option>
+
+                <option value="">服务器</option>
+
+                <option value="">负载均衡器</option>
+
+                <option value="">刀片服务器</option>
+
+                <option value="">网络设备</option>
+
+                <option value=""> </option>
+
+            </select>
+            <input type="hidden" id="fieldvalue4" name="fieldvalue4" size="0" value="">
+            </td>
+        	</tr>
+   				</tbody>
+   			</table>
+        </div>
+        </div>
+        </div>
+      </form>
+        </div>
+        <div class="col-lg-9 animated fadeInRight" id="split-right">
+           <div class="tree-toggle">
+               <div class="btn btn-sm btn-primary tree-toggle-btn" onclick="toggle()">
+                   <i class="fa fa-angle-left fa-x" id="toggle-icon"></i>
+               </div>
+           </div>
 
 
+           <div class="mail-box-header">
+               <div class="uc pull-left m-r-5">
+                   <a class="btn btn-sm btn-primary" id="check_nodes" href="#"> 查询 </a>
+               </div>
+
+               <div class="" style="float: right">
+                   <div class=" btn-group">
+                        <button data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle">EXCEL <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class=" btn_export" tabindex="0">
+                                <span>导出</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class=" btn_import" data-toggle="modal" data-target="#import_modal" tabindex="0">
+                                <span>导入</span>
+                                </a>
+                            </li>
+                        </ul>
+                   </div>
+               </div>
+
+               <div id="asset_list_table_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+               <div id="uc" class="pull-left"></div>
+               <div id="asset_list_table_filter" class="dataTables_filter"><label>搜索<input type="search" class="form-control input-sm" placeholder="" aria-controls="asset_list_table"></label></div>
+
+               <table class="table table-striped table-bordered table-hover dataTable no-footer" id="asset_list_table" style="width: 100%;" role="grid">
+               <thead>
+                   <tr role="row">
+                       <th class="text-center"><input type="checkbox" class="ipt_check_all"></th>
+                       <th class="text-center">主机名</th>
+                       <th class="text-center">IP</th>
+                       <th class="text-center">设备类型</th>
+                       <th class="text-center">机房</th>
+                       <th class="text-center">机架</th>
+                       <th class="text-center">动作</th></tr>
+               </thead>
+               <tbody id="hosts">
+
+               </tbody>
+               </table>
+
+
+               <div id="asset_list_table_processing" class="dataTables_processing panel panel-default" style="display: none;">加载中 ...</div>
+               <div class="row m-t">
+                   <div class="col-md-8">
+                       <div id="op" class="col-md-6">
+                           <div class="input-group">
+                               <select class="form-control m-b" style="width: auto" id="slct_bulk_update">
+                                    <option >选择类型</option>
+                                    <option value="delete">批量删除</option>
+                                    <option value="update">批量更新</option>
+                               </select>
+                                <div class="input-group-btn pull-left" style="padding-left: 5px;" id="btn_bulk_update">
+                                    <button style="height: 32px;" class="btn btn-sm btn-primary">提交</button>
+                                </div>
+                            </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block custom_foot_js %}
+<script type="text/javascript">
+    $('.ipt_check_all').on('click', function() {
+      if ($(this).prop("checked")) {
+          $(this).closest('table').find('.ipt_check').prop('checked', true);
+      } else {
+          $(this).closest('table').find('.ipt_check').prop('checked', false);
+      }
+    });
+
+    function toggle() {
+    if (show === 0) {
+        $("#split-left").hide(500, function () {
+            $("#split-right").attr("class", "col-lg-12");
+            $("#toggle-icon").attr("class", "fa fa-angle-right fa-x");
+            show = 1;
+        });
+    } else {
+        $("#split-right").attr("class", "col-lg-9");
+        $("#toggle-icon").attr("class", "fa fa-angle-left fa-x");
+        $("#split-left").show(500);
+        show = 0;
+    }
+}
+
+</script>
 {% endblock %}
