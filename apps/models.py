@@ -138,9 +138,9 @@ class Host(db.Model):
     engine_room = db.Column(db.String(64))
     frame_number = db.Column(db.String(32))
     power_frame_number = db.Column(db.String(32))
-    net_time = db.Column(db.Date)
-    s_period = db.Column(db.Date)
-    h_period = db.Column(db.Date)
+    net_time = db.Column(db.Date, default='2000-01-01')
+    s_period = db.Column(db.Date, default='2000-01-01')
+    h_period = db.Column(db.Date, default='2000-01-01')
     power = db.Column(db.String(32))
     status = db.Column(db.String(32))
 

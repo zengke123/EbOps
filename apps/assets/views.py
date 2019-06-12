@@ -2,8 +2,10 @@ from . import assets
 from .. import db
 from ..models import Host
 from sqlalchemy import distinct, func, or_
-from flask import jsonify, render_template, request, redirect, url_for, g
+from flask import jsonify, render_template, request, redirect, url_for, send_from_directory
 from flask_login import login_required
+from werkzeug.utils import secure_filename
+from .settings import ALLOWED_EXTENSIONS, UPLOAD_FOLDER, TEMPLATE_FOLDER
 
 
 # 主机详细信息
@@ -118,11 +120,13 @@ def dashboard():
 @login_required
 def create():
     if request.method == "GET":
+        # 获取platform cluster参数值，作为创建资产的默认值
         platform = request.args.get('platform', '')
         cluster = request.args.get('cluster', '')
         return render_template('assets_create.html', app="资产管理", action="创建资产",
                                platform=platform, cluster=cluster)
     elif request.method == "POST":
+        # 获取提交的表单数据，转为dict
         _host = request.form
         host = _host.to_dict()
         try:
@@ -202,3 +206,84 @@ def multi_update():
 @login_required
 def query():
     return render_template('assets_query.html', app="资产管理", action="资产查询")
+
+
+# 资产导入模板允许文件
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+# 下载导入资产的模板
+@assets.route('/down_templates')
+@login_required
+def down_templates():
+    filename = 'asset_data.xlsx'
+    return send_from_directory(TEMPLATE_FOLDER, filename=filename, as_attachment=True)
+
+
+# 导入资产
+@assets.route('/fm_import', methods=["GET", "POST"])
+@login_required
+def fm_import():
+    import os
+    if request.method == 'POST':
+        # 请求中无文件
+        if 'file' not in request.files:
+            return jsonify({'flag': 'fail', 'msg': '上传文件失败'})
+        file = request.files['file']
+        # 文件名为空
+        if file.filename == '':
+            return jsonify({'flag': 'fail', 'msg': '文件名错误'})
+        # 文件符合要求
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(UPLOAD_FOLDER, filename))
+            # 调用入库函数
+            nums = load_to_db(UPLOAD_FOLDER + filename)
+            return jsonify({'flag': 'success', 'msg': '导入成功' + str(nums)})
+        else:
+            return jsonify({'flag': 'fail', 'msg': '上传文件格式错误'})
+
+
+# 导入资产入库
+def load_to_db(filename):
+    from openpyxl import load_workbook
+    nums = 0
+    # 与数据中字段一致
+    host_names = ["platform", "cluster", "hostname", "device_type", "manufacturer", "device_model", "serial",
+                  "account", "version", "software_version", "local_ip", "nat_ip", "os_version", "engine_room",
+                  "frame_number", "power_frame_number", "net_time", "s_period", "h_period", "power", "status"]
+    infos = {
+        "cols": host_names,
+        "sheet": "asset_data"
+        }
+    try:
+        wb = load_workbook(filename)
+        # 读取导入excel文件中的sheet表
+        ws = wb[infos.get("sheet")]
+        # 获取列数
+        cols = len(infos.get("cols"))
+        # 获取行数
+        rows = ws.max_row
+        dbs = []
+        # 读取excel中每行数据，构造成dict, 方便入库
+        for i in range(2, rows + 1):
+            data = []
+            for j in range(1, cols + 1):
+                value = ws.cell(i, j).value
+                if not value:
+                    value = ""
+                data.append(value)
+            item = {k: v for k, v in zip(infos.get("cols"), data)}
+            dbs.append(Host(**item))
+        # 批量添加
+        db.session.add_all(dbs)
+        db.session.commit()
+        nums = len(dbs)
+    except Exception as e:
+        print(str(e))
+    finally:
+        # 最后删除上传的文件
+        import os
+        os.remove(filename)
+    return nums
