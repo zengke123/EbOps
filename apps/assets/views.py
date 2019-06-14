@@ -5,7 +5,7 @@ from sqlalchemy import distinct, func, or_
 from flask import jsonify, render_template, request, redirect, url_for, send_from_directory
 from flask_login import login_required
 from werkzeug.utils import secure_filename
-from .settings import ALLOWED_EXTENSIONS, UPLOAD_FOLDER, TEMPLATE_FOLDER
+from .settings import ALLOWED_EXTENSIONS, UPLOAD_FOLDER, TEMPLATE_FOLDER, DOWNLOAD_FOLDER
 
 
 # 主机详细信息
@@ -201,13 +201,6 @@ def multi_update():
         return render_template('assets_success.html', app="资产管理", action="资产更新", info='更新成功')
 
 
-# 资产查询
-@assets.route('/query', methods=["GET", "POST"])
-@login_required
-def query():
-    return render_template('assets_query.html', app="资产管理", action="资产查询")
-
-
 # 资产导入模板允许文件
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -287,3 +280,95 @@ def load_to_db(filename):
         import os
         os.remove(filename)
     return nums
+
+# 导出结果
+@assets.route('/unload', methods=["GET", "POST"])
+@login_required
+def unload_excel():
+    import json, datetime, os, pandas
+    # 清空目录
+    try:
+        filelist = os.listdir(DOWNLOAD_FOLDER)
+        for file in filelist:
+            os.remove(DOWNLOAD_FOLDER+file)
+    except Exception as e:
+        print(str(e))
+    temp = request.form.get('data')
+    if temp:
+        # 需转为json, 不然读取时为字符串
+        data_list = json.loads(temp)
+        datas = []
+        for x in data_list:
+            if x[-1] == "动作"or x[-1] == "更新\n删除":
+                datas.append(x[1:-1])
+            else:
+                datas.append(x)
+        filename = datetime.datetime.now().strftime("%Y%m%d%H%M%S") + ".xlsx"
+        # 转成pandas  DataFrame格式
+        df = pandas.DataFrame(datas[1:], columns=datas[0])
+        # 导出excel
+        df.to_excel(DOWNLOAD_FOLDER + filename, index=True)
+        # 返回生成的excel文件名
+        result = {
+            "flag": "success",
+            "file": filename
+        }
+    else:
+        result = {"flag": "fail",
+                  "file": ""
+                  }
+    return jsonify(result)
+
+
+# 下载导出的文件
+@assets.route('/download/<filename>')
+@login_required
+def download_file(filename):
+    return send_from_directory(DOWNLOAD_FOLDER, filename=filename, as_attachment=True)
+
+
+# 资产查询
+@assets.route('/query', methods=["GET", "POST"])
+@login_required
+def query():
+    platforms = db.session.query(distinct(Host.platform)).all()
+    device_types = db.session.query(distinct(Host.device_type)).all()
+    engine_rooms = db.session.query(distinct(Host.engine_room)).all()
+    clusters = db.session.query(distinct(Host.cluster)).all()
+    platform = [x[0] for x in platforms]
+    device_type = [x[0] for x in device_types]
+    engine_room = [x[0] for x in engine_rooms]
+    cluster = [x[0] for x in clusters]
+    return render_template('assets_query.html', app="资产管理", action="资产查询",
+                           platform=platform, device_type=device_type, engine_room=engine_room, cluster=cluster)
+
+# 返回查询结果
+@assets.route('/get_query_hosts', methods=["GET", "POST"])
+@login_required
+def get_query_hosts():
+    temp = ["选择平台", "选择机房", "选择网元", "选择设备类型"]
+    pt = request.form.get('pt')
+    jf = request.form.get('jf')
+    jq = request.form.get('jq')
+    lx = request.form.get('lx', '')
+    # 构造查询条件
+    kw_temp = {
+        "platform": pt if pt and pt not in temp else None,
+        "engine_room": jf if jf and jf not in temp else None,
+        "cluster": jq if jq and jq not in temp else None,
+        "device_type": lx if lx and lx not in temp else None
+    }
+    # 去除查询条件为 None 的选项
+    kw = {k: v for k, v in kw_temp.items() if v}
+    # 查询结果
+    hosts = db.session.query(Host).filter_by(**kw).all()
+    datas = []
+    # host数据转成json类型，前端解析
+    for host in hosts:
+        datas.append(host.to_json())
+    result = {
+        "flag": "success",
+        "hosts": datas,
+        "counts": len(datas)
+    }
+    return jsonify(result)

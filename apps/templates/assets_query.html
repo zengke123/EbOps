@@ -2,193 +2,219 @@
 {% block content %}
 
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-        <div class="col-lg-3" id="split-left" style="padding-left: 3px">
-            <form id="OSMNRForm" name="OSMNRForm" method="post" enctype="multipart/form-data">
-        <div class="container-fluid">
-        <div class="row-fluid">
-        <div class="span12">
-        <table class="table table-hover">
-        	<tbody>
-        	<tr>
-            <td>
-            <select id="value1" name="fieldvalue" class="form-control" onchange="">
-            <option value="">选择平台</option>
+	<div class="row">
+		<div class="col-lg-3" id="split-left" style="padding-left: 3px">
+			<div class="ibox float-e-margins">
+				<div class="ibox-content mailbox-content" style="padding-top: 0;padding-left: 1px">
+					<div class="file-manager ">
+						<form id="OSMNRForm" name="OSMNRForm">
+							<div class="container-fluid">
+								<div class="row-fluid">
+									<div class="span12">
+										<table class="table table-hover">
+											<tbody>
+												<tr>
+													<td>
+														<select id="value1" name="platform" class="form-control" onchange="">
+															<option value="">选择平台</option>
+											            	{% for pt in platform %}
+															<option value="">{{ pt }}</option>
+            												{% endfor %}
+														</select>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<select id="value2" name="engine_room" class="form-control" onchange="">
+															<option value="">选择机房</option>
+															{% for room in engine_room %}
+															<option value="">{{ room }}</option>
+            												{% endfor %}
+														</select>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<select id="value3" name="cluster" class="form-control" onchange="">
+															<option value="">选择网元</option>
+															{% for c in cluster %}
+															<option value="">{{ c }}</option>
+            												{% endfor %}
+														</select>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<select id="value4" name="device_type" class="form-control" onchange="">
+															<option value="">选择设备类型</option>
+															{% for d_type in device_type %}
+															 <option value="">{{ d_type }}</option>
+															{% endfor %}
+														</select>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+                                        <button class="btn btn-block btn-primary compose-mail" type="button" onclick="query()">查找</button>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
 
-                <option value="">CSP</option>
+		<div class="col-lg-9 animated fadeInRight" id="split-right">
+			<div class="tree-toggle">
+				<div class="btn btn-sm btn-primary tree-toggle-btn" onclick="toggle()">
+					<i class="fa fa-angle-left fa-x" id="toggle-icon"></i>
+				</div>
+			</div>
 
-                <option value="">CTD</option>
+			<div class="mail-box-header">
+				<form method="get" action="index.html" class="pull-right mail-search">
+					<div class="input-group">
+						<input type="text" class="form-control input-sm" name="search" placeholder="主机/集群">
+						<div class="input-group-btn">
+							<button type="submit" class="btn btn-sm btn-warning">
+								搜索
+							</button>
+						</div>
+					</div>
+				</form>
+				<h2>
+					查询结果
+				</h2>
+				<div class="mail-tools tooltip-demo m-t-md">
+					<button class="btn btn-white btn-sm text-success" id="counts"></button>
+					<div class="btn-group pull-right">
+						<button data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle">EXCEL <span class="caret"></span></button>
+						<ul class="dropdown-menu">
+							<li>
+								<a class=" btn_export" tabindex="0">
+									<span>导出</span>
+								</a>
+							</li>
+							<li>
+								<a class=" btn_import" data-toggle="modal" data-target="#import_modal" tabindex="0">
+									<span>导入</span>
+								</a>
+							</li>
+						</ul>
+					</div>
 
-                <option value="">CTX</option>
+					<div class="mail-box">
+						<table class="table table-striped table-bordered table-hover dataTable no-footer" id="asset_list_table" style="width: 100%;"
+						 role="grid">
+							<thead>
+								<tr role="row">
+									<th class="text-center"><input type="checkbox" class="ipt_check_all"></th>
+									<th class="text-center" style="display:none">平台</th>
+									<th class="text-center" style="display:none">集群名称</th>
+									<th class="text-center">主机名</th>
+									<th class="text-center" style="display:none">账户</th>
+									<th class="text-center" style="display:none">业务版本</th>
+									<th class="text-center" style="display:none">软件模块版本号</th>
+									<th class="text-center">IP</th>
+									<th class="text-center" style="display:none">映射IP地址</th>
+									<th class="text-center" style="display:none">操作系统版本</th>
+									<th class="text-center">设备类型</th>
+									<th class="text-center" style="display:none">设备厂家</th>
+									<th class="text-center" style="display:none">设备型号</th>
+									<th class="text-center" style="display:none">序列号</th>
+									<th class="text-center">机房</th>
+									<th class="text-center">机架</th>
+									<th class="text-center" style="display:none">电源柜</th>
+									<th class="text-center" style="display:none">入网时间</th>
+									<th class="text-center" style="display:none">软件过保时间</th>
+									<th class="text-center" style="display:none">硬件过保时间</th>
+									<th class="text-center" style="display:none">功率</th>
+									<th class="text-center" style="display:none">状态</th>
+									<th class="text-center">动作</th>
+								</tr>
+							</thead>
+							<tbody id="hosts">
 
-                <option value="">INSA</option>
+							</tbody>
+						</table>
 
-                <option value="">OMS</option>
+						<div id="asset_list_table_processing" class="dataTables_processing panel panel-default" style="display: none;">加载中
+							...</div>
+						<div class="row m-t">
+							<div class="col-md-8">
+								<div id="op" class="col-md-6">
+									<div class="input-group">
+										<select class="form-control m-b" style="width: auto" id="slct_bulk_update">
+											<option>选择类型</option>
+											<option value="delete">批量删除</option>
+											<option value="update">批量更新</option>
+										</select>
+										<div class="input-group-btn pull-left" style="padding-left: 5px;" id="btn_bulk_update">
+											<button style="height: 32px;" class="btn btn-sm btn-primary">提交</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="myDelModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        确定删除该设备
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">否</button>
+        <button type="button" class="btn btn-primary" id="DEL" data-dismiss="modal">是</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-                <option value="">SAP</option>
+<div aria-hidden="true" role="dialog" id="import_modal" class="modal inmodal">
+    <div class="modal-dialog ">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button data-dismiss="modal" id="close_button1" class="close close_btn1 " type="button"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">导入资产</h4>
+                <small></small>
+            </div>
 
-                <option value="">SCP</option>
+            <div class="modal-body">
 
-                <option value="">SCPAS</option>
-
-                <option value="">SICP</option>
-
-                <option value="">SMP</option>
-
-                <option value="">VC</option>
-
-                <option value="">volte彩铃</option>
-
-                <option value="">VSS</option>
-
-                <option value="">咪咕</option>
-
-                <option value="">彩印</option>
-
-                <option value="">彩宣</option>
-
-                <option value="">彩铃</option>
-
-                <option value="">来电提醒</option>
-
-                <option value="">视频彩铃</option>
-
-                <option value="">集中备份</option>
-
-            </select>
-            <input type="hidden" id="fieldvalue1" name="fieldvalue1" size="0" value="">
-            </td>
-          </tr>
-          <tr>
-	            <td>
-	            <select id="value2" name="fieldvalue" class="form-control" onchange=""><option value="">选择机房</option><option value="">高新西区二枢纽3楼301机房</option><option value="">成都多媒体呼叫中心3楼综合机房</option></select>
-	            <input type="hidden" id="fieldvalue2" name="fieldvalue2" size="0" value="">
-	            </td>
-          </tr>
-          <tr>
-          	<td>
-            <select id="value3" name="fieldvalue" class="form-control" onchange=""><option value="">选择网元</option><option value="">LDTX2</option><option value="">LDTX1</option></select>
-            <input type="hidden" id="fieldvalue3" name="fieldvalue3" size="0" value="">
-            </td>
-
-          </tr>
-
-        	<tr>
-            <td>
-            <select id="value4" name="fieldvalue" class="form-control" onchange="">
-            <option value="">选择设备类型</option>
-
-                <option value="">小型机</option>
-
-                <option value="">磁带机</option>
-
-                <option value="">存储设备</option>
-
-                <option value="">存储光纤交换机</option>
-
-                <option value="">交换机</option>
-
-                <option value="">KVM</option>
-
-                <option value="">东信OMS</option>
-
-                <option value="">IPS</option>
-
-                <option value="">防火墙</option>
-
-                <option value="">服务器</option>
-
-                <option value="">负载均衡器</option>
-
-                <option value="">刀片服务器</option>
-
-                <option value="">网络设备</option>
-
-                <option value=""> </option>
-
-            </select>
-            <input type="hidden" id="fieldvalue4" name="fieldvalue4" size="0" value="">
-            </td>
-        	</tr>
-   				</tbody>
-   			</table>
+    <form method="post" id="fm_import">
+        <div class="form-group">
+            <label class="control-label">下载导入的模板或使用导出的xlsx格式</label>
+            <a href="{{ url_for('assets.down_templates') }}" style="display: block">下载导入模版</a>
         </div>
+
+        <div class="form-group">
+            <label class="control-label" for="id_file">请选择Excel文件导入</label>
+            <input id="id_file" type="file" name="file">
         </div>
+    </form>
+
+    <div>
+        <p class="text-success" id="success_created"></p>
+        <p id="success_created_detail"></p>
+        <p class="text-danger" id="created_failed"></p>
+        <p id="created_failed_detail"></p>
+    </div>
+
+            </div>
+            <div class="modal-footer">
+
+              <button id="close_button2" data-dismiss="modal" class="btn btn-white close_btn2" type="button">关闭</button>
+              <button class="btn btn-primary" type="button" id="btn_import_confirm">确认</button>
+
+            </div>
         </div>
-      </form>
-        </div>
-        <div class="col-lg-9 animated fadeInRight" id="split-right">
-           <div class="tree-toggle">
-               <div class="btn btn-sm btn-primary tree-toggle-btn" onclick="toggle()">
-                   <i class="fa fa-angle-left fa-x" id="toggle-icon"></i>
-               </div>
-           </div>
-
-
-           <div class="mail-box-header">
-               <div class="uc pull-left m-r-5">
-                   <a class="btn btn-sm btn-primary" id="check_nodes" href="#"> 查询 </a>
-               </div>
-
-               <div class="" style="float: right">
-                   <div class=" btn-group">
-                        <button data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle">EXCEL <span class="caret"></span></button>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a class=" btn_export" tabindex="0">
-                                <span>导出</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class=" btn_import" data-toggle="modal" data-target="#import_modal" tabindex="0">
-                                <span>导入</span>
-                                </a>
-                            </li>
-                        </ul>
-                   </div>
-               </div>
-
-               <div id="asset_list_table_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
-               <div id="uc" class="pull-left"></div>
-               <div id="asset_list_table_filter" class="dataTables_filter"><label>搜索<input type="search" class="form-control input-sm" placeholder="" aria-controls="asset_list_table"></label></div>
-
-               <table class="table table-striped table-bordered table-hover dataTable no-footer" id="asset_list_table" style="width: 100%;" role="grid">
-               <thead>
-                   <tr role="row">
-                       <th class="text-center"><input type="checkbox" class="ipt_check_all"></th>
-                       <th class="text-center">主机名</th>
-                       <th class="text-center">IP</th>
-                       <th class="text-center">设备类型</th>
-                       <th class="text-center">机房</th>
-                       <th class="text-center">机架</th>
-                       <th class="text-center">动作</th></tr>
-               </thead>
-               <tbody id="hosts">
-
-               </tbody>
-               </table>
-
-
-               <div id="asset_list_table_processing" class="dataTables_processing panel panel-default" style="display: none;">加载中 ...</div>
-               <div class="row m-t">
-                   <div class="col-md-8">
-                       <div id="op" class="col-md-6">
-                           <div class="input-group">
-                               <select class="form-control m-b" style="width: auto" id="slct_bulk_update">
-                                    <option >选择类型</option>
-                                    <option value="delete">批量删除</option>
-                                    <option value="update">批量更新</option>
-                               </select>
-                                <div class="input-group-btn pull-left" style="padding-left: 5px;" id="btn_bulk_update">
-                                    <button style="height: 32px;" class="btn btn-sm btn-primary">提交</button>
-                                </div>
-                            </div>
-                       </div>
-                   </div>
-               </div>
-           </div>
-       </div>
-   </div>
     </div>
 </div>
 
@@ -203,20 +229,202 @@
       }
     });
 
+    var show=0;
     function toggle() {
-    if (show === 0) {
-        $("#split-left").hide(500, function () {
-            $("#split-right").attr("class", "col-lg-12");
-            $("#toggle-icon").attr("class", "fa fa-angle-right fa-x");
-            show = 1;
-        });
-    } else {
-        $("#split-right").attr("class", "col-lg-9");
-        $("#toggle-icon").attr("class", "fa fa-angle-left fa-x");
-        $("#split-left").show(500);
-        show = 0;
+        if (show === 0) {
+            $("#split-left").hide(500, function () {
+                $("#split-right").attr("class", "col-lg-12");
+                $("#toggle-icon").attr("class", "fa fa-angle-right fa-x");
+                show = 1;
+            });
+        } else {
+            $("#split-right").attr("class", "col-lg-9");
+            $("#toggle-icon").attr("class", "fa fa-angle-left fa-x");
+            $("#split-left").show(500);
+            show = 0;
+        }
     }
-}
 
+	// 查询
+    function query() {
+        var pt=$("#value1").find("option:selected").text();
+        var jf=$("#value2").find("option:selected").text();
+        var jq=$("#value3").find("option:selected").text();
+        var lx=$("#value4").find("option:selected").text();
+        $.ajax({   //2、发送给后端
+            url: "{{ url_for('assets.get_query_hosts') }}",
+            type: 'POST',
+            data: { "pt": pt,
+                    "jf": jf,
+                    "jq": jq,
+                    "lx": lx
+                },
+            success:function(data) {
+                if(data["flag"]==="success"){
+                    $("#hosts").empty();
+                    $.each(data["hosts"], function(i, n){
+	                	var tbBody = "";
+                        var trColor;
+                        if (i % 2 === 0) {
+                            trColor = "even";
+                        } else {
+                            trColor = "odd";
+                        }
+                        tbBody += "<tr role=\"row\" class='" + trColor + "'>" + "<td class=\" text-center\">" +
+                            "<input type=\"checkbox\" class=\"text-center ipt_check\" value=\"" + n.hostname  + "\"></td>" +
+                            "<td class=\" text-center\" style=\"display:none\">" + n.platform + "</td>\n" +
+							"<td class=\" text-center\" style=\"display:none\">" + n.cluster + "</td>\n" +
+							"<td class=\" text-center\"><a href=\"/assets/info/" + n.hostname + "\">" + n.hostname + "</a></td>\n" +
+							"<td class=\" text-center\" style=\"display:none\">" + n.account + "</td>\n" +
+							"<td class=\" text-center\" style=\"display:none\">" + n.version + "</td>\n" +
+							"<td class=\" text-center\" style=\"display:none\">" + n.software_version + "</td>\n" +
+							"<td class=\"text-center\">" + n.local_ip + "</td>\n" +
+							"<td class=\" text-center\">" + n.device_type + "</td>\n" +
+							"<td class=\" text-center\" style=\"display:none\">" + n.nat_ip + "</td>\n" +
+							"<td class=\" text-center\" style=\"display:none\">" + n.os_version + "</td>\n" +
+							"<td class=\" text-center\" style=\"display:none\">" + n.manufacturer + "</td>\n" +
+							"<td class=\" text-center\" style=\"display:none\">" + n.device_model + "</td>\n" +
+							"<td class=\" text-center\" style=\"display:none\">" + n.serial + "</td>\n" +
+							"<td class=\" text-center\">" + n.engine_room + "</td>\n" +
+                            "<td class=\" text-center\">" + n.frame_number + "</td>\n" +
+							"<td class=\" text-center\" style=\"display:none\">" + n.power_frame_number + "</td>\n" +
+							"<td class=\" text-center\" style=\"display:none\">" + n.net_time + "</td>\n" +
+							"<td class=\" text-center\" style=\"display:none\">" + n.s_period + "</td>\n" +
+							"<td class=\" text-center\" style=\"display:none\">" + n.h_period + "</td>\n" +
+							"<td class=\" text-center\" style=\"display:none\">" + n.power + "</td>\n" +
+							"<td class=\" text-center\" style=\"display:none\">" + n.status + "</td>\n" +
+                            "<td class=\" text-center\">\n" +
+                            "<a href=\"/assets/update/" + n.hostname + "\" class=\"btn btn-xs btn-info\">更新</a>\n" +
+                            "<button type=\"button\" class=\"btn btn-danger btn-xs\" data-toggle=\"modal\" data-target=\"#myDelModal\" data-whatever=\""+ n.hostname + "\">删除</button>" +
+                            "</td>\n" +
+                            "</tr>";
+                        $("#hosts").append(tbBody);
+                     });
+                     var counts='<i class="fa fa-check-square"></i>  ' + data["counts"];
+                     $("#counts").empty();
+                     $("#counts").append(counts);
+                 }
+                else alert("查询失败")
+            }
+            })
+    }
+
+
+    $('#myDelModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id_no = button.data('whatever');
+        var modal = $(this);
+        modal.find('#DEL').attr("value",id_no);
+    });
+	// 删除
+	$("#DEL").click(function () {
+        var host_id = this.value;
+        $.ajax({
+            url: "{{ url_for('assets.delete') }}",
+            type: "post",
+            data: {"id":host_id},
+            success:function(data) {
+                if(data["flag"]==="success"){
+					toastr.info("删除成功");
+					query();
+                }
+                else toastr.error("删除失败");
+            }
+        });
+    });
+	// 批量删除
+	function multi_delete(){
+        var str=$("input[type='checkbox']:checked");
+        var objarray=str.length;
+        var hosts = "";
+        for (i=0;i<objarray;i++) {
+            if(str[i].checked === true) {
+                hosts+=str[i].value+",";
+            }
+        }
+        $.post("{{ url_for('assets.multi_delete') }}",
+            {
+                hosts: hosts
+            },
+            function (data) {
+                if(data==="success"){
+                    toastr.info("删除成功");
+                    query()
+                }
+                else toastr.error("删除失败")
+            });
+    }
+
+    $("#slct_bulk_update").change(function() {
+        var checkText=$("#slct_bulk_update").find("option:selected").text();
+        $("#btn_bulk_update").empty();
+        if(checkText!=="选择") {
+            if(checkText==="批量删除"){
+                var content_de="<button type=\"button\" style=\"height: 32px;\" class=\"btn btn-sm btn-primary\" onclick='multi_delete()'>提交</button>";
+                $("#btn_bulk_update").append(content_de);
+            }
+            if(checkText==="批量更新"){
+                var str=$("input[type='checkbox']:checked");
+                var objarray=str.length;
+                var hosts = "";
+                for (i=0;i<objarray;i++) {
+                    if(str[i].checked === true) {
+                        hosts+=str[i].value+",";
+                    }
+                }
+                var content_ac="<a type=\"button\" style=\"height: 32px;\" class=\"btn btn-sm btn-primary\" href=\'/assets/multi_update?hosts=" + hosts +"\'>提交</a>";
+                $("#btn_bulk_update").append(content_ac);
+            }
+        }else {
+            var content="<button type=\"button\" style=\"height: 32px;\" class=\"btn btn-sm btn-primary\">提交</button>";
+            $("#btn_bulk_update").append(content);
+        }
+
+    });
+	//导入文件
+	$("#btn_import_confirm").click(function (){
+    var file = document.getElementById('id_file').files[0];
+    if(!file){
+        toastr.error("选择文件");
+        return
+    }
+    var formFile = new FormData();
+    formFile.append("file", file); //加入文件对象
+    $.ajax({
+        url: "{{ url_for('assets.fm_import') }}",
+        type: "post",
+        data: formFile,
+        processData: false,
+        contentType: false,
+        success:function(data) {
+        if(data["flag"]==="success"){
+          toastr.info(data["msg"]);
+        }
+        else toastr.error(data["msg"]);
+        }
+      });
+    });
+	// 导出
+	$(".btn_export").click(function () {
+        var set = [];
+        $('#asset_list_table').find('tr').each(function() {
+            var row = [];
+            $(this).find('th,td').each(function() {
+                row.push($(this).text().trim());
+            });
+            set.push(row);
+            });
+        $.ajax({
+            url: "{{ url_for('assets.unload_excel') }}",
+            type: "post",
+            data: {"data":JSON.stringify(set)},
+            success:function(data) {
+                if(data["flag"]==="success"){
+                     window.open('/assets/download/'+data['file'], '_self');
+                }
+                else toastr.error("导出失败");
+            }
+        });
+    })
 </script>
 {% endblock %}
