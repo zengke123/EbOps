@@ -75,9 +75,9 @@
 			<div class="mail-box-header">
 				<form method="get" action="index.html" class="pull-right mail-search">
 					<div class="input-group">
-						<input type="text" class="form-control input-sm" name="search" placeholder="主机/集群">
+						<input type="text" class="form-control input-sm" id="search_name" placeholder="主机/集群">
 						<div class="input-group-btn">
-							<button type="submit" class="btn btn-sm btn-warning">
+							<button type="button" class="btn btn-sm btn-warning" id="search">
 								搜索
 							</button>
 						</div>
@@ -245,6 +245,48 @@
         }
     }
 
+    // 根据返回的data数据生成table
+	function tableHost(data){
+		$.each(data["hosts"], function(i, n){
+			var tbBody = "";
+			var trColor;
+			if (i % 2 === 0) {
+				trColor = "even";
+			} else {
+				trColor = "odd";
+			}
+			tbBody += "<tr role=\"row\" class='" + trColor + "'>" + "<td class=\" text-center\">" +
+				"<input type=\"checkbox\" class=\"text-center ipt_check\" value=\"" + n.hostname  + "\"></td>" +
+				"<td class=\" text-center\" style=\"display:none\">" + n.platform + "</td>\n" +
+				"<td class=\" text-center\" style=\"display:none\">" + n.cluster + "</td>\n" +
+				"<td class=\" text-center\"><a href=\"/assets/info/" + n.hostname + "\">" + n.hostname + "</a></td>\n" +
+				"<td class=\" text-center\" style=\"display:none\">" + n.account + "</td>\n" +
+				"<td class=\" text-center\" style=\"display:none\">" + n.version + "</td>\n" +
+				"<td class=\" text-center\" style=\"display:none\">" + n.software_version + "</td>\n" +
+				"<td class=\"text-center\">" + n.local_ip + "</td>\n" +
+				"<td class=\" text-center\">" + n.device_type + "</td>\n" +
+				"<td class=\" text-center\" style=\"display:none\">" + n.nat_ip + "</td>\n" +
+				"<td class=\" text-center\" style=\"display:none\">" + n.os_version + "</td>\n" +
+				"<td class=\" text-center\" style=\"display:none\">" + n.manufacturer + "</td>\n" +
+				"<td class=\" text-center\" style=\"display:none\">" + n.device_model + "</td>\n" +
+				"<td class=\" text-center\" style=\"display:none\">" + n.serial + "</td>\n" +
+				"<td class=\" text-center\">" + n.engine_room + "</td>\n" +
+				"<td class=\" text-center\">" + n.frame_number + "</td>\n" +
+				"<td class=\" text-center\" style=\"display:none\">" + n.power_frame_number + "</td>\n" +
+				"<td class=\" text-center\" style=\"display:none\">" + n.net_time + "</td>\n" +
+				"<td class=\" text-center\" style=\"display:none\">" + n.s_period + "</td>\n" +
+				"<td class=\" text-center\" style=\"display:none\">" + n.h_period + "</td>\n" +
+				"<td class=\" text-center\" style=\"display:none\">" + n.power + "</td>\n" +
+				"<td class=\" text-center\" style=\"display:none\">" + n.status + "</td>\n" +
+				"<td class=\" text-center\">\n" +
+				"<a href=\"/assets/update/" + n.hostname + "\" class=\"btn btn-xs btn-info\">更新</a>\n" +
+				"<button type=\"button\" class=\"btn btn-danger btn-xs\" data-toggle=\"modal\" data-target=\"#myDelModal\" data-whatever=\""+ n.hostname + "\">删除</button>" +
+				"</td>\n" +
+				"</tr>";
+			$("#hosts").append(tbBody);
+		 });
+	}
+
 	// 查询
     function query() {
         var pt=$("#value1").find("option:selected").text();
@@ -262,47 +304,10 @@
             success:function(data) {
                 if(data["flag"]==="success"){
                     $("#hosts").empty();
-                    $.each(data["hosts"], function(i, n){
-	                	var tbBody = "";
-                        var trColor;
-                        if (i % 2 === 0) {
-                            trColor = "even";
-                        } else {
-                            trColor = "odd";
-                        }
-                        tbBody += "<tr role=\"row\" class='" + trColor + "'>" + "<td class=\" text-center\">" +
-                            "<input type=\"checkbox\" class=\"text-center ipt_check\" value=\"" + n.hostname  + "\"></td>" +
-                            "<td class=\" text-center\" style=\"display:none\">" + n.platform + "</td>\n" +
-							"<td class=\" text-center\" style=\"display:none\">" + n.cluster + "</td>\n" +
-							"<td class=\" text-center\"><a href=\"/assets/info/" + n.hostname + "\">" + n.hostname + "</a></td>\n" +
-							"<td class=\" text-center\" style=\"display:none\">" + n.account + "</td>\n" +
-							"<td class=\" text-center\" style=\"display:none\">" + n.version + "</td>\n" +
-							"<td class=\" text-center\" style=\"display:none\">" + n.software_version + "</td>\n" +
-							"<td class=\"text-center\">" + n.local_ip + "</td>\n" +
-							"<td class=\" text-center\">" + n.device_type + "</td>\n" +
-							"<td class=\" text-center\" style=\"display:none\">" + n.nat_ip + "</td>\n" +
-							"<td class=\" text-center\" style=\"display:none\">" + n.os_version + "</td>\n" +
-							"<td class=\" text-center\" style=\"display:none\">" + n.manufacturer + "</td>\n" +
-							"<td class=\" text-center\" style=\"display:none\">" + n.device_model + "</td>\n" +
-							"<td class=\" text-center\" style=\"display:none\">" + n.serial + "</td>\n" +
-							"<td class=\" text-center\">" + n.engine_room + "</td>\n" +
-                            "<td class=\" text-center\">" + n.frame_number + "</td>\n" +
-							"<td class=\" text-center\" style=\"display:none\">" + n.power_frame_number + "</td>\n" +
-							"<td class=\" text-center\" style=\"display:none\">" + n.net_time + "</td>\n" +
-							"<td class=\" text-center\" style=\"display:none\">" + n.s_period + "</td>\n" +
-							"<td class=\" text-center\" style=\"display:none\">" + n.h_period + "</td>\n" +
-							"<td class=\" text-center\" style=\"display:none\">" + n.power + "</td>\n" +
-							"<td class=\" text-center\" style=\"display:none\">" + n.status + "</td>\n" +
-                            "<td class=\" text-center\">\n" +
-                            "<a href=\"/assets/update/" + n.hostname + "\" class=\"btn btn-xs btn-info\">更新</a>\n" +
-                            "<button type=\"button\" class=\"btn btn-danger btn-xs\" data-toggle=\"modal\" data-target=\"#myDelModal\" data-whatever=\""+ n.hostname + "\">删除</button>" +
-                            "</td>\n" +
-                            "</tr>";
-                        $("#hosts").append(tbBody);
-                     });
-                     var counts='<i class="fa fa-check-square"></i>  ' + data["counts"];
-                     $("#counts").empty();
-                     $("#counts").append(counts);
+                    tableHost(data);
+					var counts='<i class="fa fa-check-square"></i>  ' + data["counts"];
+					$("#counts").empty();
+					$("#counts").append(counts);
                  }
                 else alert("查询失败")
             }
@@ -426,5 +431,34 @@
             }
         });
     })
+
+
+
+	// 搜索
+	$("#search").click(function () {
+		var inputValue = document.getElementById("search_name").value;
+		if(!inputValue){
+        	toastr.error("请输入搜索主机名");
+        	return
+    	}
+		$.ajax({
+            url: "{{ url_for('assets.search') }}",
+            type: "post",
+            data: {"name":inputValue},
+            success:function(data) {
+            	if(data["flag"]==="success"){
+                    $("#hosts").empty();
+                    // 调用tableHost函数
+                    tableHost(data);
+					var counts='<i class="fa fa-check-square"></i>  ' + data["counts"];
+					$("#counts").empty();
+					$("#counts").append(counts);
+                 }
+                else toastr.error("查询无结果")
+
+            }
+		 })
+	})
+
 </script>
 {% endblock %}

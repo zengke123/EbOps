@@ -372,3 +372,28 @@ def get_query_hosts():
         "counts": len(datas)
     }
     return jsonify(result)
+
+
+# 搜索
+@assets.route('/search', methods=["GET", "POST"])
+@login_required
+def search():
+    name = request.form.get('name')
+    # 模糊搜索
+    name = '%' + name.upper() + '%'
+    datas = []
+    hosts = db.session.query(Host).filter(or_(Host.hostname.like(name), Host.cluster.like(name))).all()
+    if hosts:
+        # host数据转成json类型，前端解析
+        for host in hosts:
+            datas.append(host.to_json())
+        result = {
+            "flag": "success",
+            "hosts": datas,
+            "counts": len(datas)
+        }
+    else:
+        result = {
+            "flag": "fail"
+        }
+    return jsonify(result)
