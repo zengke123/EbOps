@@ -76,6 +76,7 @@ class OpsResult(db.Model):
     log_id = db.Column(db.String(64))
 
 
+# 自动例检相关表模型
 # 例检主机
 class CheckHost(db.Model):
     __tablename__ = 'c_host'
@@ -89,11 +90,14 @@ class CheckHost(db.Model):
 class CheckHistory(db.Model):
     __tablename__ = 'c_history'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    checktime = db.Column(db.String(64), nullable=False)
+    checktime = db.Column(db.String(64), index=True, nullable=False)
     hostname = db.Column(db.String(32), index=True, nullable=False)
     type = db.Column(db.String(32), nullable=False)
+    operator = db.Column(db.String(32), nullable=False)
 
 
+# 资产管理相关表模型
+# 主机信息
 class Host(db.Model):
     """
     表名: host
