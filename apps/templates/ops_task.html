@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="ibox float-e-margins">
+				<div class="panel-options">
+					<ul class="nav nav-tabs">
+						<li class="active">
+							<a href="/ops/task/{{ log_id }}" class="text-center"><i class="fa fa-laptop"></i> 任务详情 </a>
+						</li>
+						<li>
+							<a href="/ops/task/{{ log_id }}/history" class="text-center"><i class="fa fa-file-text-o"></i> 执行结果 </a>
+						</li>
+						<li>
+							<a href="/ops/log/{{ log_id }}" target="_blank"  class="text-center celery-task-log"><i class="fa fa-toggle-right"></i> 输出 </a>
+						</li>
+					</ul>
+				</div>
+				<div class="tab-content">
+					<div class="col-sm-7" style="padding-left: 0">
+						<div class="ibox float-e-margins">
+							<div class="ibox-title">
+								<span class="label"><b>{{ log_id }}</b></span>
+								<div class="ibox-tools">
+									<a class="collapse-link">
+										<i class="fa fa-chevron-up"></i>
+									</a>
+									<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+										<i class="fa fa-wrench"></i>
+									</a>
+									<ul class="dropdown-menu dropdown-user">
+									</ul>
+									<a class="close-link">
+										<i class="fa fa-times"></i>
+									</a>
+								</div>
+							</div>
+							<div class="ibox-content">
+								<table class="table">
+									<tbody>
+										<tr class="no-borders-tr">
+											<td width="20%">名称:</td>
+											<td><b>{{ item.content }}</b></td>
+										</tr>
+                                        <tr>
+											<td>创建时间:</td>
+											<td><b>{{ item.createtime }}</b></td>
+										</tr>
+										<tr>
+											<td>最后运行:</td>
+											<td><b>{{ result.date }} {{ result.time }}</b></td>
+										</tr>
+										<tr>
+											<td>运行时间:</td>
+											<td><b>11.0 s</b></td>
+										</tr>
+										<tr>
+											<td>成功:</td>
+                                            {% if result.result == "ok" %}
+											<td><b>Yes</b></td>
+                                            {% else %}
+                                            <td><b>No</b></td>
+                                            {% endif %}
+										</tr>
+										<tr>
+											<td>内容:</td>
+											<td>
+												<b>
+													{{ item.item_detail }}
+												</b>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-5" style="padding-left: 0;padding-right: 0">
+						<div class="panel panel-danger">
+							<div class="panel-heading">
+								<i class="fa fa-info-circle"></i> 最后运行失败主机
+							</div>
+							<div class="panel-body">
+								<table class="table">
+									<tbody>
+
+
+										<tr class="no-borders-tr">
+
+											<td>192.168.0.151: </td>
+											<td>
+
+												<b>ping</b> =&gt; Failed to connect to the host via ssh: ssh: connect to host 192.168.0.151 port 22:
+												Connection timed out
+
+											</td>
+										</tr>
+
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<i class="fa fa-info-circle"></i> 最后运行成功主机
+							</div>
+							<div class="panel-body">
+								<table class="table">
+									<tbody>
+
+										<tr class="no-borders-tr">
+											<td>没有主机</td>
+										</tr>
+
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

@@ -55,16 +55,38 @@ class OpsItem(db.Model):
 
 # 作业计划明细
 class OpsInfo(db.Model):
+    """
+    id: 编号
+    t_name: 类型(ops_items中的t_name)
+    item_id: 作业计划单项编号
+    content: 标题内容
+    cycle: 执行周期
+    item_detail: 执行明细
+    createtime: 创建时间
+    """
     __tablename__ = 'ops_info'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     t_name = db.Column(db.String(64), index=True)
     item_id = db.Column(db.String(64), index=True, unique=True)
     content = db.Column(db.Text)
     cycle = db.Column(db.String(64))
+    item_detail = db.Column(db.Text)
+    createtime = db.Column(db.String(64))
 
 
 # 作业计划明细
 class OpsResult(db.Model):
+    """
+    id: 编号
+    t_name: 类型(ops_items中的t_name)
+    item_id: 作业计划单项编号,与ops_info一致
+    date: 执行日期
+    time: 执行时间
+    s_times: 执行成功次数
+    f_times: 执行失败次数
+    result: 执行结果
+    log_id: 任务编号,日志编号
+    """
     __tablename__ = 'ops_result'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     item_id = db.Column(db.String(64), index=True)
@@ -79,6 +101,12 @@ class OpsResult(db.Model):
 # 自动例检相关表模型
 # 例检主机
 class CheckHost(db.Model):
+    """
+    id: 编号
+    node: 业务平台节点
+    cluster: 集群名称
+    hostname: 主机名
+    """
     __tablename__ = 'c_host'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     node = db.Column(db.String(32), index=True, nullable=False)
@@ -88,6 +116,13 @@ class CheckHost(db.Model):
 
 # 例检历史记录
 class CheckHistory(db.Model):
+    """
+    id: 编号
+    checktime: 例检时间
+    hostname: 主机名称
+    type: 类型(主机,集群)
+    operator: 操作员
+    """
     __tablename__ = 'c_history'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     checktime = db.Column(db.String(64), index=True, nullable=False)

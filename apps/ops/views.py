@@ -74,7 +74,7 @@ def index(ops_type):
 @ops.route("/log/<log_id>")
 @login_required
 def ops_log(log_id):
-    return render_template('ops_log.html',log_id=log_id)
+    return render_template('ops_log.html', log_id=log_id)
 
 
 @ops.route("/req")
@@ -99,3 +99,21 @@ def request_log():
         "mark": "7bbfef0c-103d-4b4f-8f43-39e7121db223"
     }
     return jsonify(logs)
+
+
+@ops.route("/task/<log_id>")
+@login_required
+def task(log_id):
+    # 根据log_id获取对应的作业项目item_id
+    item_id = '_'.join(log_id.split('_')[:2])
+    item = OpsInfo.query.filter(OpsInfo.item_id == item_id).one()
+    result = OpsResult.query.filter(OpsResult.log_id == log_id).one()
+    return render_template('ops_task.html', app='作业计划', action="任务详情", log_id=log_id, item=item, result=result)
+
+
+@ops.route("/task/<log_id>/history")
+@login_required
+def task_history(log_id):
+    result = OpsResult.query.filter(OpsResult.log_id == log_id).one()
+    return render_template('ops_task_history.html', app='作业计划', action="任务详情", log_id=log_id, result=result)
+
