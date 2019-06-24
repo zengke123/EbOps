@@ -1,121 +1,300 @@
 {% extends 'base.html' %}
+{% block custom_head_css_js %}
+    <script src="{{ url_for('static',filename='js/plugins/echarts/echarts.min.js') }}"></script>
+{% endblock %}
 {% block content %}
 <div class="wrapper wrapper-content animated fadeInRight">
-
-
-<div class="row">
-      <div class="col-lg-3">
-          <div class="ibox float-e-margins">
-              <div class="ibox-title">
-                  <span class="label label-success pull-right">用户数</span>
-                  <h5>Volte 智能网</h5>
-              </div>
-              <div class="ibox-content">
-                  <h1 class="no-margins">40 886,200</h1>
-                  <div class="stat-percent font-bold text-success">98% <i class="fa fa-bolt"></i></div>
-                  <small>同比</small>
-              </div>
-          </div>
-      </div>
-      <div class="col-lg-3">
-          <div class="ibox float-e-margins">
-              <div class="ibox-title">
-                  <span class="label label-info pull-right">用户数</span>
-                  <h5>Volte 彩铃</h5>
-              </div>
-              <div class="ibox-content">
-                  <h1 class="no-margins">275,800</h1>
-                  <div class="stat-percent font-bold text-info">20% <i class="fa fa-level-up"></i></div>
-                  <small>同比</small>
-              </div>
-          </div>
-      </div>
-      <div class="col-lg-3">
-          <div class="ibox float-e-margins">
-              <div class="ibox-title">
-                  <span class="label label-primary pull-right">用户数</span>
-                  <h5>同比</h5>
-              </div>
-              <div class="ibox-content">
-                  <h1 class="no-margins">106,120</h1>
-                  <div class="stat-percent font-bold text-navy">44% <i class="fa fa-level-up"></i></div>
-                  <small>同比</small>
-              </div>
-          </div>
-      </div>
-      <div class="col-lg-3">
-          <div class="ibox float-e-margins">
-              <div class="ibox-title">
-                  <span class="label label-danger pull-right">用户数</span>
-                  <h5>Centrex</h5>
-              </div>
-              <div class="ibox-content">
-                  <h1 class="no-margins">80,600</h1>
-                  <div class="stat-percent font-bold text-danger">38% <i class="fa fa-level-down"></i></div>
-                  <small>总用户数</small>
-              </div>
-          </div>
-</div>
-</div>
-
-<div class="row">
-  <div class="col-lg-12">
-      <div class="ibox float-e-margins">
-          <div class="ibox-title">
-              <h5>SCPAS CAPS</h5>
-              <div class="pull-right">
-                  <div class="btn-group">
-                      <button type="button" class="btn btn-xs btn-white active">昨天</button>
-                      <button type="button" class="btn btn-xs btn-white">上周</button>
-                      <button type="button" class="btn btn-xs btn-white">周平均</button>
+    <div class="row">
+          <div class="col-lg-3">
+              <div class="ibox float-e-margins">
+                  <div class="ibox-title">
+                      <span class="label label-success pull-right">用户数</span>
+                      <h5>Volte 智能网</h5>
+                  </div>
+                  <div class="ibox-content">
+                      <h1 class="no-margins">{{ t_v_users }}</h1>
+                      <div class="stat-percent font-bold text-success">{{ vpmn_per }}
+                          {% if vpmn_per_flag==1 %}
+                          <i class="fa fa-level-up"></i>
+                          {% else %}
+                          <i class="fa fa-level-down"></i>
+                          {% endif %}
+                      </div>
+                      <small>同比</small>
                   </div>
               </div>
           </div>
-          <div class="ibox-content">
-              <div class="row">
-              <div class="col-lg-9">
-                  <div class="flot-chart">
-                      <div class="flot-chart-content" id="flot-dashboard-chart" style="padding: 0px; position: relative;"><canvas class="flot-base" width="684" height="200" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 684px; height: 200px;"></canvas><div class="flot-text" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; font-size: smaller; color: rgb(84, 84, 84);">
-                      	<div class="flot-x-axis flot-x1-axis xAxis x1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px;"><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 57px; top: 183px; left: 68px; text-align: center;">Jan 03</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 57px; top: 183px; left: 130px; text-align: center;">Jan 06</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 57px; top: 183px; left: 191px; text-align: center;">Jan 09</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 57px; top: 183px; left: 253px; text-align: center;">Jan 12</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 57px; top: 183px; left: 314px; text-align: center;">Jan 15</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 57px; top: 183px; left: 376px; text-align: center;">Jan 18</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 57px; top: 183px; left: 437px; text-align: center;">Jan 21</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 57px; top: 183px; left: 499px; text-align: center;">Jan 24</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 57px; top: 183px; left: 561px; text-align: center;">Jan 27</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 57px; top: 183px; left: 622px; text-align: center;">Jan 30</div></div><div class="flot-y-axis flot-y1-axis yAxis y1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px;"><div class="flot-tick-label tickLabel" style="position: absolute; top: 170px; left: 20px; text-align: right;">0</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 130px; left: 7px; text-align: right;">250</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 91px; left: 7px; text-align: right;">500</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 51px; left: 7px; text-align: right;">750</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 12px; left: 0px; text-align: right;">1000</div></div><div class="flot-y-axis flot-y2-axis yAxis y2Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px;"><div class="flot-tick-label tickLabel" style="position: absolute; top: 170px; left: 671px;">0</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 141px; left: 671px;">5</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 113px; left: 671px;">10</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 85px; left: 671px;">15</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 57px; left: 671px;">20</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 29px; left: 671px;">25</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 1px; left: 671px;">30</div></div></div><canvas class="flot-overlay" width="684" height="200" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 684px; height: 200px;"></canvas><div class="legend"><div style="position: absolute; width: 113px; height: 34px; top: 14px; left: 37px; background-color: rgb(255, 255, 255); opacity: 0.85;"> </div><table style="position:absolute;top:14px;left:37px;;font-size:smaller;color:#545454"><tbody><tr><td class="legendColorBox"><div style="border:1px solid #000000;padding:1px"><div style="width:4px;height:0;border:5px solid #1ab394;overflow:hidden"></div>																	</div></td><td class="legendLabel">Number of orders</td></tr><tr><td class="legendColorBox"><div style="border:1px solid #000000;padding:1px"><div style="width:4px;height:0;border:5px solid #1C84C6;overflow:hidden"></div></div></td><td class="legendLabel">Payments</td></tr></tbody></table></div></div>
-                  </div>
-              </div>
-              <div class="col-lg-3">
-                  <ul class="stat-list">
-                      <li>
-                          <h2 class="no-margins">2,346</h2>
-                          <small>Total orders in period</small>
-                          <div class="stat-percent">48% <i class="fa fa-level-up text-navy"></i></div>
-                          <div class="progress progress-mini">
-                              <div style="width: 48%;" class="progress-bar"></div>
-                          </div>
-                      </li>
-                      <li>
-                          <h2 class="no-margins ">4,422</h2>
-                          <small>Orders in last month</small>
-                          <div class="stat-percent">60% <i class="fa fa-level-down text-navy"></i></div>
-                          <div class="progress progress-mini">
-                              <div style="width: 60%;" class="progress-bar"></div>
-                          </div>
-                      </li>
-                      <li>
-                          <h2 class="no-margins ">9,180</h2>
-                          <small>Monthly income from orders</small>
-                          <div class="stat-percent">22% <i class="fa fa-bolt text-navy"></i></div>
-                          <div class="progress progress-mini">
-                              <div style="width: 22%;" class="progress-bar"></div>
-                          </div>
-                      </li>
-                      </ul>
-                  </div>
-              </div>
-              </div>
 
+          <div class="col-lg-3">
+              <div class="ibox float-e-margins">
+                  <div class="ibox-title">
+                      <span class="label label-info pull-right">用户数</span>
+                      <h5>Volte 彩铃</h5>
+                  </div>
+                  <div class="ibox-content">
+                      <h1 class="no-margins">{{ t_crbt }}</h1>
+                      <div class="stat-percent font-bold text-info">{{ crbt_per }}
+                          {% if crbt_per_flag==1 %}
+                          <i class="fa fa-level-up"></i>
+                          {% else %}
+                          <i class="fa fa-level-down"></i>
+                          {% endif %}
+                      </div>
+                      <small>同比</small>
+                  </div>
+              </div>
           </div>
-      </div>
-  </div>
+
+          <div class="col-lg-3">
+              <div class="ibox float-e-margins">
+                  <div class="ibox-title">
+                      <span class="label label-primary pull-right">用户数</span>
+                      <h5>视频彩铃</h5>
+                  </div>
+                  <div class="ibox-content">
+                      <h1 class="no-margins">{{ t_vrbt }}</h1>
+                      <div class="stat-percent font-bold text-navy">{{ vrbt_per }}
+                          {% if vrbt_per_flag==1 %}
+                          <i class="fa fa-level-up"></i>
+                          {% else %}
+                          <i class="fa fa-level-down"></i>
+                          {% endif %}
+                      </div>
+                      <small>同比</small>
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-lg-3">
+              <div class="ibox float-e-margins">
+                  <div class="ibox-title">
+                      <span class="label label-danger pull-right">用户数</span>
+                      <h5>Centrex</h5>
+                  </div>
+                  <div class="ibox-content">
+                      <h1 class="no-margins">{{ t_ctx_users }}</h1>
+                      <div class="stat-percent font-bold text-danger">{{ ctx_per }}
+                          {% if ctx_per_flag==1 %}
+                          <i class="fa fa-level-up"></i>
+                          {% else %}
+                          <i class="fa fa-level-down"></i>
+                          {% endif %}
+                      </div>
+                      <small>总用户数</small>
+                  </div>
+              </div>
+          </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+           <div class="ibox float-e-margins">
+              <div class="ibox-title">
+                  <h5>CAPS 统计</h5>
+                  <span class="label label-info pull-right">最近15天</span>
+              </div>
+              <div class="ibox-content">
+                  <div class="flot-chart" id="caps" style="height:300px;">
+                      <script type="text/javascript">
+                        // 基于准备好的dom，初始化echarts实例
+                        var myChart = echarts.init(document.getElementById('caps'));
+
+                        var option = {
+                            title: {
+                                subtext: 'AS网元caps总和（小时峰值）',
+                                left: '12%',
+                                textAlign: 'center'
+                            },
+                            tooltip: {
+                                trigger: 'axis',
+                                axisPointer: {
+                                    lineStyle: {
+                                        color: '#ddd'
+                                    }
+                                },
+                                backgroundColor: 'rgba(255,255,255,1)',
+                                padding: [5, 10],
+                                textStyle: {
+                                    color: '#7588E4',
+                                },
+                                extraCssText: 'box-shadow: 0 0 5px rgba(0,0,0,0.3)'
+                            },
+                            legend: {
+                                right: 20,
+                                orient: 'vertical',
+                                data: ['SCPAS','CATAS']
+                            },
+                            xAxis: {
+                                type: 'category',
+                                data: {{ date }},
+                                boundaryGap: false,
+                                axisTick: {
+                                    show: false
+                                },
+                                axisLine: {
+                                    lineStyle: {
+                                        color: '#070c11'
+                                    }
+                                },
+                                axisLabel: {
+                                    margin: 10,
+                                    textStyle: {
+                                        fontSize: 14
+                                    }
+                                }
+                            },
+                            yAxis: {
+                                type: 'value',
+                                splitLine: {
+                                    lineStyle: {
+                                        color: ['#D4DFF5']
+                                    }
+                                },
+                                axisTick: {
+                                    show: false
+                                },
+                                axisLine: {
+                                    lineStyle: {
+                                        color: '#070c11'
+                                    }
+                                },
+                                axisLabel: {
+                                    margin: 10,
+                                    textStyle: {
+                                        fontSize: 14
+                                    }
+                                }
+                            },
+                            series: [{
+                                name: 'SCPAS',
+                                type: 'line',
+                                smooth: true,
+                                showSymbol: false,
+                                symbol: 'circle',
+                                symbolSize: 6,
+                                data: {{ scpas_caps }},
+                                areaStyle: {
+                                    normal: {
+                                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                            offset: 0,
+                                            color: 'rgba(199, 237, 250,0.5)'
+                                        }, {
+                                            offset: 1,
+                                            color: 'rgba(199, 237, 250,0.2)'
+                                        }], false)
+                                    }
+                                },
+                                itemStyle: {
+                                    normal: {
+                                        color: '#f7b851'
+                                    }
+                                },
+                                lineStyle: {
+                                    normal: {
+                                        width: 3
+                                    }
+                                }
+                            }, {
+                                name: 'CATAS',
+                                type: 'line',
+                                smooth: true,
+                                showSymbol: false,
+                                symbol: 'circle',
+                                symbolSize: 6,
+                                data: {{ catas_caps }},
+                                areaStyle: {
+                                    normal: {
+                                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                            offset: 0,
+                                            color: 'rgba(216, 244, 247,1)'
+                                        }, {
+                                            offset: 1,
+                                            color: 'rgba(216, 244, 247,1)'
+                                        }], false)
+                                    }
+                                },
+                                itemStyle: {
+                                    normal: {
+                                        color: '#58c8da'
+                                    }
+                                },
+                                lineStyle: {
+                                    normal: {
+                                        width: 3
+                                    }
+                                }
+                            }]
+                        };
+
+                        myChart.setOption(option);
+                    </script>
+
+                  </div>
+              </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-warning pull-right">昨日数据</span>
+                    <h5>主机性能数据</h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <small class="stats-label">CPU / max</small>
+                            <h4>DB201</h4>
+                        </div>
+
+                        <div class="col-xs-4">
+                            <small class="stats-label">% Util</small>
+                            <h4>46.11%</h4>
+                        </div>
+                        <div class="col-xs-4">
+                            <small class="stats-label">Last week</small>
+                            <h4>21%</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <small class="stats-label">Mem / max</small>
+                            <h4>DB202</h4>
+                        </div>
+
+                        <div class="col-xs-4">
+                            <small class="stats-label">% Util</small>
+                            <h4>92.43%</h4>
+                        </div>
+                        <div class="col-xs-4">
+                            <small class="stats-label">Last week</small>
+                            <h4>92.43%</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <small class="stats-label">Disk IO / max</small>
+                            <h4>DB202</h4>
+                        </div>
+
+                        <div class="col-xs-4">
+                            <small class="stats-label">% Util</small>
+                            <h4>90.23%</h4>
+                        </div>
+                        <div class="col-xs-4">
+                            <small class="stats-label">Last week</small>
+                            <h4>80.23%</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
-
-</div>
 
 {% endblock %}

@@ -17,7 +17,11 @@ PASSWORD = 'zengke'
 HOST = '127.0.0.1'
 PORT = '3306'
 DATABASE = 'webapp'
+DATABASE2 = 'tongji'
 SQLALCHEMY_DATABASE_URI = "{}+{}://{}:{}@{}:{}/{}?charset=utf8".format(DIALECT, DRIVER, USERNAME, PASSWORD,
                                                                        HOST, PORT, DATABASE)
+SQLALCHEMY_BINDS = {
+    'tongji': "{}+{}://{}:{}@{}:{}/{}?charset=utf8".format(DIALECT, DRIVER, USERNAME, PASSWORD, HOST, PORT, DATABASE2)
+}
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 SCHEDULER_API_ENABLED = True

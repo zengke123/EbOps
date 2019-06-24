@@ -70,9 +70,9 @@
                                 <tr class="gradeX odd" role="row">
                             {% endif %}
                                 <td class="text-center"><input type="checkbox" class="cbx-term"> </td>
+                            {% if result %}
                                 <td class="text-left"><a href="/ops/task/{{ result.log_id }}">{{ item.content }}</a></td>
                                 <td class="text-center">{{ item.cycle }}</td>
-                            {% if result %}
                                 <td class="text-center">
                                    <span class="text-danger">{{ result.s_times }}</span>/<span class="text-navy">{{ result.f_times }}</span>/{{ result.s_times+result.f_times }}
                                 </td>
@@ -84,7 +84,8 @@
                                     <a data-uid="" class="btn btn-xs btn-danger btn-del">删除</a>
                                 </td>
                             {% else %}
-
+                                <td class="text-left"><a href="#">{{ item.content }}</a></td>
+                                <td class="text-center">{{ item.cycle }}</td>
                                 <td class="text-center">
                                    <span class="text-danger">0</span>/<span class="text-navy">0</span>/0
                                 </td>
