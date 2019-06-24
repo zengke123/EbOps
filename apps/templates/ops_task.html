@@ -84,40 +84,35 @@
 							<div class="panel-body">
 								<table class="table">
 									<tbody>
-
-
+									{% for ops_event in fail_events %}
 										<tr class="no-borders-tr">
-
-											<td>192.168.0.151: </td>
+											<td>{{ ops_event.hostname }}: </td>
 											<td>
-
-												<b>ping</b> =&gt; Failed to connect to the host via ssh: ssh: connect to host 192.168.0.151 port 22:
-												Connection timed out
-
+												<b>{{ ops_event.reason }}</b>
 											</td>
 										</tr>
-
+									{% endfor %}
 									</tbody>
 								</table>
 							</div>
 						</div>
 
-						<div class="panel panel-primary">
-							<div class="panel-heading">
-								<i class="fa fa-info-circle"></i> 最后运行成功主机
-							</div>
-							<div class="panel-body">
-								<table class="table">
-									<tbody>
-
-										<tr class="no-borders-tr">
-											<td>没有主机</td>
-										</tr>
-
-									</tbody>
-								</table>
-							</div>
-						</div>
+<!--						<div class="panel panel-primary">-->
+<!--							<div class="panel-heading">-->
+<!--								<i class="fa fa-info-circle"></i> 最后运行成功主机-->
+<!--							</div>-->
+<!--							<div class="panel-body">-->
+<!--								<table class="table">-->
+<!--									<tbody>-->
+<!--									{% for ops_event in succ_events %}-->
+<!--										<tr class="no-borders-tr">-->
+<!--											<td>{{ ops_event.hostname }}</td>-->
+<!--										</tr>-->
+<!--									{% endfor %}-->
+<!--									</tbody>-->
+<!--								</table>-->
+<!--							</div>-->
+<!--						</div>-->
 					</div>
 				</div>
 			</div>

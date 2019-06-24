@@ -18,8 +18,90 @@
 					</ul>
 				</div>
 				<div class="tab-content">
-					<div class="col-sm-5"></div>
-<!--					补充任务明细-->
+					<div class="col-sm-12"></div>
+
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <span style="float: left">【执行历史】 <b>{{ item.content }}</b></span>
+                                <div class="ibox-tools">
+                                    <a class="collapse-link">
+                                        <i class="fa fa-chevron-up"></i>
+                                    </a>
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                        <i class="fa fa-wrench"></i>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-user">
+                                    </ul>
+                                    <a class="close-link">
+                                        <i class="fa fa-times"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="ibox-content">
+                                <div id="task-history-list-table_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                                    <div id="uc" class="pull-left"></div>
+                                    <table class="table table-hover  dataTable no-footer" id="task-history-list-table" role="grid">
+                                        <thead>
+                                            <tr role="row">
+                                                <th class="text-center" style="width: 10%;">任务编号</th>
+                                                <th class="text-center " style="width: 15%;">检查网元</th>
+                                                <th class="text-center " style="width: 15%;">主机名称</th>
+                                                <th class="text-center" style="width: 10%;">执行结果</th>
+                                                <th class="text-center" style="width: 25%;">检查结果</th>
+                                                <th class="text-center" style="width: 25%;">失败原因</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for ops_event in events %}
+                                            <tr role="row" class="odd">
+                                                <td class=" text-center">{{ ops_event.log_id }}</td>
+                                                <td class=" text-center">{{ ops_event.cluster }}</td>
+                                                <td class=" text-center">{{ ops_event.hostname }}</td>
+                                                {% if ops_event.status=='成功' %}
+                                                <td class=" text-center"><i class="fa fa-check text-navy"></i></td>
+                                                {% else %}
+                                                <td class=" text-center"><i class="fa fa-times text-danger"></i></td>
+                                                {% endif %}
+                                                <td class=" text-center">{{ ops_event.result }}</td>
+                                                <td class=" text-center">{{ ops_event.reason }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    <div class="row m-t">
+                                        <div class="col-md-8">
+                                            <div id="op" class="col-md-6"></div>
+                                            <div class="col-md-6 text-center">
+                                                <div class="dataTables_info" id="task-history-list-table_info" role="status" aria-live="polite">显示第 {{ paginate.page }}  页结果; 总共
+                                                    {{ paginate.total }} 项</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="dataTables_paginate paging_simple_numbers" id="task-history-list-table_paginate">
+                                                <ul class="pagination">
+                                                    {% if paginate.has_prev %}
+                                                    <li class="paginate_button previous"><a href="/ops/task/{{ log_id }}/history?page={{ paginate.prev_num }}">‹</a></li>
+                                                    {% else %}
+                                                    <li class="paginate_button previous disabled"><a href="#">‹</a></li>
+                                                    {% endif %}
+
+                                                    {%  for i in  paginate.iter_pages() %}
+                                                    <li class="paginate_button"><a href="/ops/task/{{ log_id }}/history?page={{ i }}">{{ i }}</a></li>
+                                                    {% endfor %}
+
+                                                    {% if paginate.has_next %}
+                                                    <li class="paginate_button next"><a href="/ops/task/{{ log_id }}/history?page={{ paginate.next_num }}">›</a></li>
+                                                    {% else %}
+                                                        <li class="paginate_button next disabled"><a href="#">›</a></li>
+                                                    {% endif %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
 				</div>
 			</div>
 		</div>

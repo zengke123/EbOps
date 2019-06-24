@@ -98,6 +98,29 @@ class OpsResult(db.Model):
     log_id = db.Column(db.String(64))
 
 
+# 作业计划完整执行情况
+class OpsEvent(db.Model):
+    """
+    id: 编号
+    log_id: 任务编号，与ops_result中log_id一致
+    item_id: 作业计划单项编号,与ops_info一致
+    cluster: 检查的网元
+    hostname: 主机名称
+    status: 任务执行状态，成功、失败
+    result: 执行结果
+    reason: 失败原因（默认为空）
+    """
+    __tablename__ = 'ops_event'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    log_id = db.Column(db.String(64), index=True)
+    item_id = db.Column(db.String(64))
+    cluster = db.Column(db.String(64))
+    hostname = db.Column(db.String(64), index=True)
+    status = db.Column(db.String(64))
+    result = db.Column(db.Text, nullable=True)
+    reason = db.Column(db.Text, nullable=True)
+
+
 # 自动例检相关表模型
 # 例检主机
 class CheckHost(db.Model):

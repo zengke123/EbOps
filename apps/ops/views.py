@@ -1,6 +1,6 @@
 from . import ops
 from .. import db
-from ..models import OpsItem, OpsInfo, OpsResult
+from ..models import OpsItem, OpsInfo, OpsResult, OpsEvent
 from datetime import datetime
 from sqlalchemy import and_
 from flask import render_template, request, jsonify
@@ -107,13 +107,31 @@ def task(log_id):
     # 根据log_id获取对应的作业项目item_id
     item_id = '_'.join(log_id.split('_')[:2])
     item = OpsInfo.query.filter(OpsInfo.item_id == item_id).one()
+    # 查询对应任务编号log_id 执行总体结果
     result = OpsResult.query.filter(OpsResult.log_id == log_id).one()
-    return render_template('ops_task.html', app='作业计划', action="任务详情", log_id=log_id, item=item, result=result)
+    # 查询任务明细
+    events = OpsEvent.query.filter(OpsEvent.log_id == log_id).all()
+    succ_events = [event for event in events if event.status == "成功"]
+    fail_events = [event for event in events if event.status == "失败"]
+    return render_template('ops_task.html', app='作业计划', action="任务详情", log_id=log_id, item=item, result=result,
+                           succ_events=succ_events, fail_events=fail_events)
 
 
 @ops.route("/task/<log_id>/history")
 @login_required
 def task_history(log_id):
-    result = OpsResult.query.filter(OpsResult.log_id == log_id).one()
-    return render_template('ops_task_history.html', app='作业计划', action="任务详情", log_id=log_id, result=result)
+    # 查询对应任务编号log_id 执行总体结果
+    # result = OpsResult.query.filter(OpsResult.log_id == log_id).one()
+    item_id = '_'.join(log_id.split('_')[:2])
+    item = OpsInfo.query.filter(OpsInfo.item_id == item_id).one()
+    # 获取get请求传过来的页数,没有传参数，默认为1
+    page = int(request.args.get('page', 1))
+    # 分页显示，每页10条数据
+    paginate = OpsEvent.query.filter(OpsEvent.log_id == log_id).paginate(page, per_page=10, error_out=False)
+    task_events = paginate.items
+    # 获取item_id
+    item_id = '_'.join(log_id.split('_')[:2])
+    item = OpsInfo.query.filter(OpsInfo.item_id == item_id).one()
+    return render_template('ops_task_history.html', app='作业计划', action="任务详情", log_id=log_id, item=item,
+                           events=task_events, paginate=paginate)
 
