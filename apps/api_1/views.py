@@ -1,6 +1,6 @@
 from . import api_1
-from .. import db
 from .controllers import OpsEventHandler, OpsResultHandler
+from .authentication import auth
 from flask import jsonify, request
 
 
@@ -19,6 +19,7 @@ from flask import jsonify, request
 
 # 检索任务列表 ops_result
 @api_1.route("/tasks")
+@auth.login_required
 def get_all_tasks():
     tasks = OpsResultHandler.listall()
     result = []
@@ -29,6 +30,7 @@ def get_all_tasks():
 
 # 检索某个任务 ops_result
 @api_1.route("/tasks/<task_id>")
+@auth.login_required
 def get_tasks(task_id):
     tasks = OpsResultHandler.list(task_id)
     if len(tasks) >= 1:
@@ -37,11 +39,12 @@ def get_tasks(task_id):
             result.append(task.to_json())
         return jsonify({'result': 'success', 'message': result})
     else:
-        return jsonify({'result': 'fail', 'message': ''})
+        return jsonify({'result': 'fail', 'message': ''}), 400
 
 
 # 检索某个任务 ops_event
 @api_1.route("/tasks/info/<task_id>")
+@auth.login_required
 def get_tasks_info(task_id):
     tasks = OpsEventHandler.list(task_id)
     if len(tasks) >= 1:
@@ -50,69 +53,75 @@ def get_tasks_info(task_id):
             result.append(task.to_json())
         return jsonify({'result': 'success', 'message': result})
     else:
-        return jsonify({'result': 'fail', 'message': ''})
+        return jsonify({'result': 'fail', 'message': ''}), 400
 
 
 # 创建新任务结果 ops_result
 @api_1.route("/tasks", methods=['POST'])
+@auth.login_required
 def create_tasks():
     req = request.get_json()
     result = OpsResultHandler.create(req)
     if result.get('flag'):
         return jsonify({'result': 'success', 'message': 'create success'})
     else:
-        return jsonify({'result': 'fail', 'message': result.get('message')})
+        return jsonify({'result': 'fail', 'message': result.get('message')}), 400
 
 
 # 创建新任务明细 ops_event
 @api_1.route("/tasks/info", methods=['POST'])
+@auth.login_required
 def create_tasks_event():
     req = request.get_json()
     result = OpsEventHandler.create(req)
     if result.get('flag'):
         return jsonify({'result': 'success', 'message': 'create success'})
     else:
-        return jsonify({'result': 'fail', 'message': result.get('message')})
+        return jsonify({'result': 'fail', 'message': result.get('message')}), 400
 
 
 # 更新任务 ops_result
 @api_1.route("/tasks/<task_id>", methods=['PUT'])
+@auth.login_required
 def update_tasks(task_id):
     req = request.get_json()
     result = OpsResultHandler.update(task_id, req)
     if result.get('flag'):
         return jsonify({'result': 'success', 'message': 'update success'})
     else:
-        return jsonify({'result': 'fail', 'message': result.get('message')})
+        return jsonify({'result': 'fail', 'message': result.get('message')}), 400
 
 
 # 更新任务 ops_event
 @api_1.route("/tasks/info/<task_id>", methods=['PUT'])
+@auth.login_required
 def update_tasks_event(task_id):
     req = request.get_json()
     result = OpsEventHandler.update(task_id, req)
     if result.get('flag'):
         return jsonify({'result': 'success', 'message': 'update success'})
     else:
-        return jsonify({'result': 'fail', 'message': result.get('message')})
+        return jsonify({'result': 'fail', 'message': result.get('message')}), 400
 
 
 # 删除任务 ops_result
 @api_1.route("/tasks/<task_id>", methods=['DELETE'])
+@auth.login_required
 def delete_tasks(task_id):
     result = OpsResultHandler.delete(task_id)
     if result.get('flag'):
         return jsonify({'result': 'success', 'message': 'delete success'})
     else:
-        return jsonify({'result': 'fail', 'message': result.get('message')})
+        return jsonify({'result': 'fail', 'message': result.get('message')}), 400
 
 
 # 删除任务 ops_event
 @api_1.route("/tasks/info/<task_id>", methods=['DELETE'])
+@auth.login_required
 def delete_tasks_event(task_id):
     result = OpsEventHandler.delete(task_id)
     if result.get('flag'):
         return jsonify({'result': 'success', 'message': 'delete success'})
     else:
-        return jsonify({'result': 'fail', 'message': result.get('message')})
+        return jsonify({'result': 'fail', 'message': result.get('message')}), 400
 
