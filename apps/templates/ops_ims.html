@@ -71,7 +71,7 @@
                             {% endif %}
                                 <td class="text-center"><input type="checkbox" class="cbx-term"> </td>
                             {% if result %}
-                                <td class="text-left"><a href="/ops/task/{{ result.log_id }}">{{ item.content }}</a></td>
+                                <td class="text-left"><a href="/ops/task/{{ result.log_id }}?item_id={{ result.item_id }}">{{ item.content }}</a></td>
                                 <td class="text-center">{{ item.cycle }}</td>
                                 <td class="text-center">
                                    <span class="text-danger">{{ result.s_times }}</span>/<span class="text-navy">{{ result.f_times }}</span>/{{ result.s_times+result.f_times }}

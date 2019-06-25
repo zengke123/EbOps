@@ -95,7 +95,19 @@ class OpsResult(db.Model):
     s_times = db.Column(db.SmallInteger, default=0)
     f_times = db.Column(db.SmallInteger, default=0)
     result = db.Column(db.String(255))
-    log_id = db.Column(db.String(64))
+    log_id = db.Column(db.String(64), primary_key=True)
+
+    def to_json(self):
+        return {
+            "id": self.id,
+            "item_id": self.item_id,
+            "date": str(self.date),
+            "time": str(self.time),
+            "s_times": self.s_times,
+            "f_times": self.f_times,
+            "result": self.result,
+            "log_id": self.log_id
+        }
 
 
 # 作业计划完整执行情况
@@ -103,7 +115,6 @@ class OpsEvent(db.Model):
     """
     id: 编号
     log_id: 任务编号，与ops_result中log_id一致
-    item_id: 作业计划单项编号,与ops_info一致
     cluster: 检查的网元
     hostname: 主机名称
     status: 任务执行状态，成功、失败
@@ -113,12 +124,23 @@ class OpsEvent(db.Model):
     __tablename__ = 'ops_event'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     log_id = db.Column(db.String(64), index=True)
-    item_id = db.Column(db.String(64))
     cluster = db.Column(db.String(64))
     hostname = db.Column(db.String(64), index=True)
     status = db.Column(db.String(64))
     result = db.Column(db.Text, nullable=True)
     reason = db.Column(db.Text, nullable=True)
+
+    def to_json(self):
+        return {
+            "id": self.id,
+            "log_id": self.log_id,
+            "item_id": self.item_id,
+            "cluster": self.cluster,
+            "hostname": self.hostname,
+            "status": self.status,
+            "result": self.result,
+            "reason": self.reason
+        }
 
 
 # 自动例检相关表模型

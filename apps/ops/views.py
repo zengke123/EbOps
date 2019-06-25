@@ -7,6 +7,7 @@ from flask import render_template, request, jsonify
 from flask_login import login_required
 
 
+# 获取对应date 最新的执行记录结果
 def get_result(ops_infos, date):
     results = []
     for item in ops_infos:
@@ -71,6 +72,7 @@ def index(ops_type):
 #     return render_template('ops_item.html', app='作业计划', action=ops_item, ops_item=ops_item, ops_infos=_ops_infos)
 
 
+# 查看执行完整日志
 @ops.route("/log/<log_id>")
 @login_required
 def ops_log(log_id):
@@ -101,14 +103,16 @@ def request_log():
     return jsonify(logs)
 
 
+# 查询任务详情
 @ops.route("/task/<log_id>")
 @login_required
 def task(log_id):
     # 根据log_id获取对应的作业项目item_id
-    item_id = '_'.join(log_id.split('_')[:2])
+    # item_id = '_'.join(log_id.split('_')[:2])
+    item_id = request.args.get('item_id')
     item = OpsInfo.query.filter(OpsInfo.item_id == item_id).one()
-    # 查询对应任务编号log_id 执行总体结果
-    result = OpsResult.query.filter(OpsResult.log_id == log_id).one()
+    # 查询对应任务编号log_id 执行总体结果, 多条结果时返回最新一条
+    result = OpsResult.query.filter(OpsResult.log_id == log_id).order_by(OpsResult.time.desc()).first()
     # 查询任务明细
     events = OpsEvent.query.filter(OpsEvent.log_id == log_id).all()
     succ_events = [event for event in events if event.status == "成功"]
@@ -117,21 +121,20 @@ def task(log_id):
                            succ_events=succ_events, fail_events=fail_events)
 
 
+# 查看任务执行明细情况
 @ops.route("/task/<log_id>/history")
 @login_required
 def task_history(log_id):
     # 查询对应任务编号log_id 执行总体结果
-    # result = OpsResult.query.filter(OpsResult.log_id == log_id).one()
-    item_id = '_'.join(log_id.split('_')[:2])
+    result = OpsResult.query.filter(OpsResult.log_id == log_id).order_by(OpsResult.time.desc()).first()
+    item_id = result.item_id
+    # item_id = '_'.join(log_id.split('_')[:2])
     item = OpsInfo.query.filter(OpsInfo.item_id == item_id).one()
     # 获取get请求传过来的页数,没有传参数，默认为1
     page = int(request.args.get('page', 1))
     # 分页显示，每页10条数据
     paginate = OpsEvent.query.filter(OpsEvent.log_id == log_id).paginate(page, per_page=10, error_out=False)
     task_events = paginate.items
-    # 获取item_id
-    item_id = '_'.join(log_id.split('_')[:2])
-    item = OpsInfo.query.filter(OpsInfo.item_id == item_id).one()
     return render_template('ops_task_history.html', app='作业计划', action="任务详情", log_id=log_id, item=item,
                            events=task_events, paginate=paginate)
 
