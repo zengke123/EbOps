@@ -86,10 +86,14 @@
             </li>
 
             <li id="tongji">
-                <a href="#">
-                    <i class="fa fa-bar-chart-o" style="width: 14px"></i> <span class="nav-label">统计数据</span>
-                    <span class="label label-info pull-right"></span>
+                <a>
+                    <i class="fa fa-bar-chart-o" style="width: 14px"></i> <span class="nav-label">统计数据</span><span class="fa arrow"></span>
                 </a>
+                <ul class="nav nav-second-level">
+                    <li id="yw"><a href="{{ url_for('tongji.profiledata') }}">关键业务指标</a></li>
+                    <li id="xn"><a href="{{ url_for('tongji.performance') }}">主机性能指标</a></li>
+                    <li id="zy"><a href="{{ url_for('tongji.ops') }}">作业计划指标</a></li>
+                </ul>
             </li>
 
         </ul>

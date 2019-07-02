@@ -31,6 +31,8 @@ def create_app():
     from .check import check as check_blueprint
     # 资产管理
     from .assets import assets as assets_blueprint
+    # 统计数据
+    from .tongji import tongji as tongji_blueprint
     # 统一对外接口蓝本
     from .api_1 import api_1 as api_1_blueprint
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
@@ -38,5 +40,6 @@ def create_app():
     app.register_blueprint(ops_blueprint, url_prefix='/ops')
     app.register_blueprint(check_blueprint, url_prefix='/check')
     app.register_blueprint(assets_blueprint, url_prefix='/assets')
+    app.register_blueprint(tongji_blueprint, url_prefix='/tongji')
     app.register_blueprint(api_1_blueprint, url_prefix='/api/v1')
     return app

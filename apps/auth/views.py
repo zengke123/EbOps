@@ -7,7 +7,7 @@ from flask import render_template, request, url_for, flash, redirect, jsonify
 from flask_login import login_user, login_required, logout_user, current_user
 
 
-@auth.route("/login", methods=['GET','POST'])
+@auth.route("/login", methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     # 渲染HTML时需加入 {{ form.csrf_token }} 否则validate_on_submit一直为False
@@ -23,8 +23,8 @@ def login():
                 login_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 user.last_time = login_time
                 db.session.commit()
-                return redirect(url_for('main.index'))
-                # return redirect(request.args.get('next') or url_for('main.index'))
+                # return redirect(url_for('main.index'))
+                return redirect(request.args.get('next') or url_for('main.index'))
             else:
                 error = "该用户已被锁定"
     return render_template("login.html", form=form, error=error)

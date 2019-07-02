@@ -4,7 +4,11 @@ from flask import request, jsonify, render_template, make_response
 
 @api_1.app_errorhandler(404)
 def page_not_found(e):
-    return make_response(jsonify({'error': 'Not found'}), 404)
+    if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
+        response = jsonify({'error': 'not found'})
+        response.status_code = 404
+        return response
+    return render_template('404.html'), 404
 
 
 @api_1.app_errorhandler(500)
