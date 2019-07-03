@@ -57,7 +57,10 @@ def index():
     scpas_caps = [x[1] for x in datas]
     catas_caps = [x[2] for x in datas]
     # 计算性能数据
-    yesterday = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y%m%d")
+    # 获取数据库中最新日期数据
+    _last_date = db.session.execute('select date from as_pfmc order by date desc limit 1', bind=engine).fetchall()
+    last_date = _last_date[0][0]
+    # yesterday = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y%m%d")
     # yesterday = '20180909'
     cpu_sql = "select cluste, max_cpu, max_cpu_host from as_pfmc where date={} " \
               "and max_cpu=(select max(max_cpu) from as_pfmc where date='{}')"
@@ -65,7 +68,7 @@ def index():
               "and max_mem=(select max(max_mem) from as_pfmc where date='{}')"
     io_sql = "select cluste, max_io, max_io_host from as_pfmc where date={} " \
               "and max_io=(select max(max_io) from as_pfmc where date='{}')"
-    cpu_data = db.session.execute(cpu_sql.format(yesterday, yesterday), bind=engine).fetchall()
-    mem_data = db.session.execute(mem_sql.format(yesterday, yesterday), bind=engine).fetchall()
-    io_data = db.session.execute(io_sql.format(yesterday, yesterday), bind=engine).fetchall()
+    cpu_data = db.session.execute(cpu_sql.format(last_date, last_date), bind=engine).fetchall()
+    mem_data = db.session.execute(mem_sql.format(last_date, last_date), bind=engine).fetchall()
+    io_data = db.session.execute(io_sql.format(last_date, last_date), bind=engine).fetchall()
     return render_template('index.html', **locals())
