@@ -57,8 +57,8 @@ def index():
     scpas_caps = [x[1] for x in datas]
     catas_caps = [x[2] for x in datas]
     # 计算性能数据
-    # yesterday = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y%m%d")
-    yesterday = '20180909'
+    yesterday = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y%m%d")
+    # yesterday = '20180909'
     cpu_sql = "select cluste, max_cpu, max_cpu_host from as_pfmc where date={} " \
               "and max_cpu=(select max(max_cpu) from as_pfmc where date='{}')"
     mem_sql = "select cluste, max_mem, max_mem_host from as_pfmc where date={} " \
