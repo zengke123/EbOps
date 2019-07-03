@@ -50,7 +50,7 @@ class OpsItem(db.Model):
     __tablename__ = 'ops_items'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     t_name = db.Column(db.String(64), index=True, unique=True)
-    c_name = db.Column(db.String(64), unique=True)
+    c_name = db.Column(db.TEXT)
 
 
 # 作业计划明细

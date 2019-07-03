@@ -236,23 +236,23 @@
         <div class="col-lg-4">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <span class="label label-warning pull-right">昨日数据</span>
+                    <span class="label label-warning pull-right">{{yesterday}}</span>
                     <h5>主机性能数据</h5>
                 </div>
                 <div class="ibox-content">
                     <div class="row">
                         <div class="col-xs-4">
                             <small class="stats-label">CPU / max</small>
-                            <h4>DB201</h4>
+                            <h4>{{ cpu_data[0][0] }}</h4>
                         </div>
 
                         <div class="col-xs-4">
                             <small class="stats-label">% Util</small>
-                            <h4>46.11%</h4>
+                            <h4>{{ cpu_data[0][1] }}%</h4>
                         </div>
                         <div class="col-xs-4">
-                            <small class="stats-label">Last week</small>
-                            <h4>21%</h4>
+                            <small class="stats-label">Hostname</small>
+                            <h4>{{ cpu_data[0][2] }}</h4>
                         </div>
                     </div>
                 </div>
@@ -260,16 +260,16 @@
                     <div class="row">
                         <div class="col-xs-4">
                             <small class="stats-label">Mem / max</small>
-                            <h4>DB202</h4>
+                            <h4>{{ mem_data[0][0] }}</h4>
                         </div>
 
                         <div class="col-xs-4">
                             <small class="stats-label">% Util</small>
-                            <h4>92.43%</h4>
+                            <h4>{{ mem_data[0][1] }}%</h4>
                         </div>
                         <div class="col-xs-4">
-                            <small class="stats-label">Last week</small>
-                            <h4>92.43%</h4>
+                            <small class="stats-label">Hostname</small>
+                            <h4>{{ mem_data[0][2] }}</h4>
                         </div>
                     </div>
                 </div>
@@ -277,16 +277,16 @@
                     <div class="row">
                         <div class="col-xs-4">
                             <small class="stats-label">Disk IO / max</small>
-                            <h4>DB202</h4>
+                            <h4>{{ io_data[0][0] }}</h4>
                         </div>
 
                         <div class="col-xs-4">
                             <small class="stats-label">% Util</small>
-                            <h4>90.23%</h4>
+                            <h4>{{ io_data[0][1] }}%</h4>
                         </div>
                         <div class="col-xs-4">
-                            <small class="stats-label">Last week</small>
-                            <h4>80.23%</h4>
+                            <small class="stats-label">Hostname</small>
+                            <h4>{{ io_data[0][2] }}</h4>
                         </div>
                     </div>
                 </div>
