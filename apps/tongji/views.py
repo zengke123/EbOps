@@ -53,11 +53,14 @@ def profiledata():
         # 深拷贝，避免后续迭代scp_result计算同比，同时对scp_result插入同比结果出错
         _result = dict.copy(data)
         for key, value in data.items():
+            if key.endswith('cluster'):
+                continue
             # 前一天的数据
             b_value = b_data.get(key, '')
             # 前一天的指标不为0，前不为空
             if value and b_value and b_value != 0:
                 per = format((float(value) - float(b_value))/float(b_value), '.2%')
+                # per = 'test'
             else:
                 per = '-'
             _result[key + '_per'] = per
