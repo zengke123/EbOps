@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="ibox float-e-margins">
+				<div class="panel-options">
+					<ul class="nav nav-tabs">
+						<li class="active">
+							<a href="{{ url_for('check.config') }}" class="text-center"><i class="fa fa-cog"></i> 配置信息
+							</a>
+						</li>
+						<li>
+							<a href="{{ url_for('check.load_config') }}" class="text-center"><i class="fa fa-outdent"></i>
+								批量导入 </a>
+						</li>
+					</ul>
+				</div>
+				<div class="tab-content">
+					<div class="col-sm-12" style="padding-left: 0">
+						<div class="ibox float-e-margins">
+							<div class="ibox-title">
+								<span class="label"><b>配置例检主机信息，默认同步至OMSCC后台</b></span>
+								<div class="ibox-tools">
+									<a class="collapse-link">
+										<i class="fa fa-chevron-up"></i>
+									</a>
+									<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+										<i class="fa fa-wrench"></i>
+									</a>
+									<ul class="dropdown-menu dropdown-user">
+									</ul>
+									<a class="close-link">
+										<i class="fa fa-times"></i>
+									</a>
+								</div>
+							</div>
+							<div class="ibox-content">
+								<form method="post" class="form-horizontal" action="" enctype="multipart/form-data">
+
+									<div class="form-group required">
+										<label class="col-md-2 control-label" for="id_os">操作系统</label>
+										<div class="col-md-9">
+											<select name="os" class="form-control" title="" id="id_os">
+												<option value="Linux" selected="">Linux</option>
+												<option value="AIX" selected="">AIX</option>
+												<option value="HPUX" selected="">HPUX</option>
+											</select>
+										</div>
+									</div>
+
+
+									<div class="form-group required">
+										<label class="col-md-2 control-label" for="id_pt">业务平台</label>
+										<div class="col-md-9">
+											<input type="text" name="pt" class="form-control" title="" required="" id="id_pt">
+										</div>
+									</div>
+
+									<div class="form-group required">
+										<label class="col-md-2 control-label" for="id_jq">网元名称</label>
+										<div class="col-md-9">
+											<input type="text" name="jq" class="form-control" title="" required="" id="id_jq">
+										</div>
+									</div>
+
+									<div class="form-group required">
+										<label class="col-md-2 control-label" for="id_zj">主机</label>
+										<div class="col-md-9">
+											<input type="text" name="zj" class="form-control" title="" required="" id="id_zj">
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-md-2 control-label" for="id_zh">账户</label>
+										<div class="col-md-9">
+											<input type="text" name="zh" class="form-control" title="" id="id_zh">
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-md-2 control-label" for="id_jctype">检查类型</label>
+										<div class="col-md-9">
+											<input type="text" name="jctype" class="form-control" title="" id="id_jctype">
+										</div>
+									</div>
+
+									<div class="form-group
+
+">
+										<label class="col-md-2 control-label" for="id_jcnum">检查数量</label>
+										<div class="col-md-9">
+											<input type="number" name="jcnum" class="form-control" title="" id="id_jcnum">
+										</div>
+									</div>
+
+									<div class="form-group required">
+										<label class="col-md-2 control-label" for="id_ip">IP</label>
+										<div class="col-md-9">
+											<input type="text" name="ip" class="form-control" title="" required="" id="id_ip">
+										</div>
+									</div>
+
+									<div class="hr-line-dashed"></div>
+									<div class="form-group">
+										<div class="col-sm-4 col-sm-offset-2">
+											<button class="btn btn-white" type="reset">重置</button>
+											<button id="submit_button" class="btn btn-primary" type="submit">提交</button>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

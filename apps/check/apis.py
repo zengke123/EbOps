@@ -9,13 +9,13 @@ from flask_login import login_required
 @check.route("/get_nodes", methods=['GET', 'POST'])
 @login_required
 def get_nodes():
-    cluste_type = db.session.query(distinct(CheckHost.node)).all()
+    cluste_type = db.session.query(distinct(CheckHost.pt)).all()
     nodes = [x[0] for x in cluste_type]
     # ztree 一级节点
     z_nodes = []
     for i, node in enumerate(nodes):
-        cluste_temps = db.session.query(distinct(CheckHost.cluster)).filter(CheckHost.node == node).order_by(
-            CheckHost.cluster).all()
+        cluste_temps = db.session.query(distinct(CheckHost.jq)).filter(CheckHost.pt == node).order_by(
+            CheckHost.jq).all()
         clusters = [x[0] for x in cluste_temps]
         # 二级节点
         childrens = [{'name': cluster} for cluster in clusters]
@@ -31,8 +31,11 @@ def get_nodes():
 @check.route("/get_hosts", methods=['GET', 'POST'])
 def get_hosts():
     cluester = request.form.get('cluster')
-    hosts_temp = CheckHost.query.filter(CheckHost.cluster == cluester).all()
-    hosts = [x.hostname for x in hosts_temp]
+    # hosts_temp = CheckHost.query.filter(CheckHost.jq == cluester).all()
+    # hosts = [x.zj for x in hosts_temp]
+    host_temps = db.session.query(distinct(CheckHost.zj)).filter(CheckHost.jq == cluester).order_by(
+        CheckHost.zj).all()
+    hosts = [x[0] for x in host_temps]
     result = []
     host_ip = None
     for i, x in enumerate(hosts):

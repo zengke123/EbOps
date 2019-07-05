@@ -154,9 +154,14 @@ class CheckHost(db.Model):
     """
     __tablename__ = 'c_host'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    node = db.Column(db.String(32), index=True, nullable=False)
-    cluster = db.Column(db.String(32), index=True, nullable=False)
-    hostname = db.Column(db.String(32), unique=True, nullable=False)
+    os = db.Column(db.String(32), nullable=False)
+    pt = db.Column(db.String(32), index=True, nullable=False)
+    jq = db.Column(db.String(32), index=True, nullable=False)
+    zj = db.Column(db.String(32), nullable=False)
+    zh = db.Column(db.String(32))
+    jctype = db.Column(db.String(32))
+    jcnum = db.Column(db.String(32))
+    ip = db.Column(db.String(32), nullable=False)
 
 
 # 例检历史记录

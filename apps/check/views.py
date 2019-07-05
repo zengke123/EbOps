@@ -1,11 +1,11 @@
 from . import check
 from .. import db
-from ..models import CheckHistory
+from ..models import CheckHistory, CheckHost
 from flask import render_template, request, jsonify, send_from_directory
 from flask_login import login_required, current_user
 from .exts import test_check, down_report
-from .settings import DOWNLOAD_FOLDER
-
+from werkzeug.utils import secure_filename
+from .settings import ALLOWED_EXTENSIONS, UPLOAD_FOLDER, TEMPLATE_FOLDER, DOWNLOAD_FOLDER
 # 例检状态全局变量
 status = {}
 
@@ -89,3 +89,104 @@ def download(file):
     filepath = DOWNLOAD_FOLDER + str(file) + '/'
     filename = str(file) + ".tar.gz"
     return send_from_directory(filepath, filename, as_attachment=True)
+
+
+# 例检配置
+@check.route('/config', methods=['GET', 'POST'])
+@login_required
+def config():
+    if request.method == "GET":
+        return render_template('check_config.html', app="自动例检", action="例检配置")
+    elif request.method == "POST":
+        data = request.form.to_dict()
+        print(data)
+        add_host = CheckHost(**data)
+        db.session.add(add_host)
+        db.session.commit()
+        return "success"
+
+
+# 批量导入例检配置
+@check.route('/config/load', methods=['GET', 'POST'])
+@login_required
+def load_config():
+    return render_template('check_load.html', app="自动例检", action="例检配置")
+
+
+# 下载导入例检主机模板
+@check.route('/down_templates')
+@login_required
+def down_templates():
+    filename = 'check_data.xlsx'
+    return send_from_directory(TEMPLATE_FOLDER, filename=filename, as_attachment=True)
+
+
+# 资产导入模板允许文件
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+# 导入例检主机
+@check.route('/fm_import', methods=["GET", "POST"])
+@login_required
+def fm_import():
+    import os
+    if request.method == 'POST':
+        # 请求中无文件
+        if 'file' not in request.files:
+            return jsonify({'flag': 'fail', 'msg': '上传文件失败'})
+        file = request.files['file']
+        # 文件名为空
+        if file.filename == '':
+            return jsonify({'flag': 'fail', 'msg': '文件名错误'})
+        # 文件符合要求
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(UPLOAD_FOLDER, filename))
+            # 调用入库函数
+            nums = load_to_db(UPLOAD_FOLDER + filename)
+            return jsonify({'flag': 'success', 'msg': '导入成功' + str(nums)})
+        else:
+            return jsonify({'flag': 'fail', 'msg': '上传文件格式错误'})
+
+
+# 导入资产入库
+def load_to_db(filename):
+    from openpyxl import load_workbook
+    nums = 0
+    # 与数据中字段一致
+    host_names = ["os", "pt", "jq", "zj", "zh", "jctype", "jcnum", "ip"]
+    infos = {
+        "cols": host_names,
+        "sheet": "hosts"
+        }
+    try:
+        wb = load_workbook(filename)
+        # 读取导入excel文件中的sheet表
+        ws = wb[infos.get("sheet")]
+        # 获取列数
+        cols = len(infos.get("cols"))
+        # 获取行数
+        rows = ws.max_row
+        dbs = []
+        # 读取excel中每行数据，构造成dict, 方便入库
+        for i in range(2, rows + 1):
+            data = []
+            for j in range(1, cols + 1):
+                value = ws.cell(i, j).value
+                if not value:
+                    value = ""
+                data.append(value)
+            item = {k: v for k, v in zip(infos.get("cols"), data)}
+            dbs.append(CheckHost(**item))
+        # 批量添加
+        db.session.add_all(dbs)
+        db.session.commit()
+        nums = len(dbs)
+    except Exception as e:
+        print(str(e))
+    finally:
+        # 最后删除上传的文件
+        import os
+        os.remove(filename)
+    return nums

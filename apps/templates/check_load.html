@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="ibox float-e-margins">
+				<div class="panel-options">
+					<ul class="nav nav-tabs">
+						<li>
+							<a href="{{ url_for('check.config') }}" class="text-center"><i class="fa fa-cog"></i> 配置信息
+							</a>
+						</li>
+						<li class="active">
+							<a href="{{ url_for('check.load_config') }}" class="text-center"><i class="fa fa-outdent"></i>
+								批量导入 </a>
+						</li>
+					</ul>
+				</div>
+				<div class="tab-content">
+					<div class="col-sm-12" style="padding-left: 0">
+						<div class="ibox float-e-margins">
+							<div class="ibox-title">
+								<span class="label"><b>批量导入，默认同步至OMSCC后台</b></span>
+								<div class="ibox-tools">
+									<a class="collapse-link">
+										<i class="fa fa-chevron-up"></i>
+									</a>
+									<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+										<i class="fa fa-wrench"></i>
+									</a>
+									<ul class="dropdown-menu dropdown-user">
+									</ul>
+									<a class="close-link">
+										<i class="fa fa-times"></i>
+									</a>
+								</div>
+							</div>
+                            <div class="ibox-content">
+                                <form  class="form-horizontal">
+                                    <div class="form-group">
+                                        <a href="{{ url_for('check.down_templates') }}" style="display: block"> &nbsp;&nbsp;下载导入模版</a>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label" for="id_file"> 请选择excel文件导入</label>
+                                        <input id="id_file" type="file" name="file">
+                                    </div>
+
+
+
+									<div class="hr-line-dashed"></div>
+									<div class="form-group">
+										<div class="col-sm-4 col-sm-offset-2">
+											<button class="btn btn-white" type="reset">重置</button>
+											<button id="btn_import_confirm" class="btn btn-primary" type="button">提交</button>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+    $("#btn_import_confirm").click(function (){
+        var file = document.getElementById('id_file').files[0];
+        if(!file){
+            toastr.error("选择文件");
+            return
+        }
+        var formFile = new FormData();
+        formFile.append("file", file); //加入文件对象
+        $.ajax({
+            url: "{{ url_for('check.fm_import') }}",
+            type: "post",
+            data: formFile,
+            processData: false,
+            contentType: false,
+            success:function(data) {
+            if(data["flag"]==="success"){
+              toastr.info(data["msg"]);
+            }
+            else toastr.error(data["msg"]);
+            }
+          });
+    });
+
+</script>
+{% endblock %}
