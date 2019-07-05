@@ -13,7 +13,11 @@ def page_not_found(e):
 
 @api_1.app_errorhandler(500)
 def internal_server_error(e):
-    return make_response(jsonify({'error': 'internal server error'}), 500)
+    if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
+        response = jsonify({'error': 'internal server error'})
+        response.status_code = 500
+        return response
+    return render_template('500.html'), 500
 
 
 def forbidden(message):

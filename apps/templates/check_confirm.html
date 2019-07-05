@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+		<div class="col-sm-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>
+						例检 {{ hostname }}
+					</h5>
+					<div class="ibox-tools">
+						<a class="collapse-link">
+							<i class="fa fa-chevron-up"></i>
+						</a>
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+							<i class="fa fa-wrench"></i>
+						</a>
+						<a class="close-link">
+							<i class="fa fa-times"></i>
+						</a>
+					</div>
+				</div>
+				<div class="ibox-content" id="pic">
+					<div id="actions">
+                        <div class="input-group">
+                            <form>
+                                <p>
+                                    请确认主机,执行后无法暂停及取消.
+                                </p>
+                                <button type="button" id="DA" style="height: 32px;" class="btn btn-sm btn-primary" onclick="false">
+                                    <i class="fa fa-play"></i> 执行
+                                </button>
+                                <button type="button" id="CA" style="height: 32px;" class="btn btn-sm btn-danger call_back_class" onclick="javascript:history.back(-1);">
+                                    返回
+                                </button>
+                            </form>
+                        </div>
+					</div>
+                    <div><hr>
+                        <h5><span class="label label-default">运行进度</span></h5>
+                    </div>
+                    <div class="progress">
+                        <div style="width: 0%" aria-valuemax="100" aria-valuemin="0" role="progressbar" class="progress-bar progress-bar-striped active" id="bar">
+                            <span class="sr-only">100% Complete (success)</span>
+                        </div>
+                    </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#DA").click(function () {
+            var DA = document.getElementById("DA");
+            var CA = document.getElementById("CA");
+            DA.setAttribute("disabled", "disabled");
+            CA.setAttribute("disabled", "disabled");
+            var seed = Math.random();
+            console.log(seed);
+            var hostname = "{{ hostname }}";//获取例检主机名称
+            var hosttype = "{{ host_type }}";//获取例检主机名称
+            $("#bar").attr("class", "progress-bar progress-bar-striped active");
+            $("#bar").width(0);
+            //$.ajaxSetup({ cache: false });
+                var sitv = setInterval(function () {
+                    var urlStr = "/check/autocheck_status/" + Math.random();
+                    $.ajax({
+                        url: urlStr,
+                        data: {seed: seed},
+                        type: 'POST',
+                        async: true,
+                        success: function (percent) {
+                            var bar = document.getElementById("bar");
+                            bar.style = "width: " + percent + "%";
+                            $("#bar").width(percent + '%');
+                            console.log(percent)
+                        }
+                    })
+                }, 3000);
+                $.ajax({
+                    url: "{{ url_for("check.autocheck_run") }}",
+                    type: 'POST',
+                    async: true,
+                    dataType:"json",
+                    data: {
+                        hostname: hostname,
+                        type: hosttype,
+                        seed: seed
+                    },
+                    success: function (data) {
+                        clearInterval(sitv);
+                        $("#bar").width(100 + "%");
+                        $('#bar').attr("class", "progress-bar progress-bar-default");
+                        var para = document.createElement("h5");
+                        para.id = "result";
+                        var element = document.getElementById("pic");
+                        var flag = data.flag;
+                        var filename = data.filename;
+                        var lj_result= data.lj_result;
+                        if( flag==="success"){
+                            toastr.info("例检完成");
+                            var node = document.createTextNode("例检完成 ");
+                            para.appendChild(node);
+                            element.appendChild(para);
+                            var a = document.createElement("a");
+                            var node1 = document.createTextNode("导出报告");
+                            a.appendChild(node1);
+                            var down_link = "/check/download/" + filename;
+                            a.setAttribute("href",down_link);
+                            a.className="btn btn-danger btn-xs";
+                            var element1=document.getElementById("result");
+                            element1.appendChild(a)
+                        }
+                        else{
+                            toastr.error("例检失败");
+                            var node2 = document.createTextNode("例检失败");
+                            para.appendChild(node2);
+                            element.appendChild(para);
+                            var node4 = document.createElement("br");
+                            para.appendChild(node4);
+                            var node3 = document.createTextNode(lj_result);
+                            para.appendChild(node3);
+                            element.appendChild(para);
+                        }
+                        CA.removeAttribute("disabled")
+                    }
+                });
+            return false //避免重复提交，button为submit类型，IE和火狐下先进行的form表单提交，导致ajax请求失败
+            // 改button类型为button可以解决，或者return false,JS提交后，避免表单重复提交
+        })
+    });
+</script>
+
+{% endblock %}

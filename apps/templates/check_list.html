@@ -126,7 +126,7 @@
 
         function zTreeOnClick(event, treeId, treeNode) {
             $("#hosts").html("");
-            document.getElementById("check_nodes").setAttribute('href',"/check/" + treeNode.name);
+            document.getElementById("check_nodes").setAttribute('href',"/check/lj?clustername=" + treeNode.name);
             $.ajax({
                 url: "{{ url_for("check.get_hosts") }}",
                 type: 'POST',
@@ -150,7 +150,7 @@
                             "<td class=\"text-center\">" + n.ip + "</td>\n<td class=\" text-center\">" + "时间" +
                             "</td>\n" +
                             "<td class=\" text-center\">\n" +
-                            "<a href=\"#\" class=\"btn btn-xs btn-info\">例检</a>\n" +
+                            "<a href=\"/check/lj?hostname=" + n.name +"\" class=\"btn btn-xs btn-info\">例检</a>\n" +
                             "<a class=\"btn btn-xs btn-danger m-l-xs btn_asset_delete\" data-uid=\"\">删除</a>\n" +
                             "</td>\n" +
                             "</tr>";
