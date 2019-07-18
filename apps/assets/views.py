@@ -5,7 +5,7 @@ from sqlalchemy import distinct, func, or_
 from flask import jsonify, render_template, request, redirect, url_for, send_from_directory
 from flask_login import login_required
 from werkzeug.utils import secure_filename
-from .settings import ALLOWED_EXTENSIONS, UPLOAD_FOLDER, TEMPLATE_FOLDER, DOWNLOAD_FOLDER
+from ..settings import ALLOWED_EXTENSIONS, UPLOAD_FOLDER, TEMPLATE_FOLDER, DOWNLOAD_FOLDER
 
 
 # 主机详细信息

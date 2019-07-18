@@ -1,7 +1,7 @@
 import os
 import time
 import datetime
-from .settings import DOWNLOAD_FOLDER
+from ..settings import CHECK_DOWNLOAD_FOLDER
 
 
 def auto_check(lj_type, name):
@@ -48,7 +48,7 @@ def down_report():
     # omscc4.0自动例检日志存放目录
     src_path = "/home/omscc/zengke/output/*"
     # web备份目录 DOWNLOAD_FOLDER，用于下载例检报告
-    dst_path = DOWNLOAD_FOLDER + str(name)
+    dst_path = CHECK_DOWNLOAD_FOLDER + str(name)
     os.mkdir(dst_path)
     cp_cmd = "cp -R {} {}".format(src_path, dst_path)
     os.system(cp_cmd)

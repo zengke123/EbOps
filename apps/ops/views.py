@@ -83,12 +83,13 @@ def ops_log(log_id):
 @login_required
 def request_log():
     import os
+    from ..settings import OPS_LOG_FOLDER
     log_id = request.args.get('log_id')
-    filepath = '/Users/EB/PycharmProjects/EbOps'
+    # filepath = '/Users/EB/PycharmProjects/EbOps'
     filename = log_id + '.txt'
     result = ''
     try:
-        with open(os.path.join(filepath, filename), encoding="utf-8") as f:
+        with open(os.path.join(OPS_LOG_FOLDER, filename), encoding="utf-8") as f:
             lines = f.readlines()
             for line in lines:
                 result += line + '\r\n'

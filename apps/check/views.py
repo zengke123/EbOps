@@ -3,9 +3,9 @@ from .. import db
 from ..models import CheckHistory, CheckHost
 from flask import render_template, request, jsonify, send_from_directory
 from flask_login import login_required, current_user
-from .exts import test_check, down_report
+from .exts import auto_check, down_report
 from werkzeug.utils import secure_filename
-from .settings import ALLOWED_EXTENSIONS, UPLOAD_FOLDER, TEMPLATE_FOLDER, DOWNLOAD_FOLDER
+from ..settings import ALLOWED_EXTENSIONS, UPLOAD_FOLDER, TEMPLATE_FOLDER, CHECK_DOWNLOAD_FOLDER
 # 例检状态全局变量
 status = {}
 
@@ -54,7 +54,7 @@ def autocheck_run():
     seed = request.form.get("seed")
     status[seed] = 20
     try:
-        flag, result = test_check(host_type, hostname)
+        flag, result = auto_check(host_type, hostname)
     except:
         flag = "fail"
         result = "WEB后台例检模块异常"
@@ -63,8 +63,8 @@ def autocheck_run():
     time.sleep(5)
     # 例检成功，添加到历史记录
     if flag == "success":
-        # report_name = down_report()
-        report_name = '20190705112'
+        report_name = down_report()
+        # report_name = '20190705112'
         new_type = "集群" if host_type == "jq" else "主机"
         add_log = CheckHistory(checktime=report_name, hostname=hostname, type=new_type, operator=current_user.username)
         db.session.add(add_log)
@@ -73,7 +73,7 @@ def autocheck_run():
         report_name = "null"
     status[seed] = 100
     status.pop(seed)
-    return jsonify({'flag': flag, 'filename': "123456", 'lj_result': result})
+    return jsonify({'flag': flag, 'filename': report_name, 'lj_result': result})
 
 
 # 获取例检状态,实现前端进度条
@@ -86,7 +86,7 @@ def autocheck_status(id):
 # 下载例检报告
 @check.route('/download/<file>')
 def download(file):
-    filepath = DOWNLOAD_FOLDER + str(file) + '/'
+    filepath = CHECK_DOWNLOAD_FOLDER + str(file) + '/'
     filename = str(file) + ".tar.gz"
     return send_from_directory(filepath, filename, as_attachment=True)
 

@@ -84,7 +84,7 @@ class OpsResult(db.Model):
     time: 执行时间
     s_times: 执行成功次数
     f_times: 执行失败次数
-    result: 执行结果
+    result: 是否执行
     log_id: 任务编号,日志编号
     """
     __tablename__ = 'ops_result'
