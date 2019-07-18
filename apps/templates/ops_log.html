@@ -68,7 +68,8 @@
             disableStdin: true
         });
         term.open(document.getElementById('term'));
-        term.resize(90, 32);
+        // term.resize(90, 32);
+        term.resize(180, 64);
         resize();
         term.on('data', function (data) {
 

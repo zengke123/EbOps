@@ -46,7 +46,7 @@
                                                 <th class="text-center" style="width: 10%;">任务编号</th>
                                                 <th class="text-center " style="width: 15%;">检查网元</th>
                                                 <th class="text-center " style="width: 15%;">主机名称</th>
-                                                <th class="text-center" style="width: 10%;">执行结果</th>
+                                                <th class="text-center" style="width: 10%;">任务状态</th>
                                                 <th class="text-center" style="width: 25%;">检查结果</th>
                                                 <th class="text-center" style="width: 25%;">失败原因</th>
                                             </tr>
@@ -57,7 +57,7 @@
                                                 <td class=" text-center">{{ ops_event.log_id }}</td>
                                                 <td class=" text-center">{{ ops_event.cluster }}</td>
                                                 <td class=" text-center">{{ ops_event.hostname }}</td>
-                                                {% if ops_event.status=='成功' %}
+                                                {% if ops_event.status=='succ' %}
                                                 <td class=" text-center"><i class="fa fa-check text-navy"></i></td>
                                                 {% else %}
                                                 <td class=" text-center"><i class="fa fa-times text-danger"></i></td>

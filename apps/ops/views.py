@@ -95,6 +95,7 @@ def request_log():
                 result += line + '\r\n'
             f.close()
     except Exception as e:
+        print(str(e))
         result = "\n日志文件不存在"
     logs = {
         "data": result,
@@ -116,8 +117,8 @@ def task(log_id):
     result = OpsResult.query.filter(OpsResult.log_id == log_id).order_by(OpsResult.time.desc()).first()
     # 查询任务明细
     events = OpsEvent.query.filter(OpsEvent.log_id == log_id).all()
-    succ_events = [event for event in events if event.status == "成功"]
-    fail_events = [event for event in events if event.status == "失败"]
+    succ_events = [event for event in events if event.status == "succ"]
+    fail_events = [event for event in events if event.status == "fail"]
     return render_template('ops_task.html', app='作业计划', action="任务详情", log_id=log_id, item=item, result=result,
                            succ_events=succ_events, fail_events=fail_events)
 
