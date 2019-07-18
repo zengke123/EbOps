@@ -103,7 +103,8 @@ def config():
         add_host = CheckHost(**data)
         db.session.add(add_host)
         db.session.commit()
-        return "success"
+        info = "创建成功"
+        return render_template('check_set_success.html', app="自动例检", action="例检配置", info=info)
 
 
 # 批量导入例检配置
@@ -190,3 +191,39 @@ def load_to_db(filename):
         import os
         os.remove(filename)
     return nums
+
+
+# 删除设备
+@check.route('/delete', methods=["GET", "POST"])
+@login_required
+def delete():
+    hostname = request.form.get('id')
+    try:
+        to_deletes = CheckHost.query.filter(CheckHost.zj == hostname).all()
+        for to_delete in to_deletes:
+            db.session.delete(to_delete)
+        db.session.commit()
+        result = {"flag": "success"}
+    except Exception as e:
+        print(str(e))
+        result = {"flag": "fail"}
+    return jsonify(result)
+
+
+# 批量删除设备
+@check.route('/multi_delete', methods=["GET", "POST"])
+@login_required
+def multi_delete():
+    _hosts = request.form.get('hosts')
+    _hosts_temp = _hosts.split(',')
+    # 去除checkbox选择的无效选项
+    _hosts_list = [x for x in _hosts_temp if x != '' and x != 'on']
+    if _hosts_list:
+        for hostname in _hosts_list:
+            to_deletes = CheckHost.query.filter(CheckHost.zj == hostname).all()
+            for to_delete in to_deletes:
+                db.session.delete(to_delete)
+        db.session.commit()
+        return "success"
+    else:
+        return "fail"
