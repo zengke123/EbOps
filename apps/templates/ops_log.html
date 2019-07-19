@@ -63,9 +63,12 @@
             cursorBlink: false,
             screenKeys: false,
             fontFamily: '"Monaco", "Consolas", "monospace"',
-            fontSize: 12,
+            fontSize: 14,
             rightClickSelectsWord: true,
-            disableStdin: true
+            disableStdin: true,
+            theme: {
+              background: '#404040'
+            }
         });
         term.open(document.getElementById('term'));
         // term.resize(90, 32);

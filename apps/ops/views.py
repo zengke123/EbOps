@@ -89,7 +89,9 @@ def request_log():
     filename = log_id + '.txt'
     result = ''
     try:
-        with open(os.path.join(OPS_LOG_FOLDER, filename), encoding="utf-8") as f:
+        date = log_id.split('_')[2][:8]
+        filepath = OPS_LOG_FOLDER + date
+        with open(os.path.join(filepath, filename), encoding="gbk") as f:
             lines = f.readlines()
             for line in lines:
                 result += line + '\r\n'
