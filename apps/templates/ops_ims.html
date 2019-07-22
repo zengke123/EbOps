@@ -85,9 +85,9 @@
                                 </td>
                             {% else %}
                                 <td class="text-left"><a href="#">{{ item.content }}</a></td>
-                                <td class="text-center">{{ item.cycle }}</td>
+                                <td class="text-center"><span onclick="attention('{{ item.item_id }}')">{{ item.cycle }}</span></td>
                                 <td class="text-center">
-                                   <span class="text-danger">0</span>/<span class="text-navy">0</span>/0
+                                   <span class="text-navy">0</span>/<span class="text-danger">0</span>/0
                                 </td>
                                 <td class="text-center"><i class="fa fa-times text-danger"></i></td>
                                 <td class="text-center"></td>
@@ -116,16 +116,31 @@
 
 <script>
 
-        $(document).ready(function() {
-            $('.input-daterange.input-group').datepicker({
-                format: "yyyymmdd",
-                todayBtn: "linked",
-                keyboardNavigation: false,
-                forceParse: false,
-                calendarWeeks: true,
-                autoclose: true
+    $(document).ready(function() {
+        $('.input-daterange.input-group').datepicker({
+            format: "yyyymmdd",
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            calendarWeeks: true,
+            autoclose: true
+        });
+    });
+
+    function attention(id) {
+        $.post("{{ url_for('ops.get_checktime') }}",
+            {
+                item_id: id
+            },
+            function (data) {
+                if(data['flag']==="success"){
+                    toastr.info(data['message']);
+                }
+                else toastr.error("ajax请求失败")
             });
-        })
+
+    }
 
     </script>
+
 {% endblock %}

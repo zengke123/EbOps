@@ -17,8 +17,8 @@
 </div>
 
 <script>
-    var rowHeight = 18;
-    var colWidth = 10;
+    // var rowHeight = 18;
+    // var colWidth = 10;
     var mark = '{{ log_id }}';
     var url = "/ops/req";
     var term;
@@ -27,13 +27,13 @@
     var interval = 200;
     var success = true;
 
-    function calWinSize() {
-        var t = $('#marker');
-
-    }
-    function resize() {
-
-    }
+    // function calWinSize() {
+    //     var t = $('#marker');
+    //
+    // }
+    // function resize() {
+    //
+    // }
     function requestAndWrite() {
         if (!end && success) {
             success = false;
@@ -68,22 +68,24 @@
             disableStdin: true,
             theme: {
               background: '#404040'
-            }
+            },
+            rows:10000,
+            scrollback: 10000
         });
         term.open(document.getElementById('term'));
         // term.resize(90, 32);
-        term.resize(180, 64);
-        resize();
-        term.on('data', function (data) {
-
-            term.write(data);
-        });
-        window.onresize = function () {
-            resize()
-        };
-
-        setInterval(function () {
-            requestAndWrite()
-        }, interval)
+        term.resize(90, 40);
+        // resize();
+        // term.on('data', function (data) {
+        //
+        //     term.write(data);
+        // });
+        // window.onresize = function () {
+        //     resize()
+        // };
+        requestAndWrite()
+        // setInterval(function () {
+        //     requestAndWrite()
+        // }, interval)
     });
 </script>

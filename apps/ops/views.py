@@ -91,7 +91,7 @@ def request_log():
     try:
         date = log_id.split('_')[2][:8]
         filepath = OPS_LOG_FOLDER + date
-        with open(os.path.join(filepath, filename), encoding="gbk") as f:
+        with open(os.path.join(filepath, filename), encoding="utf-8") as f:
             lines = f.readlines()
             for line in lines:
                 result += line + '\r\n'
@@ -142,3 +142,22 @@ def task_history(log_id):
     return render_template('ops_task_history.html', app='作业计划', action="任务详情", log_id=log_id, item=item,
                            events=task_events, paginate=paginate)
 
+
+# 获取作业计划最后执行时间
+@ops.route("/get_checktime", methods=['GET', 'POST'])
+@login_required
+def get_checktime():
+    item_id = request.form.get('item_id')
+    check_log = db.session.query(OpsResult).filter(OpsResult.item_id==item_id).order_by(OpsResult.date.desc()).first()
+    if check_log:
+        checktime = str(check_log.date) + ":" + str(check_log.time)
+        result = {
+            'flag': "success",
+            'message': "上次执行时间: {}".format(checktime)
+        }
+    else:
+        result = {
+            'flag': "success",
+            'message': "未查询到执行记录"
+        }
+    return jsonify(result)
