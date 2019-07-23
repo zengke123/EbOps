@@ -1,6 +1,6 @@
 from . import ops
 from .. import db
-from ..models import OpsItem, OpsInfo, OpsResult, OpsEvent
+from ..models import OpsItem, OpsInfo, OpsResult, OpsEvent, OpsUndo
 from datetime import datetime
 from sqlalchemy import and_
 from flask import render_template, request, jsonify
@@ -18,6 +18,15 @@ def get_result(ops_infos, date):
     return results
 
 
+# 获取对应date 未执行记录原因
+def get_undo_task(date):
+    # 根据date匹配未执行原因的作业计划item_id, 并去重处理
+    result_temps = OpsUndo.query.filter(OpsUndo.datetime.like(date+'%')).all()
+    results = [x.item_id for x in result_temps]
+    # 去重
+    return set(results)
+
+
 @ops.route("/<ops_type>", methods=['GET', 'POST'])
 @login_required
 def index(ops_type):
@@ -33,7 +42,9 @@ def index(ops_type):
         date = datetime.now().strftime('%Y%m%d')
     # 根据日期和作业计划项item_id 获取执行记录
     _ops_results = get_result(_ops_infos, date)
-    return render_template('ops_ims.html', app='作业计划', action=ops_item, ops_item=ops_item, ops_results=_ops_results)
+    undo_tasks = get_undo_task(date)
+    return render_template('ops_ims.html', app='作业计划', action=ops_item, ops_item=ops_item, ops_results=_ops_results,
+                           undo_tasks=undo_tasks)
 
 
 # @ops.route("/sec",methods=['GET','POST'])

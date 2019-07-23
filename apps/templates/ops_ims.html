@@ -89,8 +89,13 @@
                                 <td class="text-center">
                                    <span class="text-navy">0</span>/<span class="text-danger">0</span>/0
                                 </td>
+                                {% if item.item_id in undo_tasks %}
+                                <td class="text-center"><i class="fa fa-minus text-muted"></i></td>
+                                <td class="text-center">今日无需执行</td>
+                                {% else %}
                                 <td class="text-center"><i class="fa fa-times text-danger"></i></td>
                                 <td class="text-center"></td>
+                                {% endif %}
                                 <td class="text-center"></td>
                                 <td class="text-center">
                                     <a data-uid="" class="btn btn-xs btn-primary btn-run">执行</a>

@@ -143,6 +143,21 @@ class OpsEvent(db.Model):
         }
 
 
+# 作业计划未执行记录
+class OpsUndo(db.Model):
+    """
+    id: 编号
+    datetime: 记录时间 YYYYMMDDHHMMSS
+    item_id: 作业计划单项编号,与ops_info一致
+    reason: 未执行原因(无需执行)
+    """
+    __tablename__ = 'ops_undo'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    datetime = db.Column(db.String(32), index=True)
+    item_id = db.Column(db.String(64), index=True)
+    reason = db.Column(db.Text, nullable=True)
+
+
 # 自动例检相关表模型
 # 例检主机
 class CheckHost(db.Model):
@@ -227,9 +242,9 @@ class Host(db.Model):
     engine_room = db.Column(db.String(64))
     frame_number = db.Column(db.String(32))
     power_frame_number = db.Column(db.String(32))
-    net_time = db.Column(db.Date, default='2000-01-01')
-    s_period = db.Column(db.Date, default='2000-01-01')
-    h_period = db.Column(db.Date, default='2000-01-01')
+    net_time = db.Column(db.String(32))
+    s_period = db.Column(db.String(32))
+    h_period = db.Column(db.String(32))
     power = db.Column(db.String(32))
     status = db.Column(db.String(32))
 
