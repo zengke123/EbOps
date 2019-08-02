@@ -1,4 +1,6 @@
 alembic==1.0.9
+certifi==2019.6.16
+chardet==3.0.4
 Click==7.0
 et-xmlfile==1.0.1
 Flask==1.0.2
@@ -8,6 +10,7 @@ Flask-Migrate==2.4.0
 Flask-Script==2.0.6
 Flask-SQLAlchemy==2.4.0
 Flask-WTF==0.14.2
+idna==2.8
 itsdangerous==1.1.0
 jdcal==1.4.1
 Jinja2==2.10.1
@@ -21,7 +24,9 @@ protobuf==3.7.1
 python-dateutil==2.8.0
 python-editor==1.0.4
 pytz==2019.1
+requests==2.22.0
 six==1.12.0
 SQLAlchemy==1.3.3
+urllib3==1.25.3
 Werkzeug==0.15.2
 WTForms==2.2.1
