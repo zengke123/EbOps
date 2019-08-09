@@ -4,7 +4,10 @@ from ..models import OpsItem, OpsInfo, OpsResult, OpsEvent, OpsUndo
 from datetime import datetime
 from sqlalchemy import and_
 from flask import render_template, request, jsonify
-from flask_login import login_required
+from flask_login import login_required, current_user
+from .tasks import zyjh
+import requests
+import time
 
 
 # 获取对应date 最新的执行记录结果
@@ -109,7 +112,7 @@ def request_log():
             f.close()
     except Exception as e:
         print(str(e))
-        result = "\n日志文件不存在"
+        result = "\n读取日志文件错误,错误原因：" + str(e)
     logs = {
         "data": result,
         "end": True,
@@ -159,7 +162,7 @@ def task_history(log_id):
 @login_required
 def get_checktime():
     item_id = request.form.get('item_id')
-    check_log = db.session.query(OpsResult).filter(OpsResult.item_id==item_id).order_by(OpsResult.date.desc()).first()
+    check_log = db.session.query(OpsResult).filter(OpsResult.item_id == item_id).order_by(OpsResult.date.desc()).first()
     if check_log:
         checktime = str(check_log.date) + ":" + str(check_log.time)
         result = {
@@ -172,3 +175,59 @@ def get_checktime():
             'message': "未查询到执行记录"
         }
     return jsonify(result)
+
+
+# 作业计划执行
+@ops.route("/execute", methods=['GET', 'POST'])
+@login_required
+def execute():
+    item_id = request.form.get("item_id")
+    # result = req_zyjh(item_id)
+    zyjh_item = OpsInfo.query.filter(OpsInfo.item_id == item_id).first()
+    zyjh_task = zyjh.delay(zyjh_item.api, zyjh_item.content, current_user.username)
+    return jsonify({'flag': 'success', 'desc': '任务已添加[id:{}]'.format(zyjh_task.id)})
+
+
+# 调用celery flower的api获取任务状态
+@ops.route("/monitor")
+@login_required
+def monitor():
+    celery_flower_api = 'http://127.0.0.1:5555/api/tasks'
+    r = requests.get(celery_flower_api)
+    result = r.json()
+    tasks = []
+
+    # api返回的时间为数字时间戳，需要转换格式
+    def format_time(st):
+        return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(st)) if st else ""
+
+    # 任务状态及页面颜色标识对应
+    state_map = {
+        'PENDING': ('待创建', 'danger'),
+        'RECEIVED': ('待执行', 'warning'),
+        'STARTED': ('执行中', 'navy'),
+        'SUCCESS': ('已完成', 'success'),
+        'FAILURE': ('失败', 'danger'),
+        'RETRY': ('重试', 'danger'),
+        'REVOKED': ('已撤销', 'danger')
+    }
+    # 获取任务信息
+    for k, v in result.items():
+        _task = {}
+        _task['id'] = k
+        _task['type'] = v.get('name')
+        _task_args = v.get('args')
+        _task_name = _task_args.split(',')[1].replace("'", "").strip(')')
+        _task_user = _task_args.split(',')[2].replace("'", "").strip(')')
+        _task['name'] = _task_name
+        _task['username'] = _task_user
+        # 获取状态映射关系，未找到默认为None
+        _task['state'] = state_map.get(v.get('state'), ('异常', 'danger'))
+        _task['result'] = v.get('result') if v.get('result') else ""
+        _task['received'] = format_time(v.get('received'))
+        _task['timestamp'] = format_time(v.get('succeeded'))
+        _task['runtime'] = format(v.get('runtime'), '.1f') if v.get('runtime') else ""
+        tasks.append(_task)
+    return render_template('ops_celery_tasks.html', app='任务管理', tasks=tasks)
+
+

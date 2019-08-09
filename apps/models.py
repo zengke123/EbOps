@@ -63,6 +63,7 @@ class OpsInfo(db.Model):
     cycle: 执行周期
     item_detail: 执行明细
     createtime: 创建时间
+    api: http调用服务名称
     """
     __tablename__ = 'ops_info'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -72,13 +73,13 @@ class OpsInfo(db.Model):
     cycle = db.Column(db.String(64))
     item_detail = db.Column(db.Text)
     createtime = db.Column(db.String(64))
+    api = db.Column(db.String(32))
 
 
 # 作业计划明细
 class OpsResult(db.Model):
     """
     id: 编号
-    t_name: 类型(ops_items中的t_name)
     item_id: 作业计划单项编号,与ops_info一致
     date: 执行日期
     time: 执行时间

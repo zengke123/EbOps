@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block custom_head_css_js %}
+<link rel="stylesheet" href="{{ url_for('static',filename='css/plugins/datepicker/datepicker3.css') }}"/>
+<script src="{{ url_for('static',filename='js/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
+{% endblock %}
+{% block content %}
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>
+						任务管理
+					</h5>
+					<div class="ibox-tools">
+						<a class="collapse-link">
+							<i class="fa fa-chevron-up"></i>
+						</a>
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+							<i class="fa fa-wrench"></i>
+						</a>
+						<a class="close-link">
+							<i class="fa fa-times"></i>
+						</a>
+					</div>
+				</div>
+				<div class="ibox-content">
+					<div class="" id="content_start">
+						<style>
+							#search_btn {margin-bottom: 0;}
+						</style>
+                        <div class="uc pull-left m-r-5">
+                           <a class="btn btn-sm btn-primary" id="check_nodes" href="/ops/monitor"> 刷新 </a>
+                        </div>
+						<form id="search_form" method="get" action="" class="pull-right form-inline">
+							<div class="form-group" id="date">
+								<div class="input-daterange input-group" id="datepicker">
+									<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+									<input type="text" id="id_date" class="input-sm form-control" style="width: 100px;" name="date"
+									 value="">
+								</div>
+							</div>
+							<div class="input-group">
+								<div class="input-group-btn">
+									<button id="search_btn" type="submit" class="btn btn-sm btn-primary">
+										搜索
+									</button>
+								</div>
+							</div>
+						</form>
+
+					</div>
+
+					<div id="login_log_table_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+						<div class="row">
+							<div class="col-sm-6"></div>
+							<div class="col-sm-6"></div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">
+								<table class="table table-striped table-bordered table-hover  dataTable no-footer" id="login_log_table" role="grid">
+									<thead>
+										<tr role="row">
+											<th class="text-center" tabindex="0" aria-controls="login_log_table" rowspan="1" colspan="1" style="width: 15%;">任务id</th>
+											<th class="text-center" tabindex="0" aria-controls="login_log_table" rowspan="1" colspan="1" style="width: 6%;">类型</th>
+											<th class="text-center" tabindex="0" aria-controls="login_log_table" rowspan="1" colspan="1" style="width: 6%;">提交者</th>
+											<th class="text-center" tabindex="0" aria-controls="login_log_table" rowspan="1" colspan="1" style="width: 15%;">名称</th>
+											<th class="text-center" tabindex="0" aria-controls="login_log_table" rowspan="1" colspan="1" style="width: 8%;">状态</th>
+											<th class="text-center" tabindex="0" aria-controls="login_log_table" rowspan="1" colspan="1" style="width: 12%;">创建时间</th>
+											<th class="text-center" tabindex="0" aria-controls="login_log_table" rowspan="1" colspan="1" style="width: 12%;">完成时间</th>
+                                            <th class="text-center" tabindex="0" aria-controls="login_log_table" rowspan="1" colspan="1" style="width: 8%;">运行时间</th>
+                                            <th class="text-center" tabindex="0" aria-controls="login_log_table" rowspan="1" colspan="1" style="width: 18%;">结果</th>
+									    </tr>
+									</thead>
+									<tbody>
+                                    {% for task in tasks %}
+                                        <tr class="gradeX odd" role="row">
+                                            <td class="text-center">{{ task.id }}</td>
+                                            <td class="text-center">作业计划</td>
+                                            <td class="text-center">{{ task.username }}</td>
+											<td class="text-center">{{ task.name }}</td>
+                                            <td class="text-center"><i class="fa fa-circle text-{{ task.state[1] }}"></i>  {{ task.state[0] }}</td>
+                                            <td class="text-center">{{ task.received }}</td>
+                                            <td class="text-center">{{ task.timestamp }}</td>
+                                            <td class="text-center">{{ task.runtime }}</td>
+                                            <td class="text-center">{{ task.result }}</td>
+                                        </tr>
+                                    {% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+                </div>
+			</div>
+		</div>
+	</div>
+
+</div>
+<script>
+    $(document).ready(function() {
+        $('.input-daterange.input-group').datepicker({
+            format: "yyyymmdd",
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            calendarWeeks: true,
+            autoclose: true
+        });
+    })
+</script>
+
+{% endblock %}

@@ -1,11 +1,14 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from celery import Celery
 import config
+
 
 # 创建SQLAlchemy实例
 db = SQLAlchemy()
-
+# 创建celery配置
+celery = Celery(__name__, broker='redis://localhost:6379/0')
 # 创建用户管理
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
@@ -20,6 +23,18 @@ def create_app():
     db.init_app(app)
     # 初始化用户管理
     login_manager.init_app(app)
+    # 更新celery配置
+    celery.conf.update(
+        broker_url='redis://localhost:6379/0',
+        result_backend='redis://localhost:6379/1',
+        worker_concurrency=1,
+        worker_prefetch_multiplier=1,
+        imports=('apps.ops.tasks',),
+        result_expires=1800,
+        timezone='Asia/Shanghai',
+        enable_utc=True,
+        task_send_sent_event=True
+    )
     # 蓝本注册
     # 用户认证模块
     from .auth import auth as auth_blueprint

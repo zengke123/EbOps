@@ -79,10 +79,6 @@
                                 <td class="text-center"><i class="fa fa-check text-navy"></i></td>
                                 <td class="text-center">{{ result.date }} {{ result.time }}</td>
                                 <td class="text-center"><a href="/ops/log/{{ result.log_id }}" target="_blank">查看</a></td>
-                                <td class="text-center">
-                                    <a data-uid="" class="btn btn-xs btn-primary btn-run">执行</a>
-                                    <a data-uid="" class="btn btn-xs btn-danger btn-del">删除</a>
-                                </td>
                             {% else %}
                                 <td class="text-left"><a href="#">{{ item.content }}</a></td>
                                 <td class="text-center"><span onclick="attention('{{ item.item_id }}')">{{ item.cycle }}</span></td>
@@ -97,13 +93,13 @@
                                 <td class="text-center"></td>
                                 {% endif %}
                                 <td class="text-center"></td>
-                                <td class="text-center">
-                                    <a data-uid="" class="btn btn-xs btn-primary btn-run">执行</a>
-                                    <a data-uid="" class="btn btn-xs btn-danger btn-del">删除</a>
-                                </td>
 
                             {% endif %}
-                             </tr>
+                                <td class="text-center">
+                                    <button data-uid="{{ item.item_id }}" class="btn btn-xs btn-primary btn-run" data-toggle="modal" data-target="#myModal" data-whatever="{{ item.item_id }}">执行</button>
+                                    <a data-uid="" class="btn btn-xs btn-danger btn-del">删除</a>
+                                </td>
+                                </tr>
                         {% endfor %}
                         </tbody>
                         </table>
@@ -115,6 +111,19 @@
 	        </div>
 	    </div>
 	</div>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        执行作业计划
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">否</button>
+        <button type="button" class="btn btn-primary" id="Confim" data-dismiss="modal">是</button>
+      </div>
+    </div>
+  </div>
 </div>
 <link rel="stylesheet" href="{{ url_for('static',filename='css/plugins/datepicker/datepicker3.css') }}"/>
 <script src="{{ url_for('static',filename='js/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
@@ -131,7 +140,7 @@
             autoclose: true
         });
     });
-
+    //提醒上次执行的时间
     function attention(id) {
         $.post("{{ url_for('ops.get_checktime') }}",
             {
@@ -145,6 +154,29 @@
             });
 
     }
+    //作业计划执行确认框
+    $('#myModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id_no = button.data('whatever');
+        var modal = $(this);
+        modal.find('#Confim').attr("value",id_no);
+    });
+
+    //确认执行作业计划
+    $("#Confim").click(function () {
+        var item_id = this.value;
+        $.ajax({
+            url: "{{ url_for('ops.execute') }}",
+            type: "post",
+            data: {"item_id": item_id},
+            success:function(data) {
+                if(data["flag"]==="success"){
+                     toastr.info(data['desc']);
+                }
+                else toastr.error("执行失败");
+            }
+        });
+    });
 
     </script>
 
