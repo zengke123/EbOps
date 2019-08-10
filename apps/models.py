@@ -274,3 +274,27 @@ class Host(db.Model):
                 "power": self.power,
                 "status": self.status
                 }
+
+
+# 容量信息
+class Capacity(db.Model):
+    __tablename__ = 'capacity'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    platform = db.Column(db.String(32))
+    cluster = db.Column(db.String(32), nullable=False)
+    s_capacity = db.Column(db.String(32))
+    h_capacity = db.Column(db.String(32))
+    status = db.Column(db.String(64))
+    info = db.Column(db.Text)
+
+    def to_json(self):
+        return {
+            "id": self.id,
+            "platform": self.platform,
+            "cluster": self.cluster,
+            "s_capacity": self.s_capacity,
+            "h_capacity": self.h_capacity,
+            "status": self.status,
+            "info": self.info
+        }
+

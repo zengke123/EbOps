@@ -1,6 +1,6 @@
 from . import assets
 from .. import db
-from ..models import Host
+from ..models import Host, Capacity
 from sqlalchemy import distinct, func, or_
 from flask import jsonify, render_template, request, redirect, url_for, send_from_directory
 from flask_login import login_required
@@ -207,10 +207,10 @@ def allowed_file(filename):
 
 
 # 下载导入资产的模板
-@assets.route('/down_templates')
+@assets.route('/down_templates/<filename>')
 @login_required
-def down_templates():
-    filename = 'asset_data.xlsx'
+def down_templates(filename):
+    # filename = 'asset_data.xlsx'
     return send_from_directory(TEMPLATE_FOLDER, filename=filename, as_attachment=True)
 
 
@@ -232,30 +232,40 @@ def fm_import():
             filename = secure_filename(file.filename)
             file.save(os.path.join(UPLOAD_FOLDER, filename))
             # 调用入库函数
-            nums = load_to_db(UPLOAD_FOLDER + filename)
+            nums = load_to_db(UPLOAD_FOLDER + filename, data_type="asset")
             return jsonify({'flag': 'success', 'msg': '导入成功' + str(nums)})
         else:
             return jsonify({'flag': 'fail', 'msg': '上传文件格式错误'})
 
 
 # 导入资产入库
-def load_to_db(filename):
+def load_to_db(filename, data_type):
     from openpyxl import load_workbook
     nums = 0
     # 与数据中字段一致
-    host_names = ["platform", "cluster", "hostname", "device_type", "manufacturer", "device_model", "serial",
+    capacity_names = ["platform", "cluster", "s_capacity", "h_capacity", "status", "info"]
+    asset_names = ["platform", "cluster", "hostname", "device_type", "manufacturer", "device_model", "serial",
                   "account", "version", "software_version", "local_ip", "nat_ip", "os_version", "engine_room",
                   "frame_number", "power_frame_number", "net_time", "s_period", "h_period", "power", "status"]
     infos = {
-        "cols": host_names,
-        "sheet": "asset_data"
+        "capacity": {
+            "cols": capacity_names,
+            "sheet": "capacity",
+            "model": Capacity
+        },
+        "asset": {
+            "cols": asset_names,
+            "sheet": "asset_data",
+            "model": Host
         }
+    }
     try:
         wb = load_workbook(filename)
         # 读取导入excel文件中的sheet表
-        ws = wb[infos.get("sheet")]
+        ws = wb[infos[data_type].get("sheet")]
         # 获取列数
-        cols = len(infos.get("cols"))
+        cols = len(infos[data_type].get("cols"))
+        db_model = infos[data_type].get("model")
         # 获取行数
         rows = ws.max_row
         dbs = []
@@ -267,8 +277,8 @@ def load_to_db(filename):
                 if not value:
                     value = ""
                 data.append(value)
-            item = {k: v for k, v in zip(infos.get("cols"), data)}
-            dbs.append(Host(**item))
+            item = {k: v for k, v in zip(infos[data_type].get("cols"), data)}
+            dbs.append(db_model(**item))
         # 批量添加
         db.session.add_all(dbs)
         db.session.commit()
@@ -280,6 +290,7 @@ def load_to_db(filename):
         import os
         os.remove(filename)
     return nums
+
 
 # 导出结果
 @assets.route('/unload', methods=["GET", "POST"])
@@ -299,10 +310,11 @@ def unload_excel():
         data_list = json.loads(temp)
         datas = []
         for x in data_list:
-            if x[-1] == "动作"or x[-1] == "更新\n删除":
+            if x[-1] == "动作"or x[-1] == "更新\n删除" or x[-1] == "更新删除":
                 datas.append(x[1:-1])
             else:
                 datas.append(x)
+        print(datas)
         filename = datetime.datetime.now().strftime("%Y%m%d%H%M%S") + ".xlsx"
         # 转成pandas  DataFrame格式
         df = pandas.DataFrame(datas[1:], columns=datas[0])
@@ -397,3 +409,106 @@ def search():
             "flag": "fail"
         }
     return jsonify(result)
+
+
+# 系统容量
+@assets.route('/capacity', methods=["GET", "POST"])
+@login_required
+def capacity():
+    if request.method == "GET":
+        platforms = db.session.query(distinct(Capacity.platform)).all()
+        platform = [x[0] for x in platforms]
+        datas = Capacity.query.all()
+        return render_template('assets_capacity.html', app="资产管理", action="系统容量", datas=datas, platform=platform)
+    elif request.method == "POST":
+        platform = request.form.get('platform')
+        hosts_temp = Capacity.query.filter(Capacity.platform == platform).all()
+        result = []
+        for host in hosts_temp:
+            result.append(host.to_json())
+        return jsonify({"flag": "success", "datas": result})
+
+
+# 根据id获取容量信息
+@assets.route('/get_capacity_info', methods=["GET", "POST"])
+@login_required
+def get_capacity_info():
+    item_id = request.form.get('id')
+    item_info = db.session.query(Capacity).filter(Capacity.id == item_id).one()
+    result = {
+        "flag": "success",
+        "item_info": item_info.to_json()
+    }
+    return jsonify(result)
+
+
+# 添加容量信息
+@assets.route('/create_capacity_info', methods=["GET", "POST"])
+@login_required
+def create_capacity_info():
+    if request.method == "GET":
+        return render_template('assets_capacity_create.html', app='资产管理', action='系统容量')
+    else:
+        item = request.form.to_dict()
+        add_item = Capacity(**item)
+        db.session.add(add_item)
+        db.session.commit()
+        return redirect(url_for('assets.capacity'))
+
+
+# 修改容量信息
+@assets.route('/modify_capacity_info', methods=["GET", "POST"])
+@login_required
+def modify_capacity_info():
+    # 获取前端提交的json数据
+    datas = request.get_json()
+    try:
+        item_id = datas.get('id')
+        db.session.query(Capacity).filter(Capacity.id == item_id).update(datas)
+        db.session.commit()
+        result = {"flag": "success"}
+    except Exception as e:
+        print(str(e))
+        result = {"flag": "fail"}
+    # request中要求的数据格式为json，为其他会导致前端执行success不成功
+    return jsonify(result)
+
+
+# 删除容量信息
+@assets.route('/delete_capacity_info', methods=["GET", "POST"])
+@login_required
+def delete_capacity_info():
+    item_id = request.form.get('id')
+    try:
+        to_delete = Capacity.query.filter(Capacity.id == item_id).first()
+        db.session.delete(to_delete)
+        db.session.commit()
+        result = {"flag": "success"}
+    except Exception as e:
+        print(str(e))
+        result = {"flag": "fail"}
+    return jsonify(result)
+
+
+# 导入容量
+@assets.route('/ca_import', methods=["GET", "POST"])
+@login_required
+def ca_import():
+    import os
+    if request.method == 'POST':
+        # 请求中无文件
+        if 'file' not in request.files:
+            return jsonify({'flag': 'fail', 'msg': '上传文件失败'})
+        file = request.files['file']
+        # 文件名为空
+        if file.filename == '':
+            return jsonify({'flag': 'fail', 'msg': '文件名错误'})
+        # 文件符合要求
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(UPLOAD_FOLDER, filename))
+            # 调用入库函数
+            nums = load_to_db(UPLOAD_FOLDER + filename, data_type="capacity")
+            return jsonify({'flag': 'success', 'msg': '导入成功' + str(nums)})
+        else:
+            return jsonify({'flag': 'fail', 'msg': '上传文件格式错误'})
