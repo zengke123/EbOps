@@ -33,7 +33,8 @@ def create_app():
         result_expires=1800,
         timezone='Asia/Shanghai',
         enable_utc=True,
-        task_send_sent_event=True
+        task_send_sent_event=True,
+        task_time_limit=1800
     )
     # 蓝本注册
     # 用户认证模块

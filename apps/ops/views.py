@@ -5,7 +5,7 @@ from datetime import datetime
 from sqlalchemy import and_
 from flask import render_template, request, jsonify
 from flask_login import login_required, current_user
-from .tasks import zyjh
+from .tasks import zyjh, req_zyjh
 import requests
 import time
 
@@ -47,7 +47,7 @@ def index(ops_type):
     _ops_results = get_result(_ops_infos, date)
     undo_tasks = get_undo_task(date)
     return render_template('ops_ims.html', app='作业计划', action=ops_item, ops_item=ops_item, ops_results=_ops_results,
-                           undo_tasks=undo_tasks)
+                           undo_tasks=undo_tasks, ops_type=ops_type)
 
 
 # @ops.route("/sec",methods=['GET','POST'])
@@ -182,9 +182,17 @@ def get_checktime():
 @login_required
 def execute():
     item_id = request.form.get("item_id")
-    # result = req_zyjh(item_id)
-    zyjh_item = OpsInfo.query.filter(OpsInfo.item_id == item_id).first()
-    zyjh_task = zyjh.delay(zyjh_item.api, zyjh_item.content, current_user.username)
+    # 数据库ops_item中配置的作业计划大类
+    item_types = db.session.query(OpsItem.t_name).all()
+    items = [x[0] for x in item_types]
+    # 若是执行作业计划大项
+    if item_id in items:
+        zyjh_item = OpsItem.query.filter(OpsItem.t_name == item_id).first()
+        zyjh_task = req_zyjh.delay(zyjh_item.api, zyjh_item.c_name, current_user.username)
+    # 执行作业计划子项
+    else:
+        zyjh_item = OpsInfo.query.filter(OpsInfo.item_id == item_id).first()
+        zyjh_task = req_zyjh.delay(zyjh_item.api, zyjh_item.content, current_user.username)
     return jsonify({'flag': 'success', 'desc': '任务已添加[id:{}]'.format(zyjh_task.id)})
 
 

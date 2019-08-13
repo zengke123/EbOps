@@ -61,7 +61,7 @@
 
            <div class="mail-box-header">
                <div>
-                   <button id="check_nodes" data-uid="" class="btn btn-xs btn-primary btn-run" data-toggle="modal" data-target="#myModal" data-whatever="">例检集群</button>
+                   <button id="check_nodes" data-uid="" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#myModal" data-whatever="">例检集群</button>
                </div>
                <table class="table table-striped table-bordered table-hover dataTable no-footer" id="asset_list_table" style="width: 100%;" role="grid">
                <thead>
@@ -264,7 +264,7 @@
         modal.find('#Confim').attr("value",id_no);
     });
 
-    //确认执行作业计划
+    //确认执行例检
     $("#Confim").click(function () {
         var item_id = this.value;
         $.ajax({
