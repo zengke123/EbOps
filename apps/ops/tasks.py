@@ -1,5 +1,4 @@
 from .. import celery
-import json
 import requests
 from celery.utils.log import get_task_logger
 
@@ -20,14 +19,15 @@ def zyjh(api_name, name, operator):
 def req_zyjh(api_name, name, operator):
     logger.info('[%s] 执行作业计划 [%s] "%s"', operator, name, api_name)
     # 接口url
-    url = "http://127.0.0.1:8188/CCZYJH/ZNWZY"
+    url = "http://192.168.27.51:8188/CCZYJH/ZNWZY"
     if api_name and api_name != 'null':
         payload = {'TYPE': api_name}
         try:
-            r = requests.post(url, json=payload, timeout=900)
+            r = requests.post(url, json=payload, timeout=1800)
             result = r.json()
-            return json.loads(result)
-        except json.decoder.JSONDecodeError:
+            return result
+        except Exception as e:
+            logger.info(str(e))
             return "fail"
     else:
         return "fail"

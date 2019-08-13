@@ -61,7 +61,7 @@
 
            <div class="mail-box-header">
                <div>
-                   <a class="btn btn-sm btn-primary" id="check_nodes" href="#"> 例检集群 </a>
+                   <button id="check_nodes" data-uid="" class="btn btn-xs btn-primary btn-run" data-toggle="modal" data-target="#myModal" data-whatever="">例检集群</button>
                </div>
                <table class="table table-striped table-bordered table-hover dataTable no-footer" id="asset_list_table" style="width: 100%;" role="grid">
                <thead>
@@ -119,6 +119,19 @@
     </div>
   </div>
 </div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        执行例检
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">否</button>
+        <button type="button" class="btn btn-primary" id="Confim" data-dismiss="modal">是</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
 {% block custom_foot_js %}
@@ -127,7 +140,7 @@
 
         function zTreeOnClick(event, treeId, treeNode) {
             $("#hosts").html("");
-            document.getElementById("check_nodes").setAttribute('href',"/check/lj?clustername=" + treeNode.name);
+            document.getElementById("check_nodes").setAttribute('data-whatever',"jq_" + treeNode.name);
             $.ajax({
                 url: "{{ url_for("check.get_hosts") }}",
                 type: 'POST',
@@ -150,7 +163,7 @@
                             "<td class=\" text-center\"><a href=\"/assets/info/" + n.name + "\">" + n.name + "</a></td>\n" +
                             "<td class=\"text-center\">" + n.ip + "</td>\n" +
                             "<td class=\" text-center\">\n" +
-                            "<a href=\"/check/lj?hostname=" + n.name +"\" class=\"btn btn-xs btn-info\">例检</a>\n" +
+                            "<button type=\"button\" class=\"btn btn-primary btn-xs\" data-toggle=\"modal\" data-target=\"#myModal\" data-whatever=\"zj_"+ n.name + "\">例检</button>" +
                             "<button type=\"button\" class=\"btn btn-danger btn-xs\" data-toggle=\"modal\" data-target=\"#myDelModal\" data-whatever=\""+ n.name + "\">删除</button>" +
                             "</td>\n" +
                             "</tr>";
@@ -242,6 +255,30 @@
                 else toastr.error("删除失败")
             });
     }
+
+    //例检执行确认框
+    $('#myModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id_no = button.data('whatever');
+        var modal = $(this);
+        modal.find('#Confim').attr("value",id_no);
+    });
+
+    //确认执行作业计划
+    $("#Confim").click(function () {
+        var item_id = this.value;
+        $.ajax({
+            url: "{{ url_for('check.check_host') }}",
+            type: "post",
+            data: {"item_id": item_id},
+            success:function(data) {
+                if(data["flag"]==="success"){
+                     toastr.info(data['desc']);
+                }
+                else toastr.error(data['desc']);
+            }
+        });
+    });
 
 
 

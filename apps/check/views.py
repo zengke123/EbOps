@@ -3,7 +3,7 @@ from .. import db
 from ..models import CheckHistory, CheckHost
 from flask import render_template, request, jsonify, send_from_directory
 from flask_login import login_required, current_user
-from .exts import auto_check, down_report
+from .exts import auto_check, down_report, req_zjlj
 from werkzeug.utils import secure_filename
 from ..settings import ALLOWED_EXTENSIONS, UPLOAD_FOLDER, TEMPLATE_FOLDER, CHECK_DOWNLOAD_FOLDER
 # 例检状态全局变量
@@ -33,16 +33,19 @@ def history():
 @check.route("/lj", methods=['GET', 'POST'])
 @login_required
 def check_host():
-    r_clustername = request.args.get('clustername', None)
-    r_hostname = request.args.get('hostname', None)
-    if r_clustername:
-        hostname = r_clustername
-        host_type = "jq"
+    _args = request.form.get('item_id', None)
+    names = _args.split('_')
+    print(names)
+    if len(names) == 2:
+        host_type = names[0]
+        hostname = names[1]
+        api_name = {'type':host_type, 'name':hostname}
+        zjlj_task = req_zjlj.delay(api_name, hostname, current_user.username)
+        return jsonify({'flag': 'success', 'desc': '任务已添加[id:{}]'.format(zjlj_task.id)})
     else:
-        hostname = r_hostname
-        host_type = "zj"
-    return render_template('check_confirm.html', app="自动例检", action="例检确认",
-                           hostname=hostname, host_type=host_type)
+        return jsonify({'flag': 'fail', 'desc': '参数错误'})
+    # return render_template('check_confirm.html', app="自动例检", action="例检确认",
+    #                        hostname=hostname, host_type=host_type)
 
 
 # 自动例检主函数

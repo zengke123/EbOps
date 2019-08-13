@@ -215,12 +215,20 @@ def monitor():
     for k, v in result.items():
         _task = {}
         _task['id'] = k
-        _task['type'] = v.get('name')
-        _task_args = v.get('args')
-        _task_name = _task_args.split(',')[1].replace("'", "").strip(')')
-        _task_user = _task_args.split(',')[2].replace("'", "").strip(')')
-        _task['name'] = _task_name
-        _task['username'] = _task_user
+        if v.get('name') == "apps.ops.tasks.req_zyjh":
+            _task['type'] = "作业计划"
+            _task_args = v.get('args')
+            _task_name = _task_args.split(',')[1].replace("'", "").strip(')')
+            _task_user = _task_args.split(',')[2].replace("'", "").strip(')')
+            _task['name'] = _task_name
+            _task['username'] = _task_user
+        elif v.get('name') == "apps.check.exts.req_zjlj":
+            _task['type'] = "主机例检"
+            _task_args = v.get('args')
+            _task_name = _task_args.split(',')[1].split(':')[1].replace("'", "").strip('}')
+            _task_user = _task_args.split(',')[3].replace("'", "").strip(')')
+            _task['name'] = _task_name
+            _task['username'] = _task_user
         # 获取状态映射关系，未找到默认为None
         _task['state'] = state_map.get(v.get('state'), ('异常', 'danger'))
         _task['result'] = v.get('result') if v.get('result') else ""
