@@ -50,19 +50,19 @@ def req_zjlj(api_name, name, operator):
     url = "http://192.168.27.51:8188/CHECK/ZJLJ"
     if api_name and api_name != 'null':
         payload = api_name
+        r = requests.post(url, json=payload, timeout=1800)
         try:
-            r = requests.post(url, json=payload, timeout=1800)
             result = r.json()
             if result.get('code') == "00000000":
                 report_name = down_report(api_name, operator)
                 return {'description':'success', 'report':report_name}
             else:
-                return "fail"
+                return result
         except Exception as e:
             logger.info(str(e))
-            return "fail"
+            return "http请求失败 " + str(r.status_code)
     else:
-        return "fail"
+        return "参数错误"
 
 
 def test_check(lj_type, name):
@@ -92,3 +92,27 @@ def down_report(api_name, operator):
     db.session.add(add_log)
     db.session.commit()
     return str(name)
+
+
+@celery.task
+def req_pllj(api_name, name, operator):
+    logger.info('[%s] 执行批量例检 [%s] "%s"', operator, name, api_name)
+    # 接口url
+    url = "http://192.168.27.51:8188/CHECK/ZJLJ"
+    if api_name and api_name != 'null':
+        payload = api_name
+        r = requests.post(url, json=payload, timeout=1800)
+        try:
+            result = r.json()
+            if result.get('code') == "00000000":
+                # 替换原始主机名称
+                api_name['name'] = name
+                report_name = down_report(api_name, operator)
+                return {'description':'success', 'report':report_name}
+            else:
+                return result
+        except Exception as e:
+            logger.info(str(e))
+            return "http请求失败 " + str(r.status_code)
+    else:
+        return "参数错误"

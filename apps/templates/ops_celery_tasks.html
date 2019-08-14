@@ -77,7 +77,7 @@
                                     {% for task in tasks %}
                                         <tr class="gradeX odd" role="row">
                                             <td class="text-center">{{ task.id }}</td>
-                                            <td class="text-center">作业计划</td>
+                                            <td class="text-center">{{ task.type }}</td>
                                             <td class="text-center">{{ task.username }}</td>
 											<td class="text-center">{{ task.name }}</td>
                                             <td class="text-center"><i class="fa fa-circle text-{{ task.state[1] }}"></i>  {{ task.state[0] }}</td>

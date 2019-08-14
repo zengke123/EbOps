@@ -237,6 +237,15 @@ def monitor():
             _task_user = _task_args.split(',')[3].replace("'", "").strip(')')
             _task['name'] = _task_name
             _task['username'] = _task_user
+        elif v.get('name') == "apps.check.exts.req_pllj":
+            _task['type'] = "批量例检"
+            _task_args = v.get('args')
+            temps = _task_args.split('}')[-1]
+            temp2 = temps.replace("'", "").replace(")", "").split(',')
+            _task_name = ",".join([x.strip(" ") for x in temp2[:-1] if x])
+            _task_user = temp2[-1].strip(" ")
+            _task['name'] = _task_name
+            _task['username'] = _task_user
         # 获取状态映射关系，未找到默认为None
         _task['state'] = state_map.get(v.get('state'), ('异常', 'danger'))
         _task['result'] = v.get('result') if v.get('result') else ""

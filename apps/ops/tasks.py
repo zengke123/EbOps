@@ -22,12 +22,12 @@ def req_zyjh(api_name, name, operator):
     url = "http://192.168.27.51:8188/CCZYJH/ZNWZY"
     if api_name and api_name != 'null':
         payload = {'TYPE': api_name}
+        r = requests.post(url, json=payload, timeout=1800)
         try:
-            r = requests.post(url, json=payload, timeout=1800)
             result = r.json()
             return result
         except Exception as e:
             logger.info(str(e))
-            return "fail"
+            return "http请求失败 " + str(r.status_code)
     else:
-        return "fail"
+        return "参数错误"

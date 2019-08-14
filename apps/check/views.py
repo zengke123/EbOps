@@ -3,7 +3,7 @@ from .. import db
 from ..models import CheckHistory, CheckHost
 from flask import render_template, request, jsonify, send_from_directory
 from flask_login import login_required, current_user
-from .exts import auto_check, down_report, req_zjlj
+from .exts import req_zjlj, req_pllj
 from werkzeug.utils import secure_filename
 from ..settings import ALLOWED_EXTENSIONS, UPLOAD_FOLDER, TEMPLATE_FOLDER, CHECK_DOWNLOAD_FOLDER
 # 例检状态全局变量
@@ -48,42 +48,23 @@ def check_host():
     #                        hostname=hostname, host_type=host_type)
 
 
-# 自动例检主函数
-@check.route('/autocheck', methods=['POST'])
+@check.route("/multi_check", methods=['GET', 'POST'])
 @login_required
-def autocheck_run():
-    hostname = request.form.get('hostname')
-    host_type = request.form.get('type')
-    seed = request.form.get("seed")
-    status[seed] = 20
-    try:
-        flag, result = auto_check(host_type, hostname)
-    except:
-        flag = "fail"
-        result = "WEB后台例检模块异常"
-    status[seed] = 80
-    import time
-    time.sleep(5)
-    # 例检成功，添加到历史记录
-    if flag == "success":
-        report_name = down_report()
-        # report_name = '20190705112'
-        new_type = "集群" if host_type == "jq" else "主机"
-        add_log = CheckHistory(checktime=report_name, hostname=hostname, type=new_type, operator=current_user.username)
-        db.session.add(add_log)
-        db.session.commit()
+def multi_check():
+    _args = request.form.get('hosts', None)
+    print(_args)
+    if _args:
+        _hosts = _args.split(',')
+        hosts = ["'" + str(x) + "'" for x in _hosts if x != ""]
+        print(hosts)
+        names = ",".join(hosts)
+        print(names)
+        api_name = {"type": "pl", "name": names}
+        print(api_name)
+        zjlj_task = req_pllj.delay(api_name, _args, current_user.username)
+        return jsonify({'flag': 'success', 'desc': '任务已添加[id:{}]'.format(zjlj_task.id)})
     else:
-        report_name = "null"
-    status[seed] = 100
-    status.pop(seed)
-    return jsonify({'flag': flag, 'filename': report_name, 'lj_result': result})
-
-
-# 获取例检状态,实现前端进度条
-@check.route('/autocheck_status/<id>', methods=['GET', 'POST'])
-def autocheck_status(id):
-    seed = request.form.get("seed")
-    return str(status.get(seed))
+        return jsonify({'flag': 'fail', 'desc': '参数错误'})
 
 
 # 下载例检报告
