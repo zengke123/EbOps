@@ -196,15 +196,11 @@ def execute():
     return jsonify({'flag': 'success', 'desc': '任务已添加[id:{}]'.format(zyjh_task.id)})
 
 
-# 调用celery flower的api获取任务状态
-@ops.route("/monitor")
-@login_required
-def monitor():
-    celery_flower_api = 'http://127.0.0.1:5555/api/tasks'
+def get_celery_tasks(rows):
+    celery_flower_api = 'http://127.0.0.1:5555/api/tasks?limit={}'.format(rows)
     r = requests.get(celery_flower_api)
     result = r.json()
     tasks = []
-
     # api返回的时间为数字时间戳，需要转换格式
     def format_time(st):
         return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(st)) if st else ""
@@ -253,6 +249,21 @@ def monitor():
         _task['timestamp'] = format_time(v.get('succeeded'))
         _task['runtime'] = format(v.get('runtime'), '.1f') if v.get('runtime') else ""
         tasks.append(_task)
-    return render_template('ops_celery_tasks.html', app='任务管理', tasks=tasks)
+    return tasks
+
+
+# 调用celery flower的api获取任务状态
+@ops.route("/monitor", methods=['GET', 'POST'])
+@login_required
+def monitor():
+    if request.method == "GET":
+        tasks = get_celery_tasks('20')
+        return render_template('ops_celery_tasks.html', app='任务管理', tasks=tasks)
+    elif request.method == "POST":
+        rows = request.form.get('rows')
+        print(rows)
+        tasks = get_celery_tasks(rows)
+        return jsonify({'flag':'success', 'datas':tasks})
+
 
 

@@ -33,26 +33,37 @@
                         <div class="uc pull-left m-r-5">
                            <a class="btn btn-sm btn-primary" id="check_nodes" href="/ops/monitor"> 刷新 </a>
                         </div>
-						<form id="search_form" method="get" action="" class="pull-right form-inline">
-							<div class="form-group" id="date">
-								<div class="input-daterange input-group" id="datepicker">
-									<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-									<input type="text" id="id_date" class="input-sm form-control" style="width: 100px;" name="date"
-									 value="">
-								</div>
-							</div>
-							<div class="input-group">
-								<div class="input-group-btn">
-									<button id="search_btn" type="submit" class="btn btn-sm btn-primary">
-										搜索
-									</button>
-								</div>
-							</div>
-						</form>
+<!--						<form id="search_form" method="get" action="" class="pull-right form-inline">-->
+<!--							<div class="form-group" id="date">-->
+<!--								<div class="input-daterange input-group" id="datepicker">-->
+<!--									<span class="input-group-addon"><i class="fa fa-calendar"></i></span>-->
+<!--									<input type="text" id="id_date" class="input-sm form-control" style="width: 100px;" name="date"-->
+<!--									 value="">-->
+<!--								</div>-->
+<!--							</div>-->
+<!--							<div class="input-group">-->
+<!--								<div class="input-group-btn">-->
+<!--									<button id="search_btn" type="submit" class="btn btn-sm btn-primary">-->
+<!--										搜索-->
+<!--									</button>-->
+<!--								</div>-->
+<!--							</div>-->
+<!--						</form>-->
 
 					</div>
 
 					<div id="login_log_table_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+						<div class="dataTables_length" id="session_table_length">
+							<label>显示最近任务数
+								<select id="slct_bulk_update" aria-controls="session_table" class="form-control input-sm">
+									<option value="15">---</option>
+									<option value="10">10</option>
+									<option value="20">20</option>
+									<option value="30">30</option>
+									<option value="50">50</option>
+								</select>
+							</label>
+						</div>
 						<div class="row">
 							<div class="col-sm-6"></div>
 							<div class="col-sm-6"></div>
@@ -73,7 +84,7 @@
                                             <th class="text-center" tabindex="0" aria-controls="login_log_table" rowspan="1" colspan="1" style="width: 18%;">结果</th>
 									    </tr>
 									</thead>
-									<tbody>
+									<tbody id="tasks_tab">
                                     {% for task in tasks %}
                                         <tr class="gradeX odd" role="row">
                                             <td class="text-center">{{ task.id }}</td>
@@ -100,14 +111,48 @@
 </div>
 <script>
     $(document).ready(function() {
-        $('.input-daterange.input-group').datepicker({
-            format: "yyyymmdd",
-            todayBtn: "linked",
-            keyboardNavigation: false,
-            forceParse: false,
-            calendarWeeks: true,
-            autoclose: true
-        });
+        // $('.input-daterange.input-group').datepicker({
+        //     format: "yyyymmdd",
+        //     todayBtn: "linked",
+        //     keyboardNavigation: false,
+        //     forceParse: false,
+        //     calendarWeeks: true,
+        //     autoclose: true
+        // });
+
+         $("#slct_bulk_update").change(function() {
+        var checkText = $("#slct_bulk_update").find("option:selected").text();
+        if(checkText!=="默认") {
+            $.ajax({
+                url: "{{ url_for('ops.monitor') }}",
+                type: "post",
+                data: {"rows": checkText},
+                success:function(data) {
+                if(data["flag"]==="success"){
+                   $("#tasks_tab").empty();
+                   $.each(data["datas"], function (i, n) {
+                       var tbBody = "";
+                       tbBody += "<tr role=\"row\" >" +
+                           "<td class=\" text-center\">" + n.id  + "</td>\n" +
+                           "<td class=\" text-center\">" + n.type  + "</td>\n" +
+                           "<td class=\" text-center\">" + n.username  + "</td>\n" +
+                           "<td class=\" text-center\">" + n.name  + "</td>\n" +
+                           "<td class=\" text-center\"><i class=\"fa fa-circle text-" + n.state[1] + "\"></i>" + n.state[0] + "</td>\n" +
+                           "<td class=\" text-center\">" + n.received  + "</td>\n" +
+                           "<td class=\" text-center\">" + n.timestamp  + "</td>\n" +
+                           "<td class=\" text-center\">" + n.runtime  + "</td>\n" +
+                           "<td class=\" text-center\">" + n.result  + "</td>\n" +
+                           "</tr>";
+                       $("#tasks_tab").append(tbBody);
+                   })
+
+                }
+                else toastr.error("查询失败");
+                }
+            });
+        }
+
+    });
     })
 </script>
 
