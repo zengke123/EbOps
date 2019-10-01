@@ -363,7 +363,7 @@
     $("#slct_bulk_update").change(function() {
         var checkText=$("#slct_bulk_update").find("option:selected").text();
         $("#btn_bulk_update").empty();
-        if(checkText!=="选择") {
+        if(checkText!=="选择类型") {
             if(checkText==="批量删除"){
                 var content_de="<button type=\"button\" style=\"height: 32px;\" class=\"btn btn-sm btn-primary\" onclick='multi_delete()'>提交</button>";
                 $("#btn_bulk_update").append(content_de);

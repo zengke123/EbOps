@@ -105,7 +105,7 @@ def request_log():
     try:
         date = log_id.split('_')[2][:8]
         filepath = OPS_LOG_FOLDER + date
-        with open(os.path.join(filepath, filename), encoding="utf-8") as f:
+        with open(os.path.join(filepath, filename), encoding="gbk") as f:
             lines = f.readlines()
             for line in lines:
                 result += line + '\r\n'
@@ -261,9 +261,39 @@ def monitor():
         return render_template('ops_celery_tasks.html', app='任务管理', tasks=tasks)
     elif request.method == "POST":
         rows = request.form.get('rows')
-        print(rows)
         tasks = get_celery_tasks(rows)
         return jsonify({'flag':'success', 'datas':tasks})
 
 
+# 调用celery flower的api获取任务详情
+@ops.route("/monitor/info/<task_id>", methods=['GET', 'POST'])
+@login_required
+def get_task_info(task_id):
+    celery_flower_api = 'http://127.0.0.1:5555/api/task/info/{}'.format(task_id)
+    r = requests.get(celery_flower_api)
+    result = r.json()
+    # api返回的时间为数字时间戳，需要转换格式
+    def format_time(st):
+        return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(st)) if st else ""
 
+    for i in ['received', 'started', 'succeeded']:
+        temp = format_time(result[i])
+        result[i] = temp
+    return render_template('ops_celery_task_info.html', app='任务管理', action="任务详情",
+                           task_id=task_id, result=result)
+
+
+# 调用celery flower的api终止任务
+@ops.route("/monitor/revoke", methods=['GET', 'POST'])
+@login_required
+def revoke_task():
+    from .. import celery
+    task_id =  request.form.get('task_id')
+    celery_flower_api = 'http://127.0.0.1:5555/api/task/revoke/{}?terminate=true'.format(task_id)
+    # print(task_id)
+    # celery.control.revoke(task_id, terminate=False)
+    r = requests.post(celery_flower_api)
+    result = r.json()
+    print(result)
+    # result = {"result": "success"}
+    return jsonify(result)

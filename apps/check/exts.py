@@ -64,11 +64,11 @@ def req_zjlj(api_name, name, operator):
     else:
         return "参数错误"
 
-
-def test_check(lj_type, name):
+@celery.task
+def test_check(lj_type, name, operator):
     cmd = 'zj zjlj lj:type={},name={}'.format(lj_type, name)
     print(cmd)
-    time.sleep(4)
+    time.sleep(120)
     return "success", "RETURN=0000"
 
 

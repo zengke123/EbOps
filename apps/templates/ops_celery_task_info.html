@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block custom_head_css_js %}
+<link rel="stylesheet" href="{{ url_for('static',filename='css/plugins/datepicker/datepicker3.css') }}"/>
+<script src="{{ url_for('static',filename='js/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
+{% endblock %}
+{% block content %}
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>
+						任务详情<small> {{ task_id }}</small>
+					</h5>
+					<div class="ibox-tools">
+						{% if result.state == 'PENDING' %}
+						<button class="btn btn-sm btn-danger" id="revoke" value="{{ result.uuid }}"> 终止任务 </button>
+						{% endif %}
+					</div>
+				</div>
+				<div class="ibox-content">
+					<div class="" id="content_start">
+						<div class="row">
+							<div class="col-sm-4">
+								<table class="table">
+									<tbody>
+										<tr class="no-borders-tr">
+											<td style="width: 20%">UUID:</td>
+											<td><b>{{ result.uuid }}</b></td>
+										</tr>
+										<tr>
+											<td style="width: 20%">Worker:</td>
+											<td><b>{{ result.worker }}</b></td>
+										</tr>
+										<tr>
+											<td style="width: 20%">名称:</td>
+											<td><b>{{ result.name }}</b></td>
+										</tr>
+										<tr>
+											<td style="width: 20%">状态:</td>
+											{% if result.state == 'SUCCESS' %}
+											<td><span class="label label-default">{{ result.state }}</span></td>
+											{% else %}
+											<td><span class="label label-danger">{{ result.state }}</span></td>
+											{% endif %}
+										</tr>
+										<tr>
+											<td style="width: 20%">参数:</td>
+											<td><b>{{ result.args }}</b></td>
+										</tr>
+										<tr>
+											<td style="width: 20%">结果:</td>
+											<td><b>{{ result.result }}</b></td>
+										</tr>
+
+
+										<tr>
+											<td style="width: 20%">提交时间:</td>
+											<td><b>{{ result.received }}</b></td>
+										</tr>
+										<tr>
+											<td style="width: 20%">开始时间:</td>
+											<td><b>{{ result.started }}</b></td>
+										</tr>
+										<tr>
+											<td style="width: 20%">结束时间:</td>
+											<td><b>{{ result.succeeded }}</b></td>
+										</tr>
+										<tr>
+											<td style="width: 20%">运行时间:</td>
+											<td><b>{{ result.runtime }}</b></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="col-sm-8">
+								<div style="padding-left: 0;padding-right: 0">
+									<div class="panel panel-primary">
+										<div class="panel-heading">
+											<i class="fa fa-info-circle"></i> 运行日志
+										</div>
+										<div class="panel-body">
+											<table class="table">
+												<tbody>
+
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+
+					</div>
+
+                </div>
+			</div>
+		</div>
+	</div>
+
+</div>
+<script type="text/javascript">
+	    //确认执行例检
+    $("#revoke").click(function () {
+        var task_id = this.value;
+        $.ajax({
+            url: "{{ url_for('ops.revoke_task') }}",
+            type: "post",
+            data: {"task_id": task_id},
+            success:function(data) {
+                if(data){
+                     toastr.info(data['message']);
+                }
+                else toastr.error(data);
+            }
+        });
+    });
+
+</script>
+
+{% endblock %}

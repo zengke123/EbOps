@@ -97,7 +97,8 @@
 <!--                                   <option value="delete">批量删除</option>-->
 <!--                               </select>-->
                                 <div class="input-group-btn pull-left" style="padding-left: 5px;">
-                                    <button class="btn btn-sm btn-primary" onclick="multi_delete()">批量删除</button>
+                                    <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#myMulModal" data-whatever="">批量删除</button>
+<!--                                    <button class="btn btn-sm btn-primary" onclick="multi_delete()">批量删除</button>-->
                                 </div>
                             </div>
                        </div>
@@ -123,12 +124,26 @@
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-sm" role="document">
     <div class="modal-content">
-      <div class="modal-body">
+      <div class="modal-body" id="title">
         执行例检
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">否</button>
         <button type="button" class="btn btn-primary" id="Confim" data-dismiss="modal">是</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="myMulModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        确定删除
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">否</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="multi_delete()">是</button>
       </div>
     </div>
   </div>
@@ -250,8 +265,8 @@
             },
             function (data) {
                 if(data==="success"){
-                    alert("删除成功");
-                    location.reload();
+                    toastr.info("删除成功,请刷新页面");
+                    // location.reload();
                 }
                 else toastr.error("删除失败")
             });
@@ -263,6 +278,7 @@
         var id_no = button.data('whatever');
         var modal = $(this);
         modal.find('#Confim').attr("value",id_no);
+        modal.find('#title').text("执行例检 "+id_no);
     });
 
     //确认执行例检
