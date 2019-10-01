@@ -21,7 +21,7 @@ def profiledata():
     def query_zb(_items: list, _date):
         # 查询相关字段对应日期的结果
         sql = "select {} from ywzb where date={}".format(','.join(_items), _date)
-        _data = db.session.execute(sql.format(date, date), bind=engine).fetchall()
+        _data = db.session.execute(sql, bind=engine).fetchall()
         # 查询结果不为空
         if _data:
             # 将_items和查询结果对应，转成dict
@@ -82,9 +82,9 @@ def performance():
     cpu_sql = "select cluste, max_cpu, max_cpu_host from as_pfmc where date={}"
     mem_sql = "select cluste, max_mem, max_mem_host from as_pfmc where date={}"
     io_sql = "select cluste, max_io, max_io_host from as_pfmc where date={}"
-    cpu_data = db.session.execute(cpu_sql.format(date, date), bind=engine).fetchall()
-    mem_data = db.session.execute(mem_sql.format(date, date), bind=engine).fetchall()
-    io_data = db.session.execute(io_sql.format(date, date), bind=engine).fetchall()
+    cpu_data = db.session.execute(cpu_sql.format(date), bind=engine).fetchall()
+    mem_data = db.session.execute(mem_sql.format(date), bind=engine).fetchall()
+    io_data = db.session.execute(io_sql.format(date), bind=engine).fetchall()
     return render_template('tongji_pfmc.html', app='统计数据', action="主机性能数据",
                            cpu_data=cpu_data, mem_data=mem_data, io_data=io_data, date=date)
 
@@ -92,4 +92,20 @@ def performance():
 @tongji.route('/users')
 @login_required
 def users():
-    return render_template('tongji_users.html', app='统计数据', action="用户数")
+    date = request.args.get('date', '')
+    if not date:
+        date = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y%m%d")
+    engine = create_engine(current_app.config['SQLALCHEMY_BINDS']['tongji'])
+    users_items = ['vpmn_volte', 'crbt_volte', 'hjh_volte', 'pyq_volte', 'ctx_group', 'ctx_user',
+                   'vrbt', 'vpmn_2g', 'hjh_2g', 'pyq_2g', 'vh_2g', 'vh_volte', 'vp_2g', 'vp_volte',
+                   'hp_2g', 'hp_volte', 'vhp_2g', 'vhp_volte', 'crbt_23g', 'ccp', 'newcy']
+    sql = "select {} from users where date={}".format(','.join(users_items), date)
+    data = db.session.execute(sql, bind=engine).fetchall()
+    # 查询结果不为空
+    if data:
+        # 将_items和查询结果对应，转成dict
+        data_dict = dict(zip(users_items, data[0]))
+    else:
+        # 查询结果为空时，使用空替代
+        data_dict = dict(zip(users_items, ["" for _ in range(len(users_items))]))
+    return render_template('tongji_users.html', app='统计数据', action="用户数", users_dict=data_dict, date=date)
