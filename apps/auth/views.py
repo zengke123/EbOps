@@ -9,6 +9,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 
 @auth.route("/login", methods=['GET', 'POST'])
 def login():
+    year = datetime.now().year
     form = LoginForm()
     # 渲染HTML时需加入 {{ form.csrf_token }} 否则validate_on_submit一直为False
     error = None
@@ -27,7 +28,7 @@ def login():
                 return redirect(request.args.get('next') or url_for('main.index'))
             else:
                 error = "该用户已被锁定"
-    return render_template("login.html", form=form, error=error)
+    return render_template("login.html", form=form, error=error, year=year)
 
 
 @auth.route('/logout')
