@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block custom_head_css_js %}
+
+{% endblock %}
+
+{% block content %}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox-content m-b-sm border-bottom">
+        <div class="p-xs">
+            <div class="pull-left m-r-md">
+                <i class="fa fa-mobile-phone text-navy mid-icon"></i>
+            </div>
+            <h2>用户查询</h2>
+            <span>业务数据 话单记录 开销户日志</span>
+        </div>
+    </div>
+
+    <div class="ibox-content forum-container">
+         <div class="forum-title">
+             <h3>选择查询类型</h3>
+             <h4> <small>话单默认查询近三天，多日期以 | 分隔</small></h4>
+            </div>
+         <div class="forum-item active">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="forum-icon">
+                        <i class="fa fa-database"></i>
+                    </div>
+
+                    <form id="search_form" class="pull-left form-inline" method="post">
+                        <div class="form-group" id="items">
+                            <select name="api" class="form-control input-s-lg">
+                                <option value="vpmn">智能网用户数据</option>
+                                <option value="crbt">音频彩铃用户数据</option>
+                                <option value="vrbt">视频彩铃用户数据</option>
+                                <option value="ctx">CTX用户数据</option>
+                                <option value="vpmn_rec">V网话单</option>
+                                <option value="home_rec">合家欢话单</option>
+                                <option value="frd_rec">朋友圈话单</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-daterange input-group" id="phonepicker">
+                                <span class="input-group-addon"><i class="fa fa-mobile-phone"></i></span>
+                                <input type="number" class="input-s-lg form-control" style="width: 250px;" name="phonenumber" placeholder="号码" required="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-daterange input-group" id="datepicker">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                <input type="text" class="input-s-lg form-control" style="width: 250px;" name="date" placeholder="话单日期 eg:20200101">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <button class="btn btn-white" type="reset">重置</button>
+                                <button class="btn btn-outline btn-info" type="submit"><i class="fa fa-arrow-right"></i></button>
+
+                            </div>
+                        </div>
+                    </form>
+
+            </div>
+    </div>
+</div>
+{% endblock %}

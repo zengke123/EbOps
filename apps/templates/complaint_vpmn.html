@@ -1,0 +1,273 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div>
+                <h3>查询结果 【{{ phonenumber }}】</h3>
+                <p class="pull-right"><a href="/complaint"  class="btn btn-outline btn-info  dim" role="button"><i class="fa fa-arrow-left"></i></a>
+                <p>
+                    {% if result.vpmn_flag == 1 %}
+                    <label class="label label-default">V网用户</label>
+                    {% endif %}
+                    {% if result.as_flag == 1 %}
+                    <label class="label label-default">Volte</label>
+                    {% else %}
+                    <label class="label label-default">2/3G</label>
+                    {% endif %}
+                    {% if result.home_flag == 1 %}
+                    <label class="label label-default">家庭网用户</label>
+                    {% endif %}
+                    {% if result.sicp_flag == 1 %}
+                    <label class="label label-default">融合用户</label>
+                    {% else %}
+                    <label class="label label-default">非融合用户</label>
+                    {% endif %}
+                    {% if result.sicp_check == 1 %}
+                    <label class="label label-danger">融合用户数据异常</label>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+<!--        <div class="col-lg-12">-->
+<!--            <div class="wrapper wrapper-content">-->
+<!--                <div class="row">-->
+                    <div class="col-lg-3">
+                        <div class="ibox float-e-margins">
+                              <div class="ibox-title">
+                                  <h5>智能网用户数据</h5>
+                                  <div class="ibox-tools">
+                                       {% if v_user_list %}
+                                        <label class="label pull-right label-warning-light">{{ v_user_list|length }}条数据</label>
+                                        {% else %}
+                                        <label class="label pull-right label-danger">查无数据</label>
+                                        {% endif %}
+                                  </div>
+                              </div>
+                              <div class="ibox-content">
+                                  <table class="table table-bordered table-striped">
+                                        <thead>
+                                        </thead>
+                                        <tbody>
+                                        {% if v_user_list %}
+
+                                        <tr>
+                                            <th>号码</th>
+                                            <td>{{ v_user_list[0].phone }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>集团号</th>
+                                            <td>{{ v_user_list[0].vpnid }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>vpmn号码</th>
+                                            <td>{{ v_user_list[0].vpnnumber }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>开户日期</th>
+                                            <td>{{ v_user_list[0].createdate }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>来显控制标识</th>
+                                            <td>{{ v_user_list[0].cliptype }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>个人封锁标志</th>
+                                            <td>{{ v_user_list[0].lockflag }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>集团编号</th>
+                                            <td>{{ v_user_list[0].vpncode }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>集团描述</th>
+                                            <td>{{ v_user_list[0].grpname }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>集团封锁标志</th>
+                                            <td>{{ v_user_list[0].grplock }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>归属SCP</th>
+                                            <td>{{ v_user_list[0].scpdbcode }}</td>
+                                        </tr>
+                                        {% endif %}
+                                        </tbody>
+                                    </table>
+
+                                  <p class="m-b-lg">
+                                      <small>
+                                    <strong>来显控制标识：</strong><br>
+                                      0: 来显短号 1: 来显长号 <br>
+
+                                      <strong>用户封锁标志位：</strong><br>
+                                      0：不封锁   1：封锁</small>
+                                  </p>
+
+                              </div>
+                      </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="row">
+                            <div class="ibox float-e-margins">
+                              <div class="ibox-title">
+                                  <h5>Volte用户数据</h5>
+                                  <div class="ibox-tools">
+                                       {% if as_user_list %}
+                                        <label class="label pull-right label-warning-light">{{ as_user_list|length }}条数据</label>
+                                        {% else %}
+                                        <label class="label pull-right label-danger">查无数据</label>
+                                        {% endif %}
+                                  </div>
+                              </div>
+                              <div class="ibox-content">
+                                  <table class="table table-bordered table-striped">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>号码</th>
+                                                        <th>开通时间</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% if as_user_list %}
+                                                    {% for as_user in as_user_list %}
+                                                    <tr>
+                                                        <td>{{ as_user.phone }}</td>
+                                                        <td>{{ as_user.recdate }}</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                    {% endif %}
+                                                    </tbody>
+                                                </table>
+
+                              </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="ibox float-e-margins">
+                              <div class="ibox-title">
+                                  <h5>融合用户数据</h5>
+                                  <div class="ibox-tools">
+                                    {% if sicp_user_list %}
+                                    <label class="label pull-right label-warning-light">{{ sicp_user_list|length }}条数据</label>
+                                    {% else %}
+                                    <label class="label pull-right label-danger">查无数据</label>
+                                    {% endif %}
+                                  </div>
+                              </div>
+                              <div class="ibox-content">
+                                 <table class="table table-bordered table-striped">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>号码</th>
+                                                        <th>业务类型</th>
+                                                        <th>SCP GT</th>
+                                                        <th>业务键</th>
+                                                        <th>开户时间</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% if sicp_user_list %}
+                                                    {% for sicp_user in sicp_user_list %}
+                                                    <tr>
+                                                        <td>{{ sicp_user.phone }}</td>
+                                                        <td>{{ sicp_user.servicetype }}</td>
+                                                        <td>{{ sicp_user.scpgt }}</td>
+                                                        <td>{{ sicp_user.servicekey }}</td>
+                                                        <td>{{ sicp_user.recordtime }}</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                    {% endif %}
+                                                    </tbody>
+                                                </table>
+
+                                 <p class="m-b-lg">
+                                  <small>
+                                  <strong>业务类型：</strong> <br>
+                                        0：V网
+                                        1：短号合家欢
+                                        7：个人彩印
+                                        16：彩宣（集团彩印）
+                                        21：短号朋友圈
+                                        27：能力开放 <br>
+                                      <strong>签约业务键：</strong> <br>
+                                        3：V网
+                                        104：短号合家欢
+                                        107：短号朋友圈
+                                        1023：个人彩印
+                                        113：彩宣（集团彩印）
+                                        27：能力开放
+                                  </small>
+                                </p>
+
+                          </div>
+                      </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-lg-5">
+                        <div class="ibox float-e-margins">
+                              <div class="ibox-title">
+                                  <h5>家庭网用户数据</h5>
+                                  <div class="ibox-tools">
+                                       {% if home_user_list %}
+                                        <label class="label pull-right label-warning-light">{{ home_user_list|length }}条数据</label>
+                                        {% else %}
+                                        <label class="label pull-right label-danger">查无数据</label>
+                                        {% endif %}
+                                  </div>
+                              </div>
+                              <div class="ibox-content">
+                                  <table class="table table-bordered table-striped">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>号码</th>
+                                                        <th>家庭id</th>
+                                                        <th>短号码</th>
+                                                        <th>用户类型</th>
+                                                        <th>开户时间</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% if home_user_list %}
+                                                    {% for home_user in home_user_list %}
+                                                    <tr>
+                                                        <td>{{ home_user.phone }}</td>
+                                                        <td>{{ home_user.homecode }}</td>
+                                                        <td>{{ home_user.shortnumber }}</td>
+                                                        <td>{{ home_user.usertype }}</td>
+                                                        <td>{{ home_user.starttime }}</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                    {% endif %}
+                                                    </tbody>
+                                                </table>
+                                  <p class="m-b-lg">
+                                      <small>
+                                      <strong>用户类型：</strong> <br>
+                                           1：合家欢用户
+                                           2：朋友圈用户
+                                      </small>
+                                    </p>
+                              </div>
+                          </div>
+                    </div>
+
+
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+    </div>
+
+</div>
+{% endblock %}

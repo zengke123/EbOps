@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-9">
+            <div>
+                <h3>查询结果 【{{ phonenumber }}】</h3>
+                <p class="pull-right"><a href="/complaint"  class="btn btn-outline btn-info  dim" role="button"><i class="fa fa-arrow-left"></i></a>
+                </p>
+                <p>
+                    {% if  ctx_user_list %}
+                        {% if ctx_user_list[0].useroutlock == 1%}
+                        <label class="label label-danger">呼出闭锁</label>
+                        {% endif %}
+                        {% if ctx_user_list[0].userinlock == 1%}
+                        <label class="label label-danger">呼入闭锁</label>
+                        {% endif %}
+                        {% if ctx_user_list[0].cfuflag == 1 %}
+                        <label class="label label-danger">开通无条件前转，未设置号码</label>
+                        {% elif ctx_user_list[0].cfuflag == 2 %}
+                        <label class="label label-danger">开通无条件前转，已设置号码</label>
+                        {% endif %}
+                        {% if ctx_user_list[0].cfbflag == 1 %}
+                        <label class="label label-danger">开通遇忙前转，未设置号码</label>
+                        {% elif ctx_user_list[0].cfbflag == 2 %}
+                        <label class="label label-danger">开通遇忙前转，已设置号码</label>
+                        {% endif %}
+                        {% if ctx_user_list[0].cfnryflag == 1 %}
+                        <label class="label label-danger">开通无应答前转，未设置号码</label>
+                        {% elif ctx_user_list[0].cfnryflag == 2 %}
+                        <label class="label label-danger">开通无应答前转，已设置号码</label>
+                        {% endif %}
+                        {% if ctx_user_list[0].cfnrcflag == 1 %}
+                        <label class="label label-danger">开通未注册前转，未设置号码</label>
+                        {% elif ctx_user_list[0].cfnrcflag == 2 %}
+                        <label class="label label-danger">开通未注册前转，已设置号码</label>
+                        {% endif %}
+                        {% if ctx_user_list[0].callbarflag1 == 1%}
+                        <label class="label label-default">紧急呼叫权限</label>
+                        {% endif %}
+                        {% if ctx_user_list[0].callbarflag2 == 1%}
+                        <label class="label label-default">长途呼出权限</label>
+                        {% endif %}
+                        {% if ctx_user_list[0].callbarflag3 == 1%}
+                        <label class="label label-default">国际呼出权限</label>
+                        {% endif %}
+                        {% if ctx_user_list[0].callbarflag4 == 1%}
+                        <label class="label label-default">本地呼出权限</label>
+                        {% endif %}
+                    {% else %}
+                    <label class="label label-danger">非Centrex用户</label>
+                    {% endif %}
+               </p>
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-9">
+            <div>
+                <div class="ibox float-e-margins">
+                          <div class="ibox-title">
+                              <h5>Centrex用户数据</h5>
+                              <div class="ibox-tools">
+                                   {% if ctx_user_list %}
+                                    <label class="label pull-right label-warning-light">{{ ctx_user_list|length }}条数据</label>
+                                    {% else %}
+                                    <label class="label pull-right label-danger">查无数据</label>
+                                    {% endif %}
+                              </div>
+                          </div>
+                          <div class="ibox-content">
+                              <table class="table table-bordered table-striped">
+                                    <thead>
+                                    </thead>
+                                    <tbody>
+                                    {% for user in user_data %}
+                                    <tr>
+                                        <th>{{ user[0] }}</th>
+                                        <td>{{ user[1] }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+
+<!--                                      <p class="m-b-lg">-->
+<!--                                          <small>-->
+<!--                                          </small>-->
+<!--                                      </p>-->
+
+                          </div>
+                  </div>
+             </div>
+        </div>
+
+
+    </div>
+
+
+</div>
+
+{% endblock %}

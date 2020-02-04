@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div>
+                <h3>查询结果 【{{ phonenumber }}】</h3>
+                <p class="pull-right"><a href="/complaint"  class="btn btn-outline btn-info  dim" role="button"><i class="fa fa-arrow-left"></i></a>
+                </p>
+                <p>
+                    {% if result.vrbt_flag == 1 %}
+                    <label class="label label-default">视频彩铃功能正常</label>
+                    {% elif result.vrbt_flag == 0 %}
+                    <label class="label label-danger">视频彩铃功能关闭</label>
+                    {% endif %}
+                    <label class="label label-default">系统播放视频</label> <small>{{ set_ring_list.ringfilepath }}</small>
+                </p>
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+                <div class="col-lg-4">
+                    <div>
+                        <div class="ibox float-e-margins">
+                                  <div class="ibox-title">
+                                      <h5>视频彩铃用户数据</h5>
+                                      <div class="ibox-tools">
+                                           {% if vrbt_user_list %}
+                                            <label class="label pull-right label-warning-light">{{ vrbt_user_list|length }}条数据</label>
+                                            {% else %}
+                                            <label class="label pull-right label-danger">查无数据</label>
+                                            {% endif %}
+                                      </div>
+                                  </div>
+                                  <div class="ibox-content">
+                                      <table class="table table-bordered table-striped">
+                                            <thead>
+                                            </thead>
+                                            <tbody>
+                                            {% if vrbt_user_list %}
+
+                                            <tr>
+                                                <th>号码</th>
+                                                <td>{{ vrbt_user_list[0].phonenumber }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>归属区号</th>
+                                                <td>{{ vrbt_user_list[0].locationid }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>开通日期</th>
+                                                <td>{{ vrbt_user_list[0].vrbtcreatedate }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>功能是否开启</th>
+                                                <td>{{ vrbt_user_list[0].vflag }}</td>
+                                            </tr>
+                                            {% endif %}
+                                            </tbody>
+                                        </table>
+
+<!--                                      <p class="m-b-lg">-->
+<!--                                          <small>-->
+<!--                                          </small>-->
+<!--                                      </p>-->
+
+                                  </div>
+                          </div>
+                     </div>
+
+                    <div>
+                        <div class="ibox float-e-margins">
+                                  <div class="ibox-title">
+                                      <h5>销户记录</h5>
+                                      <div class="ibox-tools">
+                                           {% if del_user_list %}
+                                            <label class="label pull-right label-warning-light">{{ del_user_list|length }}条数据</label>
+                                            {% else %}
+                                            <label class="label pull-right label-danger">查无数据</label>
+                                            {% endif %}
+                                      </div>
+                                  </div>
+                                  <div class="ibox-content">
+                                      <table class="table table-bordered table-striped">
+                                                        <thead>
+                                                        <tr>
+        <!--                                                        <th>号码</th>-->
+                                                            <th>开户日期</th>
+                                                            <th>销户日期</th>
+                                                            <th>区号</th>
+                                                            <th>销户途径</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% if del_user_list %}
+                                                        {% for del_user in del_user_list %}
+                                                        <tr>
+        <!--                                                        <td>{{ del_user.phone }}</td>-->
+                                                            <td>{{ del_user.createdate }}</td>
+                                                            <td>{{ del_user.deletedate }}</td>
+                                                            <td>{{ del_user.locationid }}</td>
+                                                            <td>{{ del_user.deltype }}</td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                        {% endif %}
+                                                        </tbody>
+                                                    </table>
+                                      <p class="m-b-lg">
+                                          <small>
+                                              <strong>用户业务申请销户途径:</strong> <br>
+                                                1：全网soap接口
+                                                2：BOSS
+
+                                          </small>
+                                        </p>
+                                  </div>
+                              </div>
+                    </div>
+                 </div>
+
+                <div class="col-lg-8">
+                    <div>
+                        <div class="ibox float-e-margins">
+                                  <div class="ibox-title">
+                                      <h5>视频彩铃用户铃音表</h5>
+                                      <div class="ibox-tools">
+                                        {% if vrbt_ring_list %}
+                                        <label class="label pull-right label-warning-light">{{ vrbt_ring_list|length }}条数据</label>
+                                        {% else %}
+                                        <label class="label pull-right label-danger">查无数据</label>
+                                        {% endif %}
+                                      </div>
+                                  </div>
+                                  <div class="ibox-content">
+                                     <table class="table table-bordered table-striped">
+                                                        <thead>
+                                                        <tr>
+        <!--                                                        <th>号码</th>-->
+                                                            <th>铃音编号</th>
+                                                            <th>铃音名称</th>
+                                                            <th>铃音分辨率标识</th>
+                                                            <th>铃音文件存放相对路径</th>
+                                                            <th>铃音类型</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% if vrbt_ring_list %}
+                                                        {% for vrbt_ring in vrbt_ring_list %}
+                                                        <tr>
+        <!--                                                        <td>{{ vrbt_ring.phonenumber }}</td>-->
+                                                            <td>{{ vrbt_ring.ringid }}</td>
+                                                            <td>{{ vrbt_ring.ringname }}</td>
+                                                            <td>{{ vrbt_ring.ringresolution }}</td>
+                                                            <td>{{ vrbt_ring.ringfilepath }}</td>
+                                                            <td>{{ vrbt_ring.type }}</td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                        {% endif %}
+                                                        </tbody>
+                                                    </table>
+
+                                     <p class="m-b-lg">
+                                      <small>
+                                          <strong>铃音类型：</strong> <br>
+                                        0：普通视频铃音
+                                        1：集团视频铃音
+                                        2：彩铃DIY视频铃音
+                                        3：彩铃加加视频铃音
+                                        4：广告视频铃音
+                                        5：音频铃音
+
+                                      </small>
+                                    </p>
+
+                              </div>
+                          </div>
+                    </div>
+
+                    <div>
+                        <div class="ibox float-e-margins">
+                                  <div class="ibox-title">
+                                      <h5>企业视频彩铃用户铃音表</h5>
+                                      <div class="ibox-tools">
+                                        {% if mrbt_ring_list %}
+                                        <label class="label pull-right label-warning-light">{{ mrbt_ring_list|length }}条数据</label>
+                                        {% else %}
+                                        <label class="label pull-right label-danger">查无数据</label>
+                                        {% endif %}
+                                      </div>
+                                  </div>
+                                  <div class="ibox-content">
+                                     <table class="table table-bordered table-striped">
+                                                        <thead>
+                                                        <tr>
+        <!--                                                        <th>号码</th>-->
+                                                            <th>群组id</th>
+                                                            <th>群组设置索引</th>
+                                                            <th>铃音编号</th>
+                                                            <th>铃音名称</th>
+                                                            <th>铃音分辨率标识</th>
+                                                            <th>铃音文件存放相对路径</th>
+                                                            <th>铃音类型</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% if mrbt_ring_list %}
+                                                        {% for mrbt_ring in mrbt_ring_list %}
+                                                        <tr>
+        <!--                                                        <td>{{ mrbt_ring.phonenumber }}</td>-->
+                                                            <td>{{ mrbt_ring.groupid }}</td>
+                                                            <td>{{ mrbt_ring.mediagrpsetindex }}</td>
+                                                            <td>{{ mrbt_ring.ringid }}</td>
+                                                            <td>{{ mrbt_ring.ringname }}</td>
+                                                            <td>{{ mrbt_ring.ringresolution }}</td>
+                                                            <td>{{ mrbt_ring.ringfilepath }}</td>
+                                                            <td>{{ mrbt_ring.type }}</td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                        {% endif %}
+                                                        </tbody>
+                                                    </table>
+
+                                     <p class="m-b-lg">
+                                      <small>
+
+                                      </small>
+                                    </p>
+
+                              </div>
+                          </div>
+                    </div>
+
+                </div>
+
+        </div>
+
+
+</div>
+{% endblock %}
