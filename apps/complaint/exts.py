@@ -1,6 +1,37 @@
+import datetime
 from flask import render_template
 
-def handle_vpmn(phonenumber, data):
+
+# 日期处理
+def get_date_range(delta_day):
+    today = datetime.datetime.now().strftime("%Y%m%d")
+    # 转为datetime格式，用于日期计算，str格式无法计算
+    begin_date = datetime.datetime.strptime(today, "%Y%m%d") - datetime.timedelta(delta_day)
+    dates = []
+    dt = begin_date
+    date = begin_date.strftime("%Y%m%d")
+    while date <= today:
+        dates.append(date)
+        dt = dt + datetime.timedelta(1)
+        date = dt.strftime("%Y%m%d")
+    return dates
+
+# 数据整理
+def t_rows(titles, data):
+    result = []
+    if isinstance(data, list):
+        for item_data in data:
+            rows = [item_data.get(k, "") for k in titles]
+            result.append(rows)
+    # 兼容返回格式为dict, 而不是list
+    elif isinstance(data, dict) and data:
+        rows = [data.get(k, "") for k in titles]
+        result.append(rows)
+    else:
+        result = [['无记录'] + ["" for _ in range(len(titles) -1)]]
+    return result
+
+def handle_vpmn(phonenumber, data, *args):
     v_user_list = data.get('VuserList', '')
     as_user_list = data.get('AsuserList', '')
     home_user_list = data.get('HomeuserList', '')
@@ -19,7 +50,7 @@ def handle_vpmn(phonenumber, data):
 
 
 
-def handle_crbt(phonenumber, data):
+def handle_crbt(phonenumber, data, *args):
     crbt_user_list = data.get('UserList', '')
     del_user_list = data.get('DeleteUserList', '')
     copy_log_list = data.get('CopyLogList', '')
@@ -49,7 +80,7 @@ def handle_crbt(phonenumber, data):
     return render_template('complaint_crbt.html', app='投诉处理', action="彩铃业务", **locals())
 
 
-def handle_vrbt(phonenumber, data):
+def handle_vrbt(phonenumber, data, *args):
     vrbt_user_list = data.get('VrbtUserList', '')
     del_user_list = data.get('VrbtDeUserList', '')
     vrbt_ring_list = data.get('VrbtRingList', '')
@@ -61,7 +92,7 @@ def handle_vrbt(phonenumber, data):
     return render_template('complaint_vrbt.html', app='投诉处理', action="视频彩铃业务", **locals())
 
 
-def handle_ctx(phonenumber, data):
+def handle_ctx(phonenumber, data, *args):
     CtxuserList = data.get('CtxuserList', '')
     user_data = []
     if isinstance(CtxuserList, list):
@@ -176,3 +207,49 @@ def handle_ctx(phonenumber, data):
             user_data.append(row)
     return render_template('complaint_ctx.html', app='投诉处理', action="Centrex业务",
                            phonenumber=phonenumber, ctx_user_list=CtxuserList, user_data=user_data)
+
+
+def handle_vpmn_rec(phonenumber, data, *args):
+    req_date = args[0]
+    cs_titles = ['RecHost', 'ServiceKey', 'CallType', 'ChargeType', 'RoamFlag', 'CallingPartyNumber',
+                 'CalledPartyNumber', 'RoamAreaNumber', 'MSInfoVLRNumber', 'MSInfoLAI', 'MSInfoCellId',
+                 'CallBeginTime', 'CallEndTime', 'CallDuration', 'AccountFlag', 'RecType']
+    lte_titles = ['RecHost', 'ServiceKey', 'CallType', 'ChargeType', 'RoamFlag', 'CallingPartyNumber',
+                  'CalledPartyNumber', 'CallBeginTime', 'CallEndTime', 'CallDuration', 'AccountFlag', 'ECGI', 'TACID',
+                  'RecType']
+    # 整理数据
+    rec_list = data.get('VpmnUserRecList', '')
+    lterec_list = data.get('VpmnUserLteRecList', '')
+    cs_rows = t_rows(cs_titles, rec_list)
+    lte_rows = t_rows(lte_titles, lterec_list)
+    return render_template('complaint_v_rec.html', app='投诉处理', action="V网话单", **locals())
+
+
+def handle_vpmn_home(phonenumber, data, *args):
+    req_date = args[0]
+    cs_titles = ['RecHost', 'ServiceKey', 'CallType', 'CallingPartyNumber', 'CalledPartyNumber', 'MSInfoVLRNumber',
+                   'MSInfoLAI',
+                   'MSInfoCellId', 'CallBeginTime', 'CallEndTime', 'CallDuration', 'RecType']
+    lte_titles = ['RecHost', 'ServiceKey', 'CallType', 'CallingPartyNumber', 'CalledPartyNumber', 'CallBeginTime',
+                  'CallEndTime', 'CallDuration', 'ECGI', 'TACID', 'RecType']
+    # 整理数据
+    rec_list = data.get('HomeUserRecList', '')
+    lterec_list = data.get('HomeUserLteRecList', '')
+    cs_rows = t_rows(cs_titles, rec_list)
+    lte_rows = t_rows(lte_titles, lterec_list)
+    return render_template('complaint_v_rec.html', app='投诉处理', action="合家欢话单", **locals())
+
+
+def handle_vpmn_frd(phonenumber, data, *args):
+    req_date = args[0]
+    cs_titles = ['RecHost', 'ServiceKey', 'CallType', 'CallingPartyNumber', 'CalledPartyNumber', 'MSInfoVLRNumber',
+                   'MSInfoLAI',
+                   'MSInfoCellId', 'CallBeginTime', 'CallEndTime', 'CallDuration', 'RecType']
+    lte_titles = ['RecHost', 'ServiceKey', 'CallType', 'CallingPartyNumber', 'CalledPartyNumber', 'CallBeginTime',
+                  'CallEndTime', 'CallDuration', 'ECGI', 'TACID', 'RecType']
+    # 整理数据
+    rec_list = data.get('FrdUserRecList', '')
+    lterec_list = data.get('FrdUserLteRecList', '')
+    cs_rows = t_rows(cs_titles, rec_list)
+    lte_rows = t_rows(lte_titles, lterec_list)
+    return render_template('complaint_v_rec.html', app='投诉处理', action="朋友圈话单", **locals())

@@ -2,7 +2,7 @@ import json
 import requests
 from . import complaint
 from ..settings import API_URL
-from .exts import handle_vpmn, handle_crbt, handle_vrbt, handle_ctx
+from .exts import handle_vpmn, handle_crbt, handle_vrbt, handle_ctx, handle_vpmn_rec, handle_vpmn_frd, handle_vpmn_home, get_date_range
 from flask import render_template, request, jsonify
 from flask_login import login_required
 
@@ -15,9 +15,9 @@ apis = {
     "crbt": ("CRBTUSERDATA", handle_crbt),
     "vrbt": ("VRBTUSERDATA", handle_vrbt),
     "portlog": ("USERPORTLOG", ""),
-    "vpmn_rec": ("VPMNUSERRECORD", ""),
-    "frd_rec": ("FRDUSERRECORD", ""),
-    "home_rec": ("HOMEUSERRECORD", "")
+    "vpmn_rec": ("VPMNUSERRECORD", handle_vpmn_rec),
+    "frd_rec": ("FRDUSERRECORD", handle_vpmn_frd),
+    "home_rec": ("HOMEUSERRECORD", handle_vpmn_home)
 }
 
 
@@ -50,11 +50,15 @@ def main():
         api_name = request.form.get("api")
         phonenumber = request.form.get("phonenumber")
         req_date = request.form.get("date")
+        if api_name in ("vpmn_rec", "frd_rec", "home_rec") and not req_date:
+            req_dates = get_date_range(2)
+            req_date = "|".join(req_dates)
+        print(req_date)
         result = req_ccautomate(api_name, phonenumber, date=req_date)
         print("<<< ACK", result)
         handle_func = apis.get(api_name)[1]
         if callable(handle_func):
-            return handle_func(phonenumber, result)
+            return handle_func(phonenumber, result, req_date)
         else:
             return jsonify(result)
     else:
