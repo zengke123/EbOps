@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
 {% block custom_head_css_js %}
-
+<script src="{{ url_for('static',filename='js/plugins/ladda/spin.min.js') }}"></script>
+<script src="{{ url_for('static',filename='js/plugins/ladda/ladda.min.js') }}"></script>
+<script src="{{ url_for('static',filename='js/plugins/ladda/ladda.jquery.min.js') }}"></script>
 {% endblock %}
 
 {% block content %}
-<div class="wrapper wrapper-content animated fadeInRight">
+<div class="wrapper wrapper-content animated fadeInRight" id="ibox1">
     <div class="ibox-content m-b-sm border-bottom">
         <div class="p-xs">
             <div class="pull-left m-r-md">
@@ -54,8 +56,8 @@
                         <div class="input-group">
                             <div class="input-group-btn">
                                 <button class="btn btn-white" type="reset">重置</button>
-                                <button class="btn btn-outline btn-info" type="submit"><i class="fa fa-arrow-right"></i></button>
-
+<!--                                <button class="btn btn-outline btn-info ladda-button-demo" type="submit"><i class="fa fa-arrow-right"></i></button>-->
+                                    <button class="ladda-button btn btn-outline btn-info" data-style="zoom-in" type="submit"><span class="ladda-label">确认</span><span class="ladda-spinner"></span></button>
                             </div>
                         </div>
                     </form>
@@ -63,4 +65,24 @@
             </div>
     </div>
 </div>
+<script>
+    $(document).ready(function (){
+
+        var l = Ladda.bind('.ladda-button');
+
+        l.click(function(){
+            // Start loading
+            l.ladda( 'start' );
+
+            // Timeout example
+            // Do something in backend and then stop ladda
+            setTimeout(function(){
+                l.ladda('stop');
+            },12000)
+
+
+        });
+
+    });
+</script>
 {% endblock %}

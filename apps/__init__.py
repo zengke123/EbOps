@@ -25,8 +25,8 @@ def create_app():
     login_manager.init_app(app)
     # 更新celery配置
     celery.conf.update(
-        broker_url='redis://localhost:6379/0',
-        result_backend='redis://localhost:6379/1',
+        broker_url='redis://127.0.0.1:6379/0',
+        result_backend='redis://127.0.0.1:6379/1',
         worker_concurrency=1,
         worker_prefetch_multiplier=1,
         imports=('apps.ops.tasks',),
@@ -49,6 +49,8 @@ def create_app():
     from .assets import assets as assets_blueprint
     # 统计数据
     from .tongji import tongji as tongji_blueprint
+    # 投诉处理
+    from .complaint import complaint as complaint_blueprint
     # 统一对外接口蓝本
     from .api_1 import api_1 as api_1_blueprint
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
@@ -58,4 +60,5 @@ def create_app():
     app.register_blueprint(assets_blueprint, url_prefix='/assets')
     app.register_blueprint(tongji_blueprint, url_prefix='/tongji')
     app.register_blueprint(api_1_blueprint, url_prefix='/api/v1')
+    app.register_blueprint(complaint_blueprint, url_prefix='/complaint')
     return app
