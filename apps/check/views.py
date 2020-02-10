@@ -1,9 +1,10 @@
 from . import check
-from .. import db
-from ..models import CheckHistory, CheckHost
+from .. import db, scheduler
+from ..models import CheckHistory, CheckHost, ChenkJobs
+from sqlalchemy import distinct
 from flask import render_template, request, jsonify, send_from_directory
 from flask_login import login_required, current_user
-from .exts import req_zjlj, req_pllj
+from .exts import req_zjlj, req_pllj, test_check, add_job_scheduler
 from werkzeug.utils import secure_filename
 from ..settings import ALLOWED_EXTENSIONS, UPLOAD_FOLDER, TEMPLATE_FOLDER, CHECK_DOWNLOAD_FOLDER
 # 例检状态全局变量
@@ -41,6 +42,7 @@ def check_host():
         hostname = names[1]
         api_name = {'type':host_type, 'name':hostname}
         zjlj_task = req_zjlj.delay(api_name, hostname, current_user.username)
+        # zjlj_task = test_check.delay(lj_type=api_name, name=hostname, operator=current_user.username)
         return jsonify({'flag': 'success', 'desc': '任务已添加[id:{}]'.format(zjlj_task.id)})
     else:
         return jsonify({'flag': 'fail', 'desc': '参数错误'})
@@ -210,4 +212,100 @@ def multi_delete():
         db.session.commit()
         return "success"
     else:
+        return "fail"
+
+
+# 例检任务
+@check.route('/jobs')
+@login_required
+def jobs():
+    all_jobs = db.session.query(ChenkJobs).all()
+    run_jobs = ChenkJobs.query.filter(ChenkJobs.status == 1).all()
+    return render_template("check_jobs.html", app="自动例检", action="例检任务", run_jobs=run_jobs, all_jobs=all_jobs)
+
+
+@check.route('/jobs/add', methods=['GET', 'POST'])
+@login_required
+def add_job():
+    name = request.form.get('name')
+    content = request.form.get('content')
+    cron_time = request.form.get('cron_time')
+    host = content.split(",")
+    _hosts_data = db.session.query(CheckHost.zj).all()
+    _hosts = [x[0] for x in _hosts_data]
+    _clusters_data = db.session.query(distinct(CheckHost.jq)).all()
+    _clusters = [x[0] for x in _clusters_data]
+    args = []
+    for x in host:
+        if x in _hosts:
+            x = 'zj_' + x
+        elif x in _clusters:
+            x = 'jq_' + x
+        else:
+            return jsonify({'result': 'fail', 'error': x + "不存在"})
+        args.append(x)
+    need_add_job = ChenkJobs(name=name, content='|'.join(args), cron_time=cron_time)
+    if cron_time.count(",") != 4:
+        return jsonify({'result': 'fail', 'error': "执行时间Cron格式错误"})
+    db.session.add(need_add_job)
+    try:
+        db.session.commit()
+        return jsonify({'result': 'success', 'error': None})
+    except:
+        return jsonify({'result': 'fail', 'error': '数据库错误'})
+
+
+@check.route('/jobs/pause', methods=['GET', 'POST'])
+@login_required
+def pause_job():
+    job_id = request.form.get('job_id')
+    current_job = ChenkJobs.query.filter(ChenkJobs.id == int(job_id)).first()
+    if current_job.status == 1:
+        scheduler.pause_job(id=job_id)
+        current_job.status = 0
+        db.session.commit()
+        print("任务【{}】【{}】已从scheduler队列暂停".format(current_job.id, current_job.name))
+        return "success"
+    else:
+        return "fail"
+
+
+@check.route('/jobs/active', methods=['GET', 'POST'])
+@login_required
+def active_job():
+    # 未初始化的任务需要先进行添加
+    job_id = request.form.get('job_id')
+    current_job = ChenkJobs.query.filter(ChenkJobs.id == int(job_id)).first()
+    if current_job:
+        try:
+            scheduler.resume_job(id=int(job_id))
+            current_job.status = 1
+            db.session.commit()
+        except:
+            _args = (current_job.content,)
+            add_job_scheduler(scheduler, job_id=current_job.id, job_cron=current_job.cron_time, args=_args)
+            current_job.status = 1
+            db.session.commit()
+        print("任务【{}】【{}】已从scheduler队列激活".format(current_job.id, current_job.name))
+        return "success"
+    else:
+        return "fail"
+
+
+@check.route('/jobs/remove', methods=['GET', 'POST'])
+@login_required
+def remove_job():
+    # 任务删除,正在运行或已暂停的任务，需要从任务队列中清除
+    job_id = request.form.get('job_id')
+    current_job = ChenkJobs.query.filter(ChenkJobs.id == int(job_id)).first()
+    try:
+        scheduler.delete_job(id=job_id)
+        print("任务【{}】【{}】已从scheduler队列删除".format(current_job.id, current_job.name))
+    except:
+        print("任务【{}】【{}】未在scheduler队列初始化,已删除".format(current_job.id, current_job.name))
+    try:
+        db.session.delete(current_job)
+        db.session.commit()
+        return "success"
+    except:
         return "fail"

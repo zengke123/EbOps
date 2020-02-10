@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+
+{% block custom_head_css_js %}
+{% endblock %}
+
+{% block content %}
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="tabs-container">
+				<ul class="nav nav-tabs">
+					<li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true"> 全部任务</a></li>
+					<li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false"> 新增任务</a></li>
+				</ul>
+				<div class="tab-content">
+					<div id="tab-1" class="tab-pane active">
+						<div class="panel-body">
+							<table class="table table-hover">
+							  <thead>
+							  	<tr>
+								  <th>ID</th>
+								  <th>任务名称</th>
+								  <th>任务内容</th>
+								  <th>执行时间（cron）</th>
+								  <th>状态</th>
+								  <th>操作</th>
+							  	</tr>
+							  </thead>
+								{% for job in all_jobs %}
+								  <tr>
+									  <td id="job_id_{{ job.id }}">{{ job.id }}</td>
+									  <td>{{ job.name }}</td>
+									  <td>{{ job.content }}</td>
+									  <td>{{ job.cron_time }}</td>
+									  {% if job.status == 1 %}
+										  <td>运行</td>
+										  <td>
+										  <button type="button" class="btn btn-warning btn-xs"  value={{ job.id }} onclick="pause_job(this.value)">暂停</button>
+										  <button type="button" class="btn btn-danger btn-xs"  value={{ job.id }} onclick="remove_job(this.value)">删除</button>
+										  </td>
+									  {% else %}
+										  <td>暂停</td>
+										  <td>
+										  <button type="button" class="btn btn-primary btn-xs"  value={{ job.id }} onclick="active_job(this.value)">激活</button>
+										  <button type="button" class="btn btn-danger btn-xs"  value={{ job.id }} onclick="remove_job(this.value)">删除</button>
+										  </td>
+									  {% endif %}
+								  </tr>
+								{% endfor %}
+							</table>
+
+						</div>
+					</div>
+					<div id="tab-2" class="tab-pane">
+						<div class="panel-body">
+							<div class="row">
+								<form class="form-horizontal" >
+									<div class="form-group required">
+										<label class="col-md-2 control-label">任务名称</label>
+											<div class="col-md-9">
+												<input type="text" name="name" class="form-control" required="" id="job_name">
+											</div>
+									</div>
+
+									<div class="form-group required">
+										<label class="col-md-2 control-label">例检集群/主机</label>
+											<div class="col-md-9">
+												<input type="text" name="content" class="form-control" required="" id="job_content" placeholder="以 , 分隔">
+											</div>
+									</div>
+
+									<div class="form-group required">
+										<label class="col-md-2 control-label">执行时间</label>
+											<div class="col-md-9">
+												<input type="text" name="platform" class="form-control" required="" id="job_cron_time" placeholder="*,*,*,*,*">
+											</div>
+									</div>
+									<div class="hr-line-dashed"></div>
+									<div class="form-group">
+										<div class="col-sm-4 col-sm-offset-2">
+											<button class="btn btn-white" type="reset">重置</button>
+											<button id="submit_button" class="btn btn-primary" onclick="add_job()" type="button">提交</button>
+										</div>
+									</div>
+
+								</form>
+							</div>
+
+						</div>
+					</div>
+				</div>
+
+
+			</div>
+		</div>
+
+	</div>
+</div>
+<script type="text/javascript">
+    function pause_job(value){
+        $.post("{{ url_for('check.pause_job') }}",
+            {
+                job_id: value
+            },
+            function (data) {
+                if(data==="success"){
+                	location.reload();
+                    toastr.info("任务已暂停");
+                }
+                else toastr.error("暂停失败")
+            });
+    }
+
+    function active_job(value){
+        $.post("{{ url_for('check.active_job') }}",
+            {
+                job_id: value
+            },
+            function (data) {
+                if(data==="success"){
+                	location.reload();
+                    toastr.info("任务已激活");
+
+                }
+                else toastr.error("激活失败")
+            });
+    }
+
+    function add_job(){
+        var name = document.getElementById("job_name").value;
+        var content = document.getElementById("job_content").value;
+        var cron_time = document.getElementById("job_cron_time").value;
+        $.post("{{ url_for('check.add_job') }}",
+            {
+                name: name,
+                content:content,
+                cron_time:cron_time
+            },
+            function (data) {
+                var result = data.result;
+                var msg = data.error;
+                if(result==="success"){
+                	location.reload();
+                    toastr.info("任务已添加");
+                }
+                else toastr.error(msg)
+            });
+    }
+
+    function remove_job(value){
+        $.post("{{ url_for('check.remove_job') }}",
+            {
+                job_id: value
+            },
+            function (data) {
+                if(data==="success"){
+                	location.reload();
+                    toastr.info("任务已删除");
+                }
+                else toastr.error("删除失败")
+            });
+    }
+</script>
+
+{% endblock %}

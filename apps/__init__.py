@@ -1,12 +1,15 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_apscheduler import APScheduler
 from celery import Celery
 import config
 
 
 # 创建SQLAlchemy实例
 db = SQLAlchemy()
+# 创建APScheduler实例
+scheduler = APScheduler()
 # 创建celery配置
 celery = Celery(__name__, broker='redis://localhost:6379/0')
 # 创建用户管理

@@ -81,7 +81,7 @@
                 <ul class="nav nav-second-level">
                     <li id="c-info"><a href="{{ url_for('check.info') }}">主机例检</a></li>
                     <li id="c-set"><a href="{{ url_for('check.config') }}">例检配置</a></li>
-                    <li id="c-task"><a href="#">例检任务</a></li>
+                    <li id="c-task"><a href="{{ url_for('check.jobs') }}">例检任务</a></li>
                     <li id="c-history"><a href="{{ url_for('check.history') }}">例检记录</a></li>
                 </ul>
             </li>

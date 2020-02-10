@@ -6,7 +6,7 @@ from .. import db
 from .. import celery
 from ..models import CheckHistory
 from celery.utils.log import get_task_logger
-from ..settings import CHECK_DOWNLOAD_FOLDER
+from ..settings import CHECK_DOWNLOAD_FOLDER, TASKS_LOG_FOLDER
 
 logger = get_task_logger(__name__)
 
@@ -64,11 +64,17 @@ def req_zjlj(api_name, name, operator):
     else:
         return "参数错误"
 
-@celery.task
-def test_check(lj_type, name, operator):
+@celery.task(bind=True)
+def test_check(self, lj_type, name, operator):
     cmd = 'zj zjlj lj:type={},name={}'.format(lj_type, name)
     print(cmd)
-    time.sleep(120)
+    # id = celery.Task.request
+    print(self.request.id)
+    log_name = TASKS_LOG_FOLDER + str(self.request.id) + '.log'
+    for i in range(10):
+        with open(log_name, 'a') as f:
+            f.write('[{}]测试状态'.format(self.request.id) + str(i) + '\n')
+            time.sleep(5)
     return "success", "RETURN=0000"
 
 
@@ -116,3 +122,64 @@ def req_pllj(api_name, name, operator):
             return "http请求失败 " + str(r.status_code)
     else:
         return "参数错误"
+
+
+def schedule_check(items):
+    import time, datetime
+    from collections import namedtuple
+    CheckItem = namedtuple("CheckItem", "type name")
+    temp_items = items.split("|")
+    check_items = []
+    for item in temp_items:
+        type_name = item.split("_")[0]
+        hostname = item.split("_")[1]
+        check_items.append(CheckItem(type=type_name, name=hostname))
+
+    for item in check_items:
+        print(datetime.datetime.now(), "例检 {} {}".format(item.type, item.name))
+        api_name = {'type': item.type, 'name': item.name}
+        zjlj_task = req_zjlj.delay(api_name, item.name, "Scheduler")
+        time.sleep(1)
+    return "success"
+
+
+def test_schedule_check(items):
+    import time, datetime
+    from collections import namedtuple
+    CheckItem = namedtuple("CheckItem","type name")
+    temp_items = items.split("|")
+    check_items =[]
+    for item in temp_items:
+        type_name = item.split("_")[0]
+        hostname = item.split("_")[1]
+        check_items.append(CheckItem(type=type_name, name=hostname))
+
+    for item in check_items:
+        print(datetime.datetime.now(), "例检 {} {}".format(item.type,item.name))
+        time.sleep(5)
+        print(datetime.datetime.now(), "例检完成")
+        time.sleep(5)
+    return "success"
+
+
+def add_job_scheduler(handler, job_id, job_cron, args):
+    minute, hour, day, month, day_of_week = job_cron.split(",")
+    if day_of_week != "*":
+        day_of_week = int(day_of_week) - 1
+    _job_args = {
+        'func': schedule_check,
+        'id': str(job_id),
+        'args': args,
+        'misfire_grace_time':300,
+        'trigger': {
+            'type': 'cron',
+            'day_of_week': day_of_week,
+            'month': month,
+            'day': day,
+            'hour': hour,
+            'minute': minute
+        }
+    }
+    # misfire_grace_time:因为某种特定的原因导致定时任务服务挂掉，在重启后如果任务的时间和实际的时间的差值小于定义的misfire_grace_time
+    print(_job_args)
+    handler.add_job(**_job_args)

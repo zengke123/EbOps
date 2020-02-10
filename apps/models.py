@@ -299,3 +299,20 @@ class Capacity(db.Model):
             "info": self.info
         }
 
+
+# 定时例检任务
+class ChenkJobs(db.Model):
+    """
+    表名: jobs
+    id: id
+    name: 任务名称
+    content: 执行任务参数
+    cron_time: 执行时间，crontab
+    status: 任务状态，默认为0 暂停，1 激活
+    """
+    __tablename__ = 'c_jobs'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(64), nullable=False)
+    content = db.Column(db.String(128), nullable=False)
+    cron_time = db.Column(db.String(64), nullable=False)
+    status = db.Column(db.SmallInteger, default=0)
