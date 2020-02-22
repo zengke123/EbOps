@@ -53,6 +53,16 @@
                 </ul>
             </li>
 
+            <li id="operate">
+                <a>
+                    <i class="fa fa-pencil-square" style="width: 14px"></i> <span class="nav-label">操作审批</span><span class="fa arrow"></span>
+                </a>
+                <ul class="nav nav-second-level">
+                    <li id="op_todo"><a href="{{ url_for('operate.task_todo') }}">待办操作</a></li>
+                    <li id="op_new"><a href="{{ url_for('operate.task_create') }}">新建审批</a></li>
+                    <li id="op_list"><a href="{{ url_for('operate.task_all') }}">操作记录</a></li>
+                </ul>
+            </li>
 
             <li id="complaint">
                 <a href="{{ url_for('complaint.main') }}">

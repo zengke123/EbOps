@@ -1,0 +1,325 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .nav.nav-tabs li {
+    background: none;
+    border: none;
+}
+    .nav.nav-tabs li.active a {
+       background: none;
+    border-color: #dddddd #dddddd rgba(0, 0, 0, 0);
+    border-bottom: #f3f3f4;
+    border-image: none;
+    border-style: solid;
+    border-width: 1px;
+    color: #555555;
+    cursor: default;
+}
+</style>
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="ibox">
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="m-b-md">
+                        <a href="javascript:history.go(-1)"  class="btn btn-white btn-xs pull-right">返回</a>
+                        {% if current_user.is_admin %}
+                        {% if result.opStatus == "Created" %}
+                        <button class="btn btn-danger btn-xs pull-right" value="{{ result.id }}|apply" onclick="task_action(this.value)">内部审批</button>
+                        {% elif result.opStatus == "apply" %}
+                        <button class="btn btn-danger btn-xs pull-right" data-toggle="modal" data-target="#permitModal" data-whatever="{{ result.id }}">局方审批</button>
+                        {% endif %}
+                        {% endif %}
+                        {% if result.opStatus == "permit" %}
+                        <button class="btn btn-danger btn-xs pull-right" data-toggle="modal" data-target="#myModal" data-whatever="{{ result.id }}">添加操作结果</button>
+                        {% endif %}
+                        <h3>{{ result.opSubject }}<small>【{{ result.id }}】</small></h3>
+                    </div>
+                    <dl class="dl-horizontal">
+                        <dt>状态:</dt> <dd>
+                          {% if result.opStatus == "Created" %}
+                            <span class="label label-warning">待内审</span>
+                            {% elif result.opStatus == "apply" %}
+                            <span class="label label-danger">待局审</span>
+                            {% elif result.opStatus == "permit" %}
+                            <span class="label label-success">待操作</span>
+                            {% elif result.opStatus == "finish" %}
+                            <span class="label label-default">已完成</span>
+                        {% endif %}
+
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-5">
+                    <dl class="dl-horizontal">
+
+                        <dt>操作网元:</dt> <dd>{{ result.opSubsystem }}</dd>
+                        <dt>操作地点:</dt> <dd>  {{ result.opLocation }}</dd>
+                        <dt>操作人员:</dt> <dd><a href="#" class="text-navy"> {{ result.opOperator }}</a> </dd>
+                        <dt>创建人员:</dt> <dd> 	{{ result.opCreator }} </dd>
+                    </dl>
+                </div>
+                <div class="col-lg-7" id="cluster_info">
+                    <dl class="dl-horizontal">
+                        <dt>局方发起人:</dt> <dd> 	{{ result.opOriginator }} </dd>
+                        <dt>申请时间:</dt> <dd>{{ result.opCreateDate }} &nbsp; {{ result.opCreateTime }}</dd>
+                        <dt>计划操作时间:</dt> <dd>{{ result.opPlanTime }}</dd>
+                        <dt>完成时间:</dt> <dd> 	{{ result.opFinishDate }} &nbsp; {{ result.opFinishTime }}</dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <dl class="dl-horizontal">
+                        <dt>操作原因:</dt>
+                        <dd>{{ result.opContent }}
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+
+             <div class="row">
+                <div class="col-lg-12">
+                    <dl class="dl-horizontal">
+                        <dt>附件:</dt>
+                        <dd>
+                            {% if result.opAttachflag == 'y' %}
+                                <a href="/operate/download/{{ result.opAttachname }}">{{ result.opAttachname }} </a>
+                            {% else %}
+                                {{ result.opAttachname }}
+                            {% endif %}
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <dl class="dl-horizontal">
+                        <dt>Completed:</dt>
+                        <dd>
+                            <div class="progress progress-striped active m-b-sm">
+                            {% if result.opStatus == "Created" %}
+                                <small>20%</small>
+                                <div style="width: 20%;" class="progress-bar"></div>
+
+                            {% elif result.opStatus == "apply" %}
+                               <small>40%</small>
+                                <div style="width: 40%;" class="progress-bar"></div>
+
+                            {% elif result.opStatus == "permit" %}
+                                <small>60%</small>
+                                <div style="width: 60%;" class="progress-bar"></div>
+                            {% elif result.opStatus == "finish" %}
+                               <small>100%</small>
+                                <div style="width: 100%;" class="progress-bar-success"></div>
+                            {% endif %}
+                          </div>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="row ">
+                <div class="col-lg-12">
+                    <div class="panel blank-panel">
+                        <div class="panel-heading">
+                            <div class="panel-options">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#tab-1" data-toggle="tab">操作步骤</a></li>
+                                    <li class=""><a href="#tab-2" data-toggle="tab">操作结果</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="panel-body">
+
+                        <div class="tab-content">
+                        <div class="tab-pane active" id="tab-1">
+                             <textarea class="form-control diff-textarea" rows="10" disabled>
+{{ result.opDetail }}
+                             </textarea>
+
+                        </div>
+                        <div class="tab-pane" id="tab-2">
+                             <textarea class="form-control diff-textarea"  rows="6" disabled>
+{{ result.opResult }}
+                             </textarea>
+
+                        </div>
+
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">操作主题</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" id="UserUpdateForm">
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">操作结果</label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" id="opResult" name="opResult"></textarea>
+                </div>
+            </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" id="SAVE" data-dismiss="modal">提交</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="permitModal" tabindex="-1" role="dialog" aria-labelledby="permitModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="permitModalLabel">操作主题</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" id="permitForm">
+
+            <div class="form-group">
+                <label class="col-sm-5 control-label">局方审批人</label>
+                <div class="col-sm-7">
+                    <input class="form-control" id="outReviewer" name="outReviewer">
+                </div>
+            </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" id="PERMIT" data-dismiss="modal">审批</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+    function task_action(value){
+        $.ajax({
+            url: "{{ url_for('operate.task_action') }}",
+            type: "post",
+            data: {"action": value},
+            success: function (data) {
+                if (data["flag"] === "success") {
+                    location.reload();
+                    toastr.info("审批成功");
+                } else toastr.error("操作失败");
+            }
+        });
+    }
+
+    // 删除操作审批
+    $('#myDelModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id_no = button.data('whatever');
+        var modal = $(this);
+        modal.find('#DEL').attr("value",id_no);
+    });
+
+	$("#DEL").click(function () {
+        var host_id = this.value;
+        var action = host_id + "|delete";
+        $.ajax({
+            url: "{{ url_for('operate.task_action') }}",
+            type: "post",
+            data: {"action": action},
+            success:function(data) {
+                if(data["flag"]==="success"){
+                    location.reload();
+                    toastr.info("删除成功");
+                }
+                else toastr.error("删除失败");
+            }
+        });
+    });
+
+	//添加操作结果
+    $('#myModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id_no = button.data('whatever');
+        var modal = $(this);
+        modal.find('.modal-title').text(id_no);
+    });
+
+    $("#SAVE").click(function () {
+        var item_id = $("#myModalLabel").text();
+        var formData  = new FormData();
+        formData.append("action", item_id+"|finish");
+        formData.append("opResult", $("#opResult").val());
+        $.ajax({
+            url: "{{ url_for('operate.task_action') }}",
+            type: "POST",
+            data: formData,
+            async: false,
+            contentType: false,
+            processData: false,
+            success:function(data) {
+                if(data["flag"]==="success"){
+                    location.reload();
+                    toastr.info("保存成功");
+                }
+                else toastr.error("保存失败");
+            }
+        });
+    });
+
+    	//添加局方审批人
+    $('#permitModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id_no = button.data('whatever');
+        var modal = $(this);
+        modal.find('.modal-title').text(id_no);
+    });
+
+    $("#PERMIT").click(function () {
+        var item_id = $("#permitModalLabel").text();
+        var formData  = new FormData();
+        formData.append("action", item_id+"|permit");
+        formData.append("outReviewer", $("#outReviewer").val());
+        $.ajax({
+            url: "{{ url_for('operate.task_action') }}",
+            type: "POST",
+            data: formData,
+            async: false,
+            contentType: false,
+            processData: false,
+            success:function(data) {
+                if(data["flag"]==="success"){
+                    location.reload();
+                    toastr.info("审批通过");
+                }
+                else toastr.error("操作失败");
+            }
+        });
+    });
+
+</script>
+
+
+<script type="text/javascript">
+</script>
+
+
+{% endblock %}

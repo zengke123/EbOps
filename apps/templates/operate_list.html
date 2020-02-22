@@ -1,0 +1,292 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>全部</h5><span class="label label-primary" id="counts">{{ result|length }}</span>
+            <div class="ibox-tools">
+                <form role="form" class="form-inline">
+                     <div class="input-group">
+                      <input type="text" class="form-control" placeholder="主题/内容" id="opContent">
+                      <span class="input-group-btn">
+                        <button class="btn btn-sm btn-primary" type="button" id="search"><i class="fa fa-search"></i></button>
+                      </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="ibox-content">
+
+            <div class="row m-b-sm m-t-sm">
+               <div id="asset_list_table_filter" class="col-md-1">
+                   <span class="input-group-btn"><i class="fa fa-filter"></i></span>
+                       <select class="btn btn-default btn-sm m-b" style="width: auto" id="id_opStatus">
+                           <option value="Created" selected="">待内审</option>
+                           <option value="apply" selected="">待局审</option>
+                           <option value="permit" selected="">待操作</option>
+                           <option value="finish" selected="">已完成</option>
+                           <option value="all" selected="selected">状态</option>
+                       </select>
+                </div>
+                <div class="col-md-1">
+
+                       <select class="btn btn-default btn-sm m-b" style="width: auto" id="id_opCreator">
+                           {% for user in users %}
+                           <option value="{{ user }}" selected="">{{ user }}</option>
+                           {% endfor %}
+                           <option value="all" selected="selected">创建人员</option>
+                       </select>
+                </div>
+                <div class="col-md-1">
+                     <button type="button" class="btn btn-warning btn-sm" id="Refresh"><i class="fa fa-refresh"></i> 刷新</button>
+                </div>
+            </div>
+<!--            <hr>-->
+            <div class="project-list">
+
+                <table class="table table-hover">
+<!--                    <thead>-->
+<!--                        <tr>-->
+<!--                            <th>id</th>-->
+<!--                            <th>状态</th>-->
+<!--                            <th>操作主题</th>-->
+<!--                            <th>操作网元</th>-->
+<!--                            <th>创建人</th>-->
+<!--                            <th>创建日期</th>-->
+<!--                            <th>操作</th>-->
+<!--                        </tr>-->
+<!--                    </thead>-->
+                    <tbody id="tasks">
+                    {% for op in result %}
+                    <tr>
+                        <td class="project-title">
+                            {{ op.id }}
+                        </td>
+
+                        <td class="project-status">
+                            {% if op.opStatus == "Created" %}
+                            <span class="label label-warning">待内审</span>
+                            {% elif op.opStatus == "apply" %}
+                            <span class="label label-danger">待局审</span>
+                            {% elif op.opStatus == "permit" %}
+                            <span class="label label-success">待操作</span>
+                            {% elif op.opStatus == "finish" %}
+                            <span class="label label-default">已完成</span>
+                            {% endif %}
+                        </td>
+                        <td class="project-title">
+                            <a href="/operate/detail/{{ op.id }}">{{ op.opSubject }}</a>
+<!--                            <br>-->
+<!--                            <small>Created   {{ op.opCreateDate }}</small>-->
+                        </td>
+                        <td class="project-title">
+                            {{ op.opSubsystem }}
+                        </td>
+                        <td class="project-title">
+                            {{ op.opCreator }}
+                        </td>
+                        <td class="project-title">
+                            {{ op.opCreateDate }}
+                        </td>
+<!--                        <td class="project-completion">-->
+<!--                            {% if op.opStatus == "Created" %}-->
+<!--                                <small>Completion with: 20%</small>-->
+<!--                                <div class="progress progress-mini">-->
+<!--                                <div style="width: 20%;" class="progress-bar"></div>-->
+<!--                                </div>-->
+<!--                            {% elif op.opStatus == "apply" %}-->
+<!--                               <small>Completion with: 40%</small>-->
+<!--                                <div class="progress progress-mini">-->
+<!--                                <div style="width: 40%;" class="progress-bar"></div>-->
+<!--                                </div>-->
+<!--                            {% elif op.opStatus == "permit" %}-->
+<!--                                <small>Completion with: 60%</small>-->
+<!--                                <div class="progress progress-mini">-->
+<!--                                <div style="width: 60%;" class="progress-bar"></div>-->
+<!--                                </div>-->
+<!--                            {% elif op.opStatus == "finish" %}-->
+<!--                               <small>Completion with: 100%</small>-->
+<!--                                <div class="progress progress-mini">-->
+<!--                                <div style="width: 100%;" class="progress-bar"></div>-->
+<!--                                </div>-->
+<!--                            {% endif %}-->
+<!--                        </td>-->
+
+                        <td class="project-actions">
+<!--                            {% if current_user.is_admin %}-->
+<!--                            {% if op.opStatus == "Created" %}-->
+<!--                            <button  class="btn btn-white btn-sm" value="{{ op.id }}|apply" onclick="task_action(this.value)"><i class="fa fa-check-square-o"></i> 内部审核 </button>-->
+<!--                            {% elif op.opStatus == "apply" %}-->
+<!--                            <button  class="btn btn-white btn-sm" value="{{ op.id }}|permit" onclick="task_action(this.value)"><i class="fa fa-check-square-o"></i> 局方审核 </button>-->
+<!--                            {% endif %}-->
+<!--                            {% endif %}-->
+<!--                            {% if op.opStatus == "permit" %}-->
+<!--                            <a href="#" class="btn btn-white btn-sm" data-toggle="modal" data-target="#myModal" data-whatever="{{ op.id }}"><i class="fa fa-check-square-o"></i>添加结果</a>-->
+<!--                            {% endif %}-->
+                            <a href="#" class="btn btn-white btn-sm" data-toggle="modal" data-target="#myDelModal" data-whatever="{{ op.id }}"><i class="fa fa-times"></i> 删除 </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myDelModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        确定删除该操作
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">否</button>
+        <button type="button" class="btn btn-primary" id="DEL" data-dismiss="modal">是</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">操作主题</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" id="UserUpdateForm">
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">操作结果</label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" id="opResult" name="opResult"></textarea>
+                </div>
+            </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" id="SAVE" data-dismiss="modal">提交</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+    function task_action(value){
+        $.ajax({
+            url: "{{ url_for('operate.task_action') }}",
+            type: "post",
+            data: {"action": value},
+            success: function (data) {
+                if (data["flag"] === "success") {
+                    toastr.info("审批成功");
+                } else toastr.error("操作失败");
+            }
+        });
+    }
+
+    // 删除操作审批
+    $('#myDelModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id_no = button.data('whatever');
+        var modal = $(this);
+        modal.find('#DEL').attr("value",id_no);
+    });
+
+	$("#DEL").click(function () {
+        var host_id = this.value;
+        var action = host_id + "|delete";
+        $.ajax({
+            url: "{{ url_for('operate.task_action') }}",
+            type: "post",
+            data: {"action": action},
+            success:function(data) {
+                if(data["flag"]==="success"){
+                    toastr.info("删除成功");
+                }
+                else toastr.error("删除失败");
+            }
+        });
+    });
+
+    $("#Refresh").click(function () {
+         var formFile = new FormData();
+         formFile.append("opCreator", $("#id_opCreator option:selected").val());
+         formFile.append("opStatus", $("#id_opStatus option:selected").val());
+         $.ajax({
+                type: "POST",
+                url: "{{ url_for('operate.user_search') }}",
+                data: formFile,
+                async: false,
+                contentType: false,
+                processData: false,
+                success:function(data) {
+                    if(data["flag"]==="success"){
+                         $("#counts").text(data["counts"]);
+                         $("#tasks").empty();
+                         $.each(data["datas"], function (i, n) {
+                             var tbBody = "";
+                             tbBody += "<tr>" +
+                             "<td class=\"project-title\">" + n.id +"</td>" +
+                             "<td class=\"project-status\"><span class=\"label " + n.color + "\">" + n.opStatus + "</span></td>" +
+                             "<td class=\"project-title\"><a href=\"/operate/detail/" + n.id + "\">" + n.opSubject + "</a></td>" +
+                             "<td class=\"project-title\">" + n.opSubsystem + "</td>" +
+                             "<td class=\"project-title\">" + n.opCreator + "</td>" +
+                             "<td class=\"project-title\">" + n.opCreateDate + "</td>" +
+                             "<td class=\"project-actions\"><a href=\"#\" class=\"btn btn-white btn-sm\" data-toggle=\"modal\" data-target=\"#myDelModal\" data-whatever=\"" +
+                                     n.id + "\"><i class=\"fa fa-times\"></i> 删除 </a></td>" +
+                             "</tr>"
+                             ;
+                             $("#tasks").append(tbBody);
+                         })
+                    }
+                    else toastr.error("查询失败");
+                }
+             });
+    });
+
+    // search
+     $("#search").click(function () {
+         var formFile = new FormData();
+         formFile.append("opContent", $("#opContent").val());
+         $.ajax({
+                type: "POST",
+                url: "{{ url_for('operate.task_search') }}",
+                data: formFile,
+                async: false,
+                contentType: false,
+                processData: false,
+                success:function(data) {
+                    if(data["flag"]==="success"){
+                         $("#counts").text(data["counts"]);
+                         $("#tasks").empty();
+                         $.each(data["datas"], function (i, n) {
+                             var tbBody = "";
+                             tbBody += "<tr>" +
+                             "<td class=\"project-title\">" + n.id +"</td>" +
+                             "<td class=\"project-status\"><span class=\"label " + n.color + "\">" + n.opStatus + "</span></td>" +
+                             "<td class=\"project-title\"><a href=\"/operate/detail/" + n.id + "\">" + n.opSubject + "</a></td>" +
+                             "<td class=\"project-title\">" + n.opSubsystem + "</td>" +
+                             "<td class=\"project-title\">" + n.opCreator + "</td>" +
+                             "<td class=\"project-title\">" + n.opCreateDate + "</td>" +
+                             "<td class=\"project-actions\"><a href=\"#\" class=\"btn btn-white btn-sm\" data-toggle=\"modal\" data-target=\"#myDelModal\" data-whatever=\"" +
+                                     n.id + "\"><i class=\"fa fa-times\"></i> 删除 </a></td>" +
+                             "</tr>"
+                             ;
+                             $("#tasks").append(tbBody);
+                         })
+                    }
+                    else toastr.error("查询失败");
+                }
+             });
+    });
+
+</script>
+
+{% endblock %}

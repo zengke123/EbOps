@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>操作审批</h5>
+                        <div class="m-b-md">
+<!--                        状态为可编辑时显示-->
+                        <a href="{{ url_for('operate.task_todo') }}" class="btn btn-danger btn-xs pull-right">返回待办</a>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <form role="form" id="new_op" enctype="multipart/form-data">
+                                <div class="col-sm-12">
+
+                                    <div class="form-group"><label>操作主题</label>
+                                        <input type="text" placeholder="" class="form-control" id="opSubject" name="opSubject" required="">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group"><label>操作网元</label>
+                                        <input type="text" placeholder="" class="form-control" id="opSubsystem" name="opSubsystem" required="">
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group"><label>操作地点</label>
+                                        <input type="text" value="4A" class="form-control" id="opLocation" name="opLocation" required="">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group"><label>计划操作时间</label>
+                                        <input type="text" value="{{ now }}" class="form-control" id="opPlanTime" name="opPlanTime" required="">
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group"><label>操作人员</label>
+                                        <input type="text" placeholder="" class="form-control" id="opOperator" name="opOperator" required="">
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group"><label>局方发起人</label>
+<!--                                        <input type="text" placeholder="" class="form-control" name="opOriginator">-->
+
+                                        <select name="opOriginator" class="form-control" title="" id="id_opOriginator">
+                                            <option value="none" selected="selected">None</option>
+                                            <option value="shenrongfeng" selected="">沈蓉峰</option>
+                                            <option value="huangxu" selected="">黄旭</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12">
+                                    <div class="form-group"><label>操作原因</label>
+                                        <textarea placeholder="" class="form-control" rows="10" id="opContent" name="opContent" required=""></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12">
+                                    <div class="form-group"><label>具体操作内容</label>
+                                        <textarea placeholder="" class="form-control" rows="3" id="opDetail" name="opDetail" required=""></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <span class="fileinput-exists">附件</span>
+                                        <input id="opfile" type="file" name="file"/>
+
+                                    </div>
+                                </div>
+<!--                                <div class="hr-line-dashed"></div>-->
+                                <div class="form-group">
+                                    <div class="col-sm-4 col-sm-offset-2">
+                                        <button class="btn btn-white" type="reset">重置</button>
+                                        <button id="submit_button" class="btn btn-primary" type="button">提交</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+</div>
+<script type="text/javascript">
+ $("#submit_button").click(function () {
+     var formFile = new FormData();
+     var file = $("#opfile")[0].files[0];
+     formFile.append("file", file);
+     formFile.append("opSubject", $("#opSubject").val());
+     formFile.append("opSubsystem", $("#opSubsystem").val());
+     formFile.append("opLocation", $("#opLocation").val());
+     formFile.append("opPlanTime", $("#opPlanTime").val());
+     formFile.append("opOperator", $("#opOperator").val());
+     formFile.append("opOriginator", $("#id_opOriginator option:selected").val());
+     formFile.append("opContent", $("#opContent").val());
+     formFile.append("opDetail", $("#opDetail").val());
+    $.ajax({
+            type: "POST",
+            url: "{{ url_for('operate.task_create') }}",
+            data: formFile,
+            async: false,
+            contentType: false,
+            processData: false,
+            success:function(data) {
+                if(data["flag"]==="success"){
+                    toastr.info("创建成功");
+                }
+                else toastr.error("创建失败");
+            }
+         });
+       });
+
+</script>
+{% endblock %}
