@@ -302,8 +302,17 @@ def user_search():
         result = resp.json()
     # print(result)
     # 映射状态名称
-    map_result = list(map(status_map, result))
-    print(map_result)
+    search_result = list(map(status_map, result))
+    # print(search_result)
+
+    if current_user.is_admin:
+        map_result = search_result
+    else:
+        map_result = []
+        for item in search_result:
+            if item.get('opCreator') == current_user.username:
+                map_result.append(item)
+
     map_result.sort(key=lambda item: item.get('id'), reverse=True)
     return jsonify({'flag': 'success','datas': map_result, 'counts': len(map_result)})
     # return jsonify(result)
