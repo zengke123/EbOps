@@ -1,0 +1,237 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="alert alert-danger help-message alert-dismissable page-message" style="">
+    <button aria-hidden="true" data-dismiss="alert" class="close hide-btn" type="button">×</button>
+    文件归属文件夹/标签选择后，信息无法更改，请谨慎操作 <br>
+    若需更新，删除后重新上传。文件上传后仅上传者及管理员可以删除
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>上传文件</h5>
+            <div class="ibox-tools">
+                <a  href="{{ url_for('file_manager.main') }}" class="btn btn-xs btn-primary">
+                    返回
+                </a>
+            </div>
+        </div>
+        <div class="ibox-content">
+
+            <form enctype="multipart/form-data" class="form-horizontal" action="">
+                <input type="hidden" name="csrfmiddlewaretoken" value="JtMgB3utQbBBAHPvq4eYcw9RPS0cRVaSYgRmdNiUHPM3Rygf8qTSQHmoRco1SvLv">
+                <div class="form-group required">
+                    <label class="col-md-2 control-label">文件夹</label>
+                    <div class="col-md-6">
+                           <select name="cagetory" class="form-control" title="" id="id_cagetory">
+                            {% for c in cagetory %}
+                              <option value="{{ c }}" selected="">{{ c }}</option>
+
+                            {% endfor %}
+                            </select>
+                    </div>
+                    <div class="col-md-2">
+                         <a href="#" class="btn btn-outline btn-sm" data-toggle="modal" data-target="#myModal" data-whatever=""><i class="fa fa-plus"></i></a>
+                    </div>
+                </div>
+                <div class="form-group required">
+
+                    <label class="col-md-2 control-label">标 签</label>
+                    <div class="col-md-10">
+                        <div class="tagBtnList" id="taglist">
+                            <a class="label" id="change_all" value="0">全选</a>
+                            {% for tag in tags %}
+                                 <a id="{{ tag }}" class="label label-default field-tag" value="0">{{ tag }}</a>
+                                {% endfor %}
+                            <span><a href="#" class="btn btn-outline btn-sm" data-toggle="modal" data-target="#tagModal" data-whatever=""><i class="fa fa-plus"></i></a></span>
+                        </div>
+                        <div class="help-block">标签用于快速筛选，建议根据业务类型、网元类型选择，可多选</div>
+                    </div>
+
+                </div>
+                <div class="form-group required"><label class="col-md-2 control-label">文 件</label>
+                    <div class="col-md-9">
+                        <div class="row bootstrap3-multi-input">
+                            <div class="col-xs-12">
+                                <input type="file" name="private_key" class="" title="" id="id_file"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <button class="btn btn-white" type="reset">重置</button>
+                        <button id="submit_button" class="btn btn-primary" type="button">提交</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">新建文件夹</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" id="UserUpdateForm">
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input type="text" class="form-control" id="cagetory" name="cagetory" required="">
+                </div>
+            </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" id="SAVE" data-dismiss="modal">提交</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="tagModal" tabindex="-1" role="dialog" aria-labelledby="tagModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="tagsModalLabel">添加标签</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" id="TagForm">
+
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input type="text" class="form-control" id="tags" name="tags" required="">
+                </div>
+            </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" id="SAVETAG" data-dismiss="modal">提交</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+        // $('.select2').select2();
+    }).on('click', '.field-tag', function() {
+        changeField(this);
+    }).on('click', '#change_all', function () {
+        var tag_fields = $('.field-tag');
+        var $this = $(this);
+        var active = '1';
+        if ($this.attr('value') === '0'){
+            active = '0';
+            $this.attr('value', '1').addClass('label-primary')
+        } else {
+            active = '1';
+            $this.attr('value', '0').removeClass('label-primary')
+        }
+        $.each(tag_fields, function (k, v) {
+            changeField(v, active)
+        })
+    });
+
+    function changeField(obj, active) {
+        var $this = $(obj);
+        if (!active) {
+            active = $this.attr('value');
+        }
+        if (active === '0') {
+            $this.attr('value', '1').addClass('label-primary');
+        } else {
+            $this.attr('value', '0').removeClass('label-primary');
+        }
+    }
+
+    $("#SAVE").click(function () {
+        var formData  = new FormData();
+        formData.append("cagetory", $("#cagetory").val());
+        $.ajax({
+            url: "{{ url_for('file_manager.add_cagetory') }}",
+            type: "POST",
+            data: formData,
+            async: false,
+            contentType: false,
+            processData: false,
+            success:function(data) {
+                if(data["flag"]==="success"){
+                    location.reload();
+                    toastr.info("保存成功");
+                }
+                else toastr.error("保存失败");
+            }
+        });
+    });
+
+
+    $("#SAVETAG").click(function () {
+        var formData  = new FormData();
+        formData.append("tags", $("#tags").val());
+        $.ajax({
+            url: "{{ url_for('file_manager.add_tag') }}",
+            type: "POST",
+            data: formData,
+            async: false,
+            contentType: false,
+            processData: false,
+            success:function(data) {
+                if(data["flag"]==="success"){
+                    location.reload();
+                    toastr.info("保存成功");
+                }
+                else toastr.error("保存失败");
+            }
+        });
+    });
+
+    $("#submit_button").click(function () {
+        // var tag_fields = $('.field-tag');
+        // console.log(tag_fields);
+        var tags = '';
+        $(".field-tag").each(function(i,e){
+          tags[i]= $(this).attr('value');
+          if ($(this).attr('value') === '1') {
+              tags = tags + $(this).attr('id') + '|' ;
+          }
+        });
+        // console.log(tag);
+        var formFile = new FormData();
+        var file = $("#id_file")[0].files[0];
+        formFile.append("file", file);
+        formFile.append("tags", tags);
+        formFile.append("cagetory", $("#id_cagetory option:selected").val());
+        $.ajax({
+                type: "POST",
+                url: "{{ url_for('file_manager.upload') }}",
+                data: formFile,
+                async: false,
+                contentType: false,
+                processData: false,
+                success:function(data) {
+                    if(data["flag"]==="success"){
+                        toastr.info("上传成功");
+                    }
+                    else toastr.error(data["msg"]);
+                }
+             });
+           });
+
+
+
+</script>
+{% endblock %}

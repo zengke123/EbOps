@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+{% block custom_head_css_js %}
+<link rel="stylesheet" href="{{ url_for('static',filename='css/plugins/select2/select2.min.css') }}"/>
+{% endblock %}
+{% block content %}
+<div class="wrapper wrapper-content animated fadeInRight">
+
+<div class="row">
+    <div class="col-lg-3" id="split-left">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <div class="file-manager">
+                    <h4><a href="{{ url_for('file_manager.main') }}" class="file-control active">全部</a></h4>
+<!--                    <a href="{{ url_for('file_manager.main') }}" class="file-control active">All</a>-->
+<!--                    <a href="#" class="file-control">文档</a>-->
+<!--                    <a href="#" class="file-control">图片</a>-->
+                    <div class="hr-line-dashed"></div>
+                    <a class="btn btn-primary btn-block" href="{{ url_for('file_manager.upload') }}"><i class="fa fa-upload"></i><span class="bold">上传文件</span></a>
+                    <div class="hr-line-dashed"></div>
+                    <h5>Folders</h5>
+                    <ul class="folder-list" style="padding: 0">
+                        {% for c in cagetory %}
+                        <li><button class="btn btn-xs btn-outline btn-link" value="{{ c }}" onclick="TypeOnClick(this.value)"><i class="fa fa-folder"></i> {{ c }}</button></li>
+                        {% endfor %}
+                    </ul>
+                    <h5 class="tag-title">Tags</h5>
+                    <ul class="tag-list" style="padding: 1px">
+                        {% for tag in tags %}
+                        <li>
+                            <button class="btn btn-xs btn-link field-tag" id="{{ tag }}" value="" onclick="TagOnClick(this.id, this.value)">{{ tag }}</button>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-9 animated fadeInRight" id="split-right">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5 id="title">All</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <i class="fa fa-wrench"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-user">
+                                    <li><a href="{{ url_for('file_manager.conf') }}">文件夹管理</a>
+                                    </li>
+                                </ul>
+<!--                                <a class="close-link">-->
+<!--                                    <i class="fa fa-times"></i>-->
+<!--                                </a>-->
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>文件名称</th>
+                                    <th>标签</th>
+                                    <th>更新时间</th>
+                                    <th>大小</th>
+                                    <th>上传者</th>
+                                    <th>下载次数</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody id="file_list">
+                                {% for file in files %}
+                                <tr>
+                                    <td>{{ file.id }}</td>
+                                    <td>
+                                        <a href="/file_manager/download/{{ file.id }}" class="btn-outline btn-link">{{ file.filename }}</a>
+                                    </td>
+                                    <td>
+                                        <span class="label label-default">{{ file.tags }}</span>
+                                    </td>
+                                    <td>
+                                        {{ file.update }}
+                                    </td>
+                                    <td>
+                                        {{ file.size }}KB
+                                    </td>
+                                    <td>
+                                        {{ file.owner }}
+                                    </td>
+                                    <td>
+                                        {{ file.downloads }}
+                                    </td>
+                                    <td class="text-navy">
+                                        <a href="#" data-toggle="modal" data-target="#myDelModal" data-whatever="{{ file.id }}">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+            </div>
+        </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="myDelModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        确定删除该文件
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">否</button>
+        <button type="button" class="btn btn-primary" id="DEL" data-dismiss="modal">是</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    $('#myDelModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id_no = button.data('whatever');
+        var modal = $(this);
+        modal.find('#DEL').attr("value",id_no);
+    });
+
+	$("#DEL").click(function () {
+        var file_id = this.value;
+        $.ajax({
+            url: "{{ url_for('file_manager.delete_file') }}",
+            type: "post",
+            data: {"id": file_id},
+            success:function(data) {
+                if(data["flag"]==="success"){
+                    location.reload();
+                    toastr.info("删除成功")
+                }
+                else
+                    toastr.error("删除失败");
+                    toastr.error(data["msg"]);
+            }
+        });
+    });
+
+	function TypeOnClick(value) {
+	    // toastr.info(value);
+	    $("#file_list").html("");
+	    $("#title").text(value);
+        $(".field-tag").each(function(i,e){
+          $(this).val(value)
+        });
+        $.ajax({
+            url: "{{ url_for('file_manager.get_by_type') }}",
+            type: 'POST',
+            async: true,
+            dataType: "json",
+            data: {
+                cagetory: value
+            },
+            success: function (data) {
+                $.each(data, function (i, n) {
+                    var tbBody = "";
+                    tbBody += "<tr>" +
+                            "<td>" + n.id + "</td>" +
+                            "<td><a href=\"/file_manager/download/" + n.id + "\" class=\"btn-outline btn-link\">" + n.filename + "</a></td>" +
+                            "<td><span class=\"label label-default\">" + n.tags + "</span></td>" +
+                            "<td>" + n.update + "</td>" +
+                            "<td>" + n.size + "KB</td>" +
+                            "<td>" + n.owner + "</td>" +
+                            "<td>" + n.downloads + "</td>" +
+                            "<td class=\"text-navy\"><a href=\"#\" data-toggle=\"modal\" data-target=\"#myDelModal\" data-whatever=\"" +
+                            n.id + "\"><i class=\"fa fa-times\"></i></a></td>"+
+                            "</tr>"
+                    $("#file_list").append(tbBody);
+                });
+            }
+        })
+    }
+
+
+    function TagOnClick(id, value) {
+	    if(value){
+	        // toastr.info(id);
+            // toastr.info(value);
+            $("#file_list").html("");
+            $("#title").text(value + "-" + id);
+            $.ajax({
+                url: "{{ url_for('file_manager.get_by_tags') }}",
+                type: 'POST',
+                async: true,
+                dataType: "json",
+                data: {
+                    cagetory: value,
+                    tags: id
+                },
+                success: function (data) {
+                    $.each(data, function (i, n) {
+                        var tbBody = "";
+                        tbBody += "<tr>" +
+                                "<td>" + n.id + "</td>" +
+                                "<td><a href=\"/file_manager/download/" + n.id + "\" class=\"btn-outline btn-link\">" + n.filename + "</a></td>" +
+                                "<td><span class=\"label label-default\">" + n.tags + "</span></td>" +
+                                "<td>" + n.update + "</td>" +
+                                "<td>" + n.size + "KB</td>" +
+                                "<td>" + n.owner + "</td>" +
+                                "<td>" + n.downloads + "</td>" +
+                                "<td class=\"text-navy\"><a href=\"#\" data-toggle=\"modal\" data-target=\"#myDelModal\" data-whatever=\"" +
+                                n.id + "\"><i class=\"fa fa-times\"></i></a></td>"+
+                                "</tr>";
+                        $("#file_list").append(tbBody);
+                    });
+                }
+            })
+        }
+	    else{
+	        toastr.error("选择类别")
+        }
+    }
+
+</script>
+{% endblock %}

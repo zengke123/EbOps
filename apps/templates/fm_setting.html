@@ -1,0 +1,376 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="alert alert-info help-message alert-dismissable page-message" style="">
+    <button aria-hidden="true" data-dismiss="alert" class="close hide-btn" type="button">×</button>
+    删除文件夹/标签，文件也会相应删除，请谨慎操作; 仅管理员操作<br>
+    建议使用重命名，相应的文件信息会同步更新
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+<div class="row">
+    <div class="col-lg-4">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <div class="file-manager">
+                    <div class="panel panel-info">
+
+                        <div class="panel-heading">
+                            <i class="fa fa-folder"></i> 文件夹
+                        </div>
+                        <div class="panel-body">
+                            <table class="table group_edit">
+                                <tbody>
+                                    <tr>
+                                        <td colspan="2" class="no-borders">
+                                           <input type="text" placeholder="新建" class="form-control" id="cagetory" name="cagetory" required>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="no-borders">
+                                            <button type="button" class="btn btn-info btn-sm" id="btn-update-cagetory">确认</button>
+                                        </td>
+                                    </tr>
+
+                                {% for c in cagetory %}
+                                <tr>
+                                  <td><b class="bdg_node">{{ c }}</b></td>
+                                  <td>
+                                      <button class="btn btn-info pull-right btn-xs btn-leave-node" type="button" data-toggle="modal" data-target="#updateModal" data-whatever="{{ c }}"><i class="fa fa-edit"></i></button>
+                                  </td>
+
+                                  <td>
+                                      <button class="btn btn-danger pull-right btn-xs btn-leave-node" type="button" data-toggle="modal" data-target="#myDelModal" data-whatever="{{ c }}">
+                                          <i class="fa fa-minus"></i></button>
+                                  </td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <div class="file-manager">
+                    <div class="panel panel-warning">
+
+                        <div class="panel-heading">
+                            <i class="fa fa-info-circle"></i> 标签
+                        </div>
+                        <div class="panel-body">
+                            <form></form>
+                            <table class="table group_edit">
+                                <tbody>
+                                    <tr>
+                                        <td colspan="2" class="no-borders required">
+                                           <input type="text" placeholder="新建" class="form-control" id="tags" name="tags" required>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="no-borders">
+                                            <button type="button" class="btn btn-warning btn-sm" id="btn-update-tags">确认</button>
+                                        </td>
+                                    </tr>
+
+                                {% for c in tags %}
+                                <tr>
+                                  <td><b class="bdg_node">{{ c }}</b></td>
+
+                                   <td>
+                                      <button class="btn btn-warning pull-right btn-xs btn-leave-node" type="button" data-toggle="modal" data-target="#updateTagModal" data-whatever="{{ c }}">
+                                          <i class="fa fa-edit"></i></button>
+                                  </td>
+
+
+                                  <td>
+                                      <button class="btn btn-danger pull-right btn-xs btn-leave-node" type="button" data-toggle="modal" data-target="#TagDelModal" data-whatever="{{ c }}">
+                                          <i class="fa fa-minus"></i></button>
+                                  </td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="ibox-tools">
+            <a  href="{{ url_for('file_manager.main') }}" class="btn btn-xs btn-primary">
+               返回
+            </a>
+        </div>
+    </div>
+</div>
+</div>
+<!--删除文件夹Modal-->
+<div class="modal fade" id="myDelModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        确定删除该文件夹
+          <h4 id="typename"></h4>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">否</button>
+        <button type="button" class="btn btn-danger" id="DEL" data-dismiss="modal">是</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--删除标签Modal-->
+<div class="modal fade" id="TagDelModal" tabindex="-1" role="dialog" aria-labelledby="TagModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        确定删除该标签
+          <h4 id="tagname"></h4>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">否</button>
+        <button type="button" class="btn btn-danger" id="DELTAG" data-dismiss="modal">是</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--重命名文件夹Modal-->
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">重命名</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" id="UpdateForm">
+            <div class="form-group required">
+                <label class="col-md-4 control-label">文件夹</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="old_cagetory" name="old_cagetory" required disabled>
+                </div>
+            </div>
+            <div class="form-group required">
+                <label class="col-md-4 control-label">重命名</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="new_cagetory" name="new_cagetory" required="">
+                </div>
+            </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" id="UPDATE" data-dismiss="modal">更新</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--重命名标签Modal-->
+<div class="modal fade" id="updateTagModal" tabindex="-1" role="dialog" aria-labelledby="updateTagModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">重命名</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" id="UpdateTagForm">
+            <div class="form-group required">
+                <label class="col-md-4 control-label">标签</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="old_tags" name="old_tags" required disabled>
+                </div>
+            </div>
+            <div class="form-group required">
+                <label class="col-md-4 control-label">重命名</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="new_tags" name="new_tags" required>
+                </div>
+            </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" id="UPDATETAG" data-dismiss="modal">更新</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+    $('#myDelModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id_no = button.data('whatever');
+        var modal = $(this);
+        modal.find('#DEL').attr("value",id_no);
+        modal.find('#typename').text(id_no);
+    });
+    // 删除文件夹
+	$("#DEL").click(function () {
+        var file_id = this.value;
+        $.ajax({
+            url: "{{ url_for('file_manager.del_cagetory') }}",
+            type: "post",
+            data: {"cagetory": file_id},
+            success:function(data) {
+                if(data["flag"]==="success"){
+                    location.reload();
+                    toastr.info("删除成功")
+                }
+                else
+                    toastr.error("删除失败");
+                    toastr.error(data["msg"]);
+            }
+        });
+    });
+
+
+    $('#TagDelModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id_no = button.data('whatever');
+        var modal = $(this);
+        modal.find('#DELTAG').attr("value",id_no);
+        modal.find('#tagname').text(id_no);
+    });
+
+    //删除标签
+    $("#DELTAG").click(function () {
+        var file_id = this.value;
+        $.ajax({
+            url: "{{ url_for('file_manager.del_tag') }}",
+            type: "post",
+            data: {"tags": file_id},
+            success:function(data) {
+                if(data["flag"]==="success"){
+                    location.reload();
+                    toastr.info("删除成功")
+                }
+                else
+                    toastr.error("删除失败");
+                    toastr.error(data["msg"]);
+            }
+        });
+    });
+
+    // 新建文件夹
+    $("#btn-update-cagetory").click(function () {
+        var formData  = new FormData();
+        formData.append("cagetory", $("#cagetory").val());
+        $.ajax({
+            url: "{{ url_for('file_manager.add_cagetory') }}",
+            type: "POST",
+            data: formData,
+            async: false,
+            contentType: false,
+            processData: false,
+            success:function(data) {
+                if(data["flag"]==="success"){
+                    location.reload();
+                    toastr.info("保存成功");
+                }
+                else toastr.error("保存失败");
+            }
+        });
+    });
+
+    $("#btn-update-tags").click(function () {
+        var formData  = new FormData();
+        formData.append("tags", $("#tags").val());
+        $.ajax({
+            url: "{{ url_for('file_manager.add_tag') }}",
+            type: "POST",
+            data: formData,
+            async: false,
+            contentType: false,
+            processData: false,
+            success:function(data) {
+                if(data["flag"]==="success"){
+                    location.reload();
+                    toastr.info("保存成功");
+                }
+                else toastr.error("保存失败");
+            }
+        });
+    });
+
+    // 重命名文件夹及标签
+    $('#updateModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id_no = button.data('whatever');
+        var modal = $(this);
+        modal.find('#old_cagetory').val(id_no);
+    });
+
+
+    $('#updateTagModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id_no = button.data('whatever');
+        var modal = $(this);
+        modal.find('#old_tags').val(id_no);
+    });
+
+    // 请求更新文件夹名称
+    $("#UPDATE").click(function () {
+        var formData  = new FormData();
+        formData.append("old", $("#old_cagetory").val());
+        formData.append("new", $("#new_cagetory").val());
+        $.ajax({
+            url: "{{ url_for('file_manager.update_cagetory') }}",
+            type: "POST",
+            data: formData,
+            async: false,
+            contentType: false,
+            processData: false,
+            success:function(data) {
+                if(data["flag"]==="success"){
+                    location.reload();
+                    toastr.info("保存成功");
+                }
+                else toastr.error("保存失败");
+            }
+        });
+    });
+
+
+    // 请求更新文件夹名称
+    $("#UPDATETAG").click(function () {
+        var formData  = new FormData();
+        formData.append("old", $("#old_tags").val());
+        formData.append("new", $("#new_tags").val());
+        $.ajax({
+            url: "{{ url_for('file_manager.update_tags') }}",
+            type: "POST",
+            data: formData,
+            async: false,
+            contentType: false,
+            processData: false,
+            success:function(data) {
+                if(data["flag"]==="success"){
+                    location.reload();
+                    toastr.info("保存成功");
+                }
+                else toastr.error("保存失败");
+            }
+        });
+    });
+</script>
+{% endblock %}

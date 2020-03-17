@@ -60,7 +60,7 @@
                 <ul class="nav nav-second-level">
                     <li id="op_todo"><a href="{{ url_for('operate.task_todo') }}">待办操作</a></li>
                     <li id="op_new"><a href="{{ url_for('operate.task_create') }}">新建审批</a></li>
-                    <li id="op_list"><a href="{{ url_for('operate.task_all') }}">操作记录</a></li>
+                    <li id="op_list"><a href="{{ url_for('operate.task_all') }}">所有操作</a></li>
                 </ul>
             </li>
 
@@ -112,6 +112,13 @@
                     <li id="xn"><a href="{{ url_for('tongji.performance') }}">主机性能指标</a></li>
                     <li id="zy"><a href="{{ url_for('tongji.users') }}">业务用户数</a></li>
                 </ul>
+            </li>
+
+            <li id="file_manager">
+                <a href="{{ url_for('file_manager.main') }}">
+                    <i class="fa fa-file-text" style="width: 14px"></i> <span class="nav-label">共享文档</span>
+                    <span class="label label-info pull-right"></span>
+                </a>
             </li>
 
         </ul>
