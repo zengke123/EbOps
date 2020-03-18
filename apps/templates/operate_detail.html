@@ -36,20 +36,33 @@
                         {% endif %}
                         <h3>{{ result.opSubject }}<small>【{{ result.id }}】</small></h3>
                     </div>
-                    <dl class="dl-horizontal">
-                        <dt>状态:</dt> <dd>
-                          {% if result.opStatus == "Created" %}
-                            <span class="label label-warning">待内审</span>
-                            {% elif result.opStatus == "apply" %}
-                            <span class="label label-danger">待局审</span>
-                            {% elif result.opStatus == "permit" %}
-                            <span class="label label-success">待操作</span>
-                            {% elif result.opStatus == "finish" %}
-                            <span class="label label-default">已完成</span>
-                        {% endif %}
+                    <div class="row">
+                    <div class="col-lg-5">
+                        <dl class="dl-horizontal">
+                            <dt>状态:</dt> <dd>
+                              {% if result.opStatus == "Created" %}
+                                <span class="label label-warning">待内审</span>
+                                {% elif result.opStatus == "apply" %}
+                                <span class="label label-danger">待局审</span>
+                                {% elif result.opStatus == "permit" %}
+                                <span class="label label-success">待操作</span>
+                                {% elif result.opStatus == "finish" %}
+                                <span class="label label-default">已完成</span>
+                            {% endif %}
 
-                        </dd>
-                    </dl>
+                            </dd>
+                        </dl>
+                    </div>
+
+                        <div class="col-lg-5">
+                        <dl class="dl-horizontal">
+                            <dt>类型:</dt> <dd>
+
+                                <span class="label label-success">{{ result.opType }}</span>
+                            </dd>
+                        </dl>
+                    </div>
+                    </div>
                 </div>
             </div>
             <div class="row">

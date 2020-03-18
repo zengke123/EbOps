@@ -57,6 +57,8 @@ def create_app():
     # 统一对外接口蓝本
     from .api_1 import api_1 as api_1_blueprint
     from .operate import operate as op_blueprint
+    # 资料管理蓝本
+    from .filemanager import file_manager as fm_blueprint
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
     app.register_blueprint(main_blueprint, url_prefix='')
     app.register_blueprint(ops_blueprint, url_prefix='/ops')
@@ -66,4 +68,5 @@ def create_app():
     app.register_blueprint(api_1_blueprint, url_prefix='/api/v1')
     app.register_blueprint(complaint_blueprint, url_prefix='/complaint')
     app.register_blueprint(op_blueprint, url_prefix='/operate')
+    app.register_blueprint(fm_blueprint, url_prefix='/file_manager')
     return app

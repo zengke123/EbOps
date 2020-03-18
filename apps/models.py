@@ -316,3 +316,47 @@ class ChenkJobs(db.Model):
     content = db.Column(db.String(128), nullable=False)
     cron_time = db.Column(db.String(64), nullable=False)
     status = db.Column(db.SmallInteger, default=0)
+    
+
+class FmCagetory(db.Model):
+    '''
+    表名: fm_cagetory
+    '''
+    __tablename__ = 'fm_cagetory'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    cagetory = db.Column(db.String(128), nullable=False, unique=True)
+
+
+class FmTags(db.Model):
+    '''
+    表名: fm_tags
+    '''
+    __tablename__ = 'fm_tags'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    tags = db.Column(db.String(128), nullable=False, unique=True)
+
+
+class FmFiles(db.Model):
+    '''
+    表名: fm_files
+    '''
+    __tablename__ = 'fm_files'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    filename = db.Column(db.String(128), nullable=False, unique=True)
+    cagetory = db.Column(db.String(128), nullable=False)
+    tags = db.Column(db.String(128))
+    size = db.Column(db.String(64))
+    owner = db.Column(db.String(64), nullable=False)
+    update = db.Column(db.String(64))
+    downloads = db.Column(db.SmallInteger)
+    def to_json(self):
+        return {
+            "id": self.id,
+            "filename": self.filename,
+            "cagetory": self.cagetory,
+            "tags": self.tags,
+            "size": self.size,
+            "owner": self.owner,
+            "update": self.update,
+            "downloads": self.downloads
+        }

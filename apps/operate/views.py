@@ -138,7 +138,7 @@ def task_todo():
 @login_required
 def task_create():
     if request.method == "GET":
-        now = datetime.datetime.now().strftime("%Y-%m-%d  %H:%M")
+        now = datetime.datetime.now().strftime("%Y-%m-%d  %H:%M:%S")
         return render_template('operate_new.html', app="操作审批", action="新建", now=now)
     elif request.method == "POST":
         req = request.form
@@ -166,7 +166,7 @@ def task_create():
             "opSubject": req.get('opSubject'),
             "opSubsystem": req.get('opSubsystem'),
             "opTimeStamp": "",
-            "opType": ""
+            "opType": req.get('opType')
         }
         if 'file' not in request.files:
             body['opAttachflag'] = 'n'

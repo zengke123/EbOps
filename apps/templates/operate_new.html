@@ -15,11 +15,29 @@
                             <form role="form" id="new_op" enctype="multipart/form-data">
                                 <div class="col-sm-12">
 
-                                    <div class="form-group"><label>操作主题</label>
+                                    <div class="form-group required"><label>操作主题</label>
                                         <input type="text" placeholder="" class="form-control" id="opSubject" name="opSubject" required="">
                                     </div>
                                 </div>
-                                <div class="col-sm-3">
+
+                                <div class="col-sm-2">
+                                    <div class="form-group"><label>操作类型</label>
+<!--                                        <input type="text" placeholder="" class="form-control" name="opOriginator">-->
+
+                                        <select name="opType" class="form-control" title="" id="id_opType">
+                                            <option value="软件升级" selected="selected">软件升级</option>
+                                            <option value="软件部署" selected="">软件部署</option>
+                                            <option value="配置调整" selected="">配置调整</option>
+                                            <option value="功能优化" selected="">功能优化</option>
+                                            <option value="安全加固" selected="">安全加固</option>
+                                            <option value="业务恢复" selected="">业务恢复</option>
+                                            <option value="容灾切换" selected="">容灾切换</option>
+                                            <option value="其他" selected="">其他</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2">
                                     <div class="form-group"><label>操作网元</label>
                                         <input type="text" placeholder="" class="form-control" id="opSubsystem" name="opSubsystem" required="">
                                     </div>
@@ -29,7 +47,7 @@
                                         <input type="text" value="4A" class="form-control" id="opLocation" name="opLocation" required="">
                                     </div>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-2">
                                     <div class="form-group"><label>计划操作时间</label>
                                         <input type="text" value="{{ now }}" class="form-control" id="opPlanTime" name="opPlanTime" required="">
                                     </div>
@@ -44,9 +62,11 @@
 <!--                                        <input type="text" placeholder="" class="form-control" name="opOriginator">-->
 
                                         <select name="opOriginator" class="form-control" title="" id="id_opOriginator">
-                                            <option value="none" selected="selected">None</option>
+                                            <option value="none" selected="selected">无</option>
                                             <option value="shenrongfeng" selected="">沈蓉峰</option>
                                             <option value="huangxu" selected="">黄旭</option>
+                                            <option value="liyan" selected="">李燕</option>
+                                            <option value="wuyang" selected="">吴阳</option>
                                         </select>
                                     </div>
                                 </div>
@@ -95,6 +115,7 @@
      formFile.append("opOriginator", $("#id_opOriginator option:selected").val());
      formFile.append("opContent", $("#opContent").val());
      formFile.append("opDetail", $("#opDetail").val());
+     formFile.append("opType", $("#id_opType option:selected").val());
     $.ajax({
             type: "POST",
             url: "{{ url_for('operate.task_create') }}",
