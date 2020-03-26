@@ -47,7 +47,7 @@
 										</tr>
 										<tr>
 											<td style="width: 20%">参数:</td>
-											<td><b>{{ result.args }}</b></td>
+											<td><b>{{ result.kwargs }}</b></td>
 										</tr>
 										<tr>
 											<td style="width: 20%">结果:</td>
@@ -82,8 +82,17 @@
 										</div>
 										<div class="panel-body">
 											<table class="table">
-												<tbody>
-
+												<tbody id="log">
+<!--													<tr class="no-borders-tr">-->
+<!--														<td><span class="label label-primary"> INFO </span></td>-->
+<!--														<td><b>Today at 10:30:50 pm </b></td>-->
+<!--														<td><b>Added new contact to the user group </b></td>-->
+<!--													</tr>-->
+<!--													<tr class="no-borders-tr">-->
+<!--														<td><span class="label label-warning"> Processing </span></td>-->
+<!--														<td><b>Today at 10:30:50 pm </b></td>-->
+<!--														<td><b>Added new contact to the user group </b></td>-->
+<!--													</tr>-->
 												</tbody>
 											</table>
 										</div>
@@ -118,7 +127,6 @@
             }
         });
     });
-
 </script>
 
 {% endblock %}

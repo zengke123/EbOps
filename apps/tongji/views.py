@@ -109,3 +109,10 @@ def users():
         # 查询结果为空时，使用空替代
         data_dict = dict(zip(users_items, ["" for _ in range(len(users_items))]))
     return render_template('tongji_users.html', app='统计数据', action="用户数", users_dict=data_dict, date=date)
+
+
+@tongji.route('/real-time')
+@login_required
+def node_pfmc():
+    return render_template('tongji_node_pfmc.html', app='统计数据', action="实时指标")
+
