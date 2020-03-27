@@ -71,4 +71,40 @@ def index():
     cpu_data = db.session.execute(cpu_sql.format(last_date, last_date), bind=engine).fetchall()
     mem_data = db.session.execute(mem_sql.format(last_date, last_date), bind=engine).fetchall()
     io_data = db.session.execute(io_sql.format(last_date, last_date), bind=engine).fetchall()
+
+    # 查询接通率
+    node_pfmc_data = get_node_pfmc(engine)
     return render_template('index.html', **locals())
+
+
+
+def get_node_pfmc(engine):
+    # 查询接通率
+    mo_dn_sql = "select end_time from node_pfmc ORDER BY end_time desc"
+    node_endtime = db.session.execute(mo_dn_sql, bind=engine).fetchone()
+    node_endtime = node_endtime[0]
+    scpas_sql = "select mo_dn, succsessionrate from node_pfmc where mo_dn like 'SCP-SCPAS%' " \
+                "and end_time='{}' ORDER BY succsessionrate asc".format(node_endtime)
+    scpas_value = db.session.execute(scpas_sql, bind=engine).fetchone()
+
+    catas_sql = "select mo_dn, succsessionrate from node_pfmc where mo_dn like 'CRBT-CATAS%' " \
+                "and end_time='{}' ORDER BY succsessionrate asc".format(node_endtime)
+    catas_value = db.session.execute(catas_sql, bind=engine).fetchone()
+
+    sicp_sql = "select mo_dn, succsessionrate from node_pfmc where mo_dn like 'SICP-SICP%' " \
+                "and end_time='{}' ORDER BY succsessionrate asc".format(node_endtime)
+    sicp_value = db.session.execute(sicp_sql, bind=engine).fetchone()
+
+    scim_sql = "select mo_dn, succsessionrate from node_pfmc where mo_dn like 'SCP-SCIM%' " \
+                "and end_time='{}' ORDER BY succsessionrate asc".format(node_endtime)
+    scim_value = db.session.execute(scim_sql, bind=engine).fetchone()
+
+    result = {
+        'node_time': node_endtime,
+        'scpas': (scpas_value[0], float(scpas_value[1])),
+        'catas': (catas_value[0], float(catas_value[1])),
+        'sicp': (sicp_value[0], float(sicp_value[1])),
+        'scim': (scim_value[0], float(scim_value[1]))
+    }
+    print(result)
+    return result
