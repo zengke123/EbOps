@@ -79,3 +79,28 @@ def get_node_pfmc():
     }
     print(data)
     return jsonify(data)
+
+
+@tongji.route("/api/caps")
+@login_required
+def get_caps():
+    caps_sql = "select `date`,`scpas_caps`,`catas_caps`,`vrbt_caps`,`scim_caps`,`ctx_caps` from caps " \
+               "where date_sub(curdate(), INTERVAL 15 DAY) <= date(`date`);"
+    datas = exe_sql(caps_sql)
+    date = [int(x[0]) for x in datas]
+    scpas_caps = [x[1] for x in datas]
+    catas_caps = [x[2] for x in datas]
+    vrbt_caps = [x[3] for x in datas]
+    scim_caps = [x[4] for x in datas]
+    ctx_caps = [x[5] for x in datas]
+    data = [
+        ['date', *date],
+        ['SCPAS', *scpas_caps],
+        ['音频彩铃', *catas_caps],
+        ['视频彩铃', *vrbt_caps],
+        ['SCIM', *scim_caps],
+        ['Centrex', *ctx_caps],
+
+    ]
+    print(data)
+    return jsonify(data)

@@ -51,11 +51,11 @@ def index():
     crbt_per, crbt_per_flag = compare(t_crbt, y_crbt)
     vrbt_per, vrbt_per_flag = compare(t_vrbt, y_vrbt)
     ctx_per, ctx_per_flag = compare(t_ctx_users, y_ctx_users)
-    datas = db.session.execute("select `date`,`scpas_caps`,`catas_caps` from caps where date_sub(curdate(), INTERVAL 15 DAY) <= date(`date`);",
-                               bind=engine).fetchall()
-    date = [int(x[0]) for x in datas]
-    scpas_caps = [x[1] for x in datas]
-    catas_caps = [x[2] for x in datas]
+    # datas = db.session.execute("select `date`,`scpas_caps`,`catas_caps` from caps where date_sub(curdate(), INTERVAL 15 DAY) <= date(`date`);",
+    #                            bind=engine).fetchall()
+    # date = [int(x[0]) for x in datas]
+    # scpas_caps = [x[1] for x in datas]
+    # catas_caps = [x[2] for x in datas]
     # 计算性能数据
     # 获取数据库中最新日期数据
     _last_date = db.session.execute('select date from as_pfmc order by date desc limit 1', bind=engine).fetchall()

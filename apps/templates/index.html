@@ -4,6 +4,45 @@
 {% endblock %}
 {% block content %}
 <div class="wrapper wrapper-content animated fadeInRight">
+      <div class="row">
+
+        <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-primary pull-right">{{ node_pfmc_data.node_time }}</span>
+                        <h5>网络接通率 <small>当前同网元最小值</small></h5>
+                    </div>
+                    <div class="ibox-content">
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h1 class="no-margins">{{ node_pfmc_data.scpas[1] }}%</h1>
+                                <div class="font-bold text-navy"><small>{{ node_pfmc_data.scpas[0] }}</small></div>
+                            </div>
+                            <div class="col-md-3">
+                                <h1 class="no-margins">{{ node_pfmc_data.catas[1] }}%</h1>
+                                <div class="font-bold text-navy"><small>{{ node_pfmc_data.catas[0] }}</small></div>
+                            </div>
+                            <div class="col-md-3">
+                                <h1 class="no-margins">{{ node_pfmc_data.sicp[1] }}%</h1>
+                                <div class="font-bold text-navy"><small>{{ node_pfmc_data.sicp[0] }}</small></div>
+                            </div>
+                            <div class="col-md-3">
+                                <h1 class="no-margins">{{ node_pfmc_data.scim[1] }}%</h1>
+                                <div class="font-bold text-navy"> <small>{{ node_pfmc_data.scim[0] }}</small></div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+
+    </div>
+
+
     <div class="row">
           <div class="col-lg-3">
               <div class="ibox float-e-margins">
@@ -85,7 +124,6 @@
               </div>
           </div>
     </div>
-
     <div class="row">
         <div class="col-lg-8">
            <div class="ibox float-e-margins">
@@ -101,7 +139,7 @@
 
                         var option = {
                             title: {
-                                subtext: 'AS网元caps总和（小时峰值）',
+                                subtext: '网元caps总和（小时峰值）',
                                 left: '12%',
                                 textAlign: 'center'
                             },
@@ -120,13 +158,20 @@
                                 extraCssText: 'box-shadow: 0 0 5px rgba(0,0,0,0.3)'
                             },
                             legend: {
-                                right: 20,
-                                orient: 'vertical',
-                                data: ['SCPAS','CATAS']
+                                icon: 'rect',
+                                itemWidth: 14,
+                                itemHeight: 5,
+                                itemGap: 13,
+                                right: '4%',
+                                textStyle: {
+                                    fontSize: 12,
+                                    color: '#070c11'
+                                }
                             },
+
+
                             xAxis: {
                                 type: 'category',
-                                data: {{ date }},
                                 boundaryGap: false,
                                 axisTick: {
                                     show: false
@@ -165,68 +210,31 @@
                                     }
                                 }
                             },
-                            series: [{
-                                name: 'SCPAS',
-                                type: 'line',
-                                smooth: true,
-                                showSymbol: false,
-                                symbol: 'circle',
-                                symbolSize: 6,
-                                data: {{ scpas_caps }},
-                                areaStyle: {
-                                    normal: {
-                                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                                            offset: 0,
-                                            color: 'rgba(199, 237, 250,0.5)'
-                                        }, {
-                                            offset: 1,
-                                            color: 'rgba(199, 237, 250,0.2)'
-                                        }], false)
-                                    }
-                                },
-                                itemStyle: {
-                                    normal: {
-                                        color: '#f7b851'
-                                    }
-                                },
-                                lineStyle: {
-                                    normal: {
-                                        width: 3
-                                    }
-                                }
-                            }, {
-                                name: 'CATAS',
-                                type: 'line',
-                                smooth: true,
-                                showSymbol: false,
-                                symbol: 'circle',
-                                symbolSize: 6,
-                                data: {{ catas_caps }},
-                                areaStyle: {
-                                    normal: {
-                                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                                            offset: 0,
-                                            color: 'rgba(216, 244, 247,1)'
-                                        }, {
-                                            offset: 1,
-                                            color: 'rgba(216, 244, 247,1)'
-                                        }], false)
-                                    }
-                                },
-                                itemStyle: {
-                                    normal: {
-                                        color: '#58c8da'
-                                    }
-                                },
-                                lineStyle: {
-                                    normal: {
-                                        width: 3
-                                    }
-                                }
-                            }]
+                            series: []
                         };
 
                         myChart.setOption(option);
+                        myChart.showLoading();
+                        $.get('/tongji/api/caps').done(function (data) {
+                                myChart.hideLoading();
+                                // 填入数据
+                                myChart.setOption({
+                                    dataset: {
+                                        // 提供一份数据。
+                                        source: data
+                                    },
+
+                                  series: [
+                                      {type: 'line', smooth: true, seriesLayoutBy: 'row',showSymbol: false},
+                                      {type: 'line', smooth: true, seriesLayoutBy: 'row',showSymbol: false},
+                                      {type: 'line', smooth: true, seriesLayoutBy: 'row',showSymbol: false},
+                                      {type: 'line', smooth: true, seriesLayoutBy: 'row',showSymbol: false},
+                                      {type: 'line', smooth: true, seriesLayoutBy: 'row',showSymbol: false}
+                                  ]
+
+                                });
+
+                            });
                     </script>
 
                   </div>
