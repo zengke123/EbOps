@@ -3,4 +3,295 @@
     <script src="{{ url_for('static',filename='js/plugins/echarts/echarts.min.js') }}"></script>
 {% endblock %}
 {% block content %}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>VPMN话单量 <small>分钟粒度增量</small></h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="#">Config option 1</a>
+                                </li>
+                                <li><a href="#">Config option 2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content" style="position: relative">
+                        <div class="flot-chart" id="vpmn_2g" style="height:300px;">
+
+                        </div>
+
+                     </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>HOME话单量 <small>分钟粒度增量</small></h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="#">Config option 1</a>
+                                </li>
+                                <li><a href="#">Config option 2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content" style="position: relative">
+                        <div class="flot-chart" id="home_2g" style="height:300px;">
+
+                        </div>
+
+                     </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>FRID话单量 <small>分钟粒度增量</small></h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="#">Config option 1</a>
+                                </li>
+                                <li><a href="#">Config option 2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content" style="position: relative">
+                        <div class="flot-chart" id="frid_2g" style="height:300px;">
+
+                        </div>
+
+                     </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('vpmn_2g'));
+    var myChart2 = echarts.init(document.getElementById('home_2g'));
+    var myChart3 = echarts.init(document.getElementById('frid_2g'));
+    option = {
+        backgroundColor: '#ffffff',
+        tooltip: {
+            trigger: 'axis',
+            position: ['80%', '20%'],
+            axisPointer: {
+                lineStyle: {
+                    color: '#939393'
+                }
+            }
+        },
+        legend: {
+            icon: 'rect',
+            itemWidth: 14,
+            itemHeight: 5,
+            itemGap: 13,
+            right: '4%',
+            textStyle: {
+                fontSize: 12,
+                color: '#070c11'
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: [{
+            type: 'category',
+            boundaryGap: false,
+            axisLine: {
+                lineStyle: {
+                    color: '#939393'
+                }
+            }
+        }],
+        yAxis: [{
+            type: 'value',
+            axisTick: {
+                show: true
+            },
+            scale:true,
+            axisLine: {
+                lineStyle: {
+                    color: '#939393'
+                }
+            },
+            axisLabel: {
+                margin: 10,
+                textStyle: {
+                    fontSize: 14
+                }
+            },
+            splitLine: {
+                lineStyle: {
+                    color: '#939393'
+                }
+            }
+        }],
+        dataset: {
+            // 提供一份数据。
+            source: [
+            ]
+        },
+        series: []
+    };
+
+    myChart.setOption(option);
+    myChart2.setOption(option);
+    myChart3.setOption(option);
+    myChart.showLoading();
+    myChart2.showLoading();
+    myChart3.showLoading();
+
+
+    // 异步加载数据
+    $.get('/tongji/api/chrg2g').done(function (data) {
+        myChart.hideLoading();
+        myChart2.hideLoading();
+        myChart3.hideLoading();
+        myChart.setOption({
+            dataset: {
+                // 提供一份数据。
+                source: data.VPMN2G
+            },
+
+            series: [
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'}
+            ]
+
+        });
+
+        myChart2.setOption({
+            dataset: {
+                // 提供一份数据。
+                source: data.HOME2G
+            },
+
+            series: [
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'}
+            ]
+
+        });
+
+        myChart3.setOption({
+            dataset: {
+                // 提供一份数据。
+                source: data.FRID2G
+            },
+
+            series: [
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'}
+            ]
+
+        });
+
+    });
+
+     setInterval(function () {
+         $.get('/tongji/api/chrg2g').done(function (data) {
+             myChart.setOption({
+                dataset: {
+                    source: data.VPMN2G
+                }
+             });
+
+             myChart2.setOption({
+                dataset: {
+                    source: data.HOME2G
+                }
+             });
+
+             myChart3.setOption({
+                dataset: {
+                    source: data.FRID2G
+                }
+             });
+         })
+     }, 60000);
+
+</script>
 {% endblock %}

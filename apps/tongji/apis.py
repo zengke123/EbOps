@@ -159,3 +159,48 @@ def get_chrg4g():
     # print(result)
     return jsonify(result)
 
+
+def get_chrg2g_service(mo_dns, service):
+    now_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:00")
+    # new = datetime.datetime.strptime(now_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(days=2)
+    # now = new.strftime("%Y-%m-%d %H:%M:%S")
+    time_range = get_time_range(now_time, delta_minute=15)
+    data = []
+    for mo_dn in mo_dns:
+        mo_dn_data = [mo_dn]
+
+        # sql = "select * from node_chrg where date_sub(now(), INTERVAL 15 MINUTE)<= check_time " \
+        #       "and network='4G' and service='{}' and mo_dn='{}';".format(service, mo_dn)
+        sql = "select increment from node_chrg where check_time>='{}'  and check_time<='{}' "\
+              "and network='2G' and service='{}' and mo_dn='{}';".format(time_range[0], time_range[-1], service, mo_dn)
+        result = exe_sql(sql)
+        for x in result:
+            mo_dn_data.append(x[0])
+        data.append(mo_dn_data)
+    data.insert(0, ['时间', *time_range])
+    return data
+
+
+@tongji.route("/api/chrg2g")
+@login_required
+def get_chrg2g():
+    vpmn_mo_dns = ('SCP17', 'SCP18', 'SCP19', 'SCP21', 'SCP22', 'SCP23', 'SCP25', 'SCP26', 'SCP28', 'SCP29', 'SCP30',
+                   'SCP31', 'SCP32', 'SCP33', 'SCP34', 'SCP37', 'SCP39', 'SCPAS03', 'SCPAS04', 'SCPAS05', 'SCPAS06',
+                   'SCPAS07', 'SCPAS08', 'SCPAS35', 'SCPAS38')
+
+    home_mo_dns = ('SCP27', 'SCP40', 'SCP41', 'SCPAS03', 'SCPAS04', 'SCPAS05', 'SCPAS06', 'SCPAS07', 'SCPAS08',
+                   'SCPAS35', 'SCPAS38')
+
+    frid_mo_dns = ('SCP20',)
+
+    vpmn_data = get_chrg2g_service(vpmn_mo_dns, 'VPMN')
+    home_data = get_chrg2g_service(home_mo_dns, 'HOME')
+    frid_data = get_chrg2g_service(frid_mo_dns, 'FRID')
+    result = {
+        'VPMN2G': vpmn_data,
+        'HOME2G': home_data,
+        'FRID2G': frid_data
+    }
+    # print(result)
+    return jsonify(result)
+
