@@ -6,9 +6,13 @@ from flask import current_app, jsonify
 from flask_login import login_required
 from sqlalchemy import create_engine
 
+engine = None
 def exe_sql(sql):
     # 创建engine 连接tongji库
-    engine = create_engine(current_app.config['SQLALCHEMY_BINDS']['tongji'])
+    global engine
+    if not engine:
+        engine = create_engine(current_app.config['SQLALCHEMY_BINDS']['tongji'], pool_recycle=3600)
+        print('Connect mysql database tongji...')
     print(sql)
     data = db.session.execute(sql, bind=engine).fetchall()
     return data
@@ -67,10 +71,11 @@ def get_sicp(nowtime):
     source = get_data(nowtime, mo_dn_sql, time_sql)
     return source
 
+
 @tongji.route("/api/node_pfmc")
 @login_required
 def get_node_pfmc():
-    nowtime = (datetime.datetime.now() - datetime.timedelta(hours=42)).strftime("%Y-%m-%d %H:%M:%S")
+    nowtime = (datetime.datetime.now() - datetime.timedelta(hours=2)).strftime("%Y-%m-%d %H:%M:%S")
     data = {
         'scpas': get_scpas(nowtime),
         'catas': get_catas(nowtime),
@@ -104,3 +109,53 @@ def get_caps():
     ]
     print(data)
     return jsonify(data)
+
+
+def get_time_range(now, delta_minute):
+    # 转为datetime格式，用于日期计算，str格式无法计算
+    begin_date = datetime.datetime.strptime(now, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(minutes=delta_minute)
+    dates = []
+    dt = begin_date
+    date = begin_date.strftime("%Y-%m-%d %H:%M:%S")
+    while date < now:
+        dates.append(date)
+        dt = dt + datetime.timedelta(minutes=1)
+        date = dt.strftime("%Y-%m-%d %H:%M:%S")
+    return dates
+
+
+def get_chrg4g_service(service):
+    now_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:00")
+    # new = datetime.datetime.strptime(now_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(days=2)
+    # now = new.strftime("%Y-%m-%d %H:%M:%S")
+    time_range = get_time_range(now_time, delta_minute=15)
+    data = []
+    for mo_dn in ("SCPAS03", "SCPAS04", "SCPAS05", "SCPAS06", "SCPAS07", "SCPAS08", "SCPAS35", "SCPAS38"):
+        mo_dn_data = [mo_dn]
+
+        # sql = "select * from node_chrg where date_sub(now(), INTERVAL 15 MINUTE)<= check_time " \
+        #       "and network='4G' and service='{}' and mo_dn='{}';".format(service, mo_dn)
+        sql = "select increment from node_chrg where check_time>='{}'  and check_time<='{}' "\
+              "and network='4G' and service='{}' and mo_dn='{}';".format(time_range[0], time_range[-1], service, mo_dn)
+        result = exe_sql(sql)
+        for x in result:
+            mo_dn_data.append(x[0])
+        data.append(mo_dn_data)
+    data.insert(0, ['时间', *time_range])
+    return data
+
+
+@tongji.route("/api/chrg4g")
+@login_required
+def get_chrg4g():
+    vpmn_data = get_chrg4g_service('VPMN')
+    home_data = get_chrg4g_service('HOME')
+    frid_data = get_chrg4g_service('FRID')
+    result = {
+        'VPMN': vpmn_data,
+        'HOME': home_data,
+        'FRID': frid_data
+    }
+    # print(result)
+    return jsonify(result)
+

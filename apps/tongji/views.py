@@ -111,8 +111,19 @@ def users():
     return render_template('tongji_users.html', app='统计数据', action="用户数", users_dict=data_dict, date=date)
 
 
-@tongji.route('/real-time')
+@tongji.route('/node_pfmc')
 @login_required
 def node_pfmc():
     return render_template('tongji_node_pfmc.html', app='统计数据', action="实时指标")
 
+
+@tongji.route('/node_chrg4g')
+@login_required
+def node_record_volte():
+    return render_template('tongji_node_record.html', app='统计数据', action="Volte话单量")
+
+
+@tongji.route('/node_chrg2g')
+@login_required
+def node_record_2g():
+    return render_template('tongji_node_record_2g.html', app='统计数据', action="2/3G话单量")
