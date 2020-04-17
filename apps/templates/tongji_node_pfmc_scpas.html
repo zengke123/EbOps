@@ -5,10 +5,10 @@
 {% block content %}
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-12">
             <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <h5>接通成功率 <small>SCPAS</small></h5>
+                        <h5>SCPAS</h5>
                         <div class="ibox-tools">
                             <a class="collapse-link">
                                 <i class="fa fa-chevron-up"></i>
@@ -37,10 +37,13 @@
 
         </div>
 
-        <div class="col-lg-6">
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
             <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <h5>接通成功率 <small>CATAS</small></h5>
+                        <h5>SCP</h5>
                         <div class="ibox-tools">
                             <a class="collapse-link">
                                 <i class="fa fa-chevron-up"></i>
@@ -69,77 +72,6 @@
 
         </div>
 
-
-
-    </div>
-
-    <div class="row">
-        <div class="col-lg-6">
-            <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <h5>接通成功率 <small>SCIM</small></h5>
-                        <div class="ibox-tools">
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-up"></i>
-                            </a>
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <i class="fa fa-wrench"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-user">
-                                <li><a href="#">Config option 1</a>
-                                </li>
-                                <li><a href="#">Config option 2</a>
-                                </li>
-                            </ul>
-                            <a class="close-link">
-                                <i class="fa fa-times"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="ibox-content" style="position: relative">
-                        <div class="flot-chart" id="caps3" style="height:300px;">
-
-                        </div>
-
-                     </div>
-            </div>
-
-        </div>
-
-        <div class="col-lg-6">
-            <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <h5>接通成功率 <small>SICP</small></h5>
-                        <div class="ibox-tools">
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-up"></i>
-                            </a>
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <i class="fa fa-wrench"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-user">
-                                <li><a href="#">Config option 1</a>
-                                </li>
-                                <li><a href="#">Config option 2</a>
-                                </li>
-                            </ul>
-                            <a class="close-link">
-                                <i class="fa fa-times"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="ibox-content" style="position: relative">
-                        <div class="flot-chart" id="caps4" style="height:300px;">
-
-                        </div>
-
-                     </div>
-            </div>
-
-        </div>
-
-
-
     </div>
 
 </div>
@@ -147,8 +79,6 @@
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById('caps'));
     var myChart2 = echarts.init(document.getElementById('caps2'));
-    var myChart3 = echarts.init(document.getElementById('caps3'));
-    var myChart4 = echarts.init(document.getElementById('caps4'));
     option = {
         backgroundColor: '#ffffff',
         tooltip: {
@@ -218,18 +148,13 @@
 
     myChart.setOption(option);
     myChart2.setOption(option);
-    myChart3.setOption(option);
-    myChart4.setOption(option);
     myChart.showLoading();
     myChart2.showLoading();
-    myChart3.showLoading();
-    myChart4.showLoading();
+
     // 异步加载数据
-    $.get('/tongji/api/node_pfmc').done(function (data) {
+    $.get('/tongji/api/node_pfmc/scpas').done(function (data) {
         myChart.hideLoading();
         myChart2.hideLoading();
-        myChart3.hideLoading();
-        myChart4.hideLoading();
         // 填入数据
         myChart.setOption({
             dataset: {
@@ -257,53 +182,37 @@
         myChart2.setOption({
             dataset: {
                 // 提供一份数据。
-                source: data.catas
+                source: data.scp
             },
-            series: [
-                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
-                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
-                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
-                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
-                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
-                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
-                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
-                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
-                {type: 'line', smooth: true, seriesLayoutBy: 'row'}
-            ]
-
-        });
-
-        myChart3.setOption({
-            dataset: {
-                // 提供一份数据。
-                source: data.scim
-            },
-
             yAxis: [{
-                min:90
+                min:50
             }],
             series: [
                 {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
                 {type: 'line', smooth: true, seriesLayoutBy: 'row'}
             ]
 
         });
-
-        myChart4.setOption({
-            dataset: {
-                // 提供一份数据。
-                source: data.sicp
-            },
-            series: [
-                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
-                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
-                {type: 'line', smooth: true, seriesLayoutBy: 'row'},
-                {type: 'line', smooth: true, seriesLayoutBy: 'row'}
-
-            ]
-
-        });
-
 
     });
 

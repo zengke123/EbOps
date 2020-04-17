@@ -108,16 +108,31 @@
                     <i class="fa fa-bar-chart-o" style="width: 14px"></i> <span class="nav-label">统计数据</span><span class="fa arrow"></span>
                 </a>
                 <ul class="nav nav-second-level">
-                    <li id="zb"><a href="{{ url_for('tongji.node_pfmc') }}">网络接通率</a></li>
+                    <li id="zb2"><a href="#">网络接通率<span class="fa arrow"></span></a>
+                       <ul class="nav nav-third-level" style="">
+                            <li>
+                                <a href="{{ url_for('tongji.node_pfmc_scpas') }}">智能网</a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('tongji.node_pfmc_catas') }}">彩铃</a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('tongji.node_pfmc_sicp') }}">SICP</a>
+                            </li>
+                           <li>
+                                <a href="{{ url_for('tongji.node_pfmc_vc') }}">SICP</a>
+                            </li>
+                        </ul>
+                    </li>
                     <li id="chrg"><a href="#">话单量<span class="fa arrow"></span></a>
                         <ul class="nav nav-third-level" style="">
-                                    <li>
-                                        <a href="{{ url_for('tongji.node_record_volte') }}">Volte</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ url_for('tongji.node_record_2g') }}">2/3 G</a>
-                                    </li>
-                                </ul>
+                            <li>
+                                <a href="{{ url_for('tongji.node_record_volte') }}">Volte</a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('tongji.node_record_2g') }}">2/3 G</a>
+                            </li>
+                        </ul>
                     </li>
                     <li id="yw"><a href="{{ url_for('tongji.profiledata') }}">关键业务指标</a></li>
                     <li id="xn"><a href="{{ url_for('tongji.performance') }}">主机性能指标</a></li>

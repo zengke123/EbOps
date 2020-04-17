@@ -114,7 +114,32 @@ def users():
 @tongji.route('/node_pfmc')
 @login_required
 def node_pfmc():
-    return render_template('tongji_node_pfmc.html', app='统计数据', action="实时指标")
+    return render_template('tongji_node_pfmc.html', app='统计数据', action="网络接通率")
+
+
+# 按业务拆分视图
+@tongji.route('/node_pfmc/scpas')
+@login_required
+def node_pfmc_scpas():
+    return render_template('tongji_node_pfmc_scpas.html', app='统计数据', action="网络接通率")
+
+
+@tongji.route('/node_pfmc/catas')
+@login_required
+def node_pfmc_catas():
+    return render_template('tongji_node_pfmc_catas.html', app='统计数据', action="网络接通率")
+
+
+@tongji.route('/node_pfmc/sicp')
+@login_required
+def node_pfmc_sicp():
+    return render_template('tongji_node_pfmc_sicp.html', app='统计数据', action="网络接通率")
+
+
+@tongji.route('/node_pfmc/vc')
+@login_required
+def node_pfmc_vc():
+    return render_template('tongji_node_pfmc_vc.html', app='统计数据', action="网络接通率")
 
 
 @tongji.route('/node_chrg4g')

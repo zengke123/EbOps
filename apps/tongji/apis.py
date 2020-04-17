@@ -49,7 +49,19 @@ def get_scp(nowtime):
 
 
 def get_catas(nowtime):
-    mo_dn_sql = "SELECT DISTINCT(mo_dn) FROM node_pfmc where mo_dn like 'CRBT-CATAS%' and end_time >= '{}'".format(nowtime)
+    mo_dn_sql = "SELECT DISTINCT(mo_dn) FROM node_pfmc where mo_dn in " \
+                "('CRBT-CATAS20','CRBT-CATAS22','CRBT-CATAS04','CRBT-CATAS05','CRBT-CATAS06') " \
+                "and end_time >= '{}'".format(nowtime)
+    time_sql = "SELECT DISTINCT(end_time) FROM node_pfmc where mo_dn like 'CRBT-CATAS%' and end_time >= '{}'".format(
+        nowtime)
+    source = get_data(nowtime, mo_dn_sql, time_sql)
+    return source
+
+
+def get_cavtas(nowtime):
+    mo_dn_sql = "SELECT DISTINCT(mo_dn) FROM node_pfmc where mo_dn in " \
+                "('CRBT-CATAS03','CRBT-CATAS07','CRBT-CATAS08','CRBT-CATAS09') " \
+                "and end_time >= '{}'".format(nowtime)
     time_sql = "SELECT DISTINCT(end_time) FROM node_pfmc where mo_dn like 'CRBT-CATAS%' and end_time >= '{}'".format(
         nowtime)
     source = get_data(nowtime, mo_dn_sql, time_sql)
@@ -72,15 +84,75 @@ def get_sicp(nowtime):
     return source
 
 
+def get_vc(nowtime):
+    mo_dn_sql = "SELECT DISTINCT(mo_dn) FROM node_pfmc where mo_dn like 'VC-%' and end_time >= '{}'".format(nowtime)
+    time_sql = "SELECT DISTINCT(end_time) FROM node_pfmc where mo_dn like 'VC-%' and end_time >= '{}'".format(
+        nowtime)
+    source = get_data(nowtime, mo_dn_sql, time_sql)
+    return source
+
+
+# 完整数据接口
 @tongji.route("/api/node_pfmc")
 @login_required
 def get_node_pfmc():
     nowtime = (datetime.datetime.now() - datetime.timedelta(hours=2)).strftime("%Y-%m-%d %H:%M:%S")
     data = {
+        'scp': get_scp(nowtime),
         'scpas': get_scpas(nowtime),
         'catas': get_catas(nowtime),
+        'cavtas': get_cavtas(nowtime),
+        'scim': get_scim(nowtime),
+        'sicp': get_sicp(nowtime),
+        'vc': get_vc(nowtime),
+    }
+    print(data)
+    return jsonify(data)
+
+
+# 提供分业务接口，拆分
+@tongji.route("/api/node_pfmc/scpas")
+@login_required
+def get_node_pfmc_scpas():
+    nowtime = (datetime.datetime.now() - datetime.timedelta(hours=2)).strftime("%Y-%m-%d %H:%M:%S")
+    data = {
+        'scp': get_scp(nowtime),
+        'scpas': get_scpas(nowtime)
+    }
+    print(data)
+    return jsonify(data)
+
+
+@tongji.route("/api/node_pfmc/catas")
+@login_required
+def get_node_pfmc_catas():
+    nowtime = (datetime.datetime.now() - datetime.timedelta(hours=2)).strftime("%Y-%m-%d %H:%M:%S")
+    data = {
+        'catas': get_catas(nowtime),
+        'cavtas': get_cavtas(nowtime)
+    }
+    print(data)
+    return jsonify(data)
+
+
+@tongji.route("/api/node_pfmc/sicp")
+@login_required
+def get_node_pfmc_sicp():
+    nowtime = (datetime.datetime.now() - datetime.timedelta(hours=2)).strftime("%Y-%m-%d %H:%M:%S")
+    data = {
         'scim': get_scim(nowtime),
         'sicp': get_sicp(nowtime)
+    }
+    print(data)
+    return jsonify(data)
+
+
+@tongji.route("/api/node_pfmc/vc")
+@login_required
+def get_node_pfmc_vc():
+    nowtime = (datetime.datetime.now() - datetime.timedelta(hours=2)).strftime("%Y-%m-%d %H:%M:%S")
+    data = {
+        'vc': get_vc(nowtime)
     }
     print(data)
     return jsonify(data)
