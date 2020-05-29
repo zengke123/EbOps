@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_apscheduler import APScheduler
+from flask_cache import Cache
 from celery import Celery
 import config
 
@@ -17,6 +18,8 @@ login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 # 登录视图对应蓝图auth的login
 login_manager.login_view = 'auth.login'
+# 使用缓存
+cache = Cache(config={'CACHE_TYPE': 'simple'})
 
 
 def create_app():
@@ -26,6 +29,8 @@ def create_app():
     db.init_app(app)
     # 初始化用户管理
     login_manager.init_app(app)
+    # 初始化缓存
+    cache.init_app(app)
     # 更新celery配置
     celery.conf.update(
         broker_url='redis://127.0.0.1:6379/0',

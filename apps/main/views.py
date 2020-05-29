@@ -1,5 +1,5 @@
 from . import main
-from .. import db
+from .. import db, cache
 from flask import render_template, current_app
 from flask_login import login_required
 from sqlalchemy import create_engine
@@ -7,6 +7,7 @@ from sqlalchemy import create_engine
 
 @main.route("/", methods=['GET', 'POST'])
 @login_required
+@cache.cached(timeout=60)
 def index():
     import datetime
     # 创建engine 连接tongji库
@@ -75,7 +76,6 @@ def index():
     # 查询接通率
     node_pfmc_data = get_node_pfmc(engine)
     return render_template('index.html', **locals())
-
 
 
 def get_node_pfmc(engine):
