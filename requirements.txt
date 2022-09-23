@@ -20,7 +20,7 @@ mysql-connector-python==8.0.16
 numpy==1.16.4
 openpyxl==2.6.2
 pandas==0.24.2
-protobuf==3.7.1
+protobuf==3.18.3
 python-dateutil==2.8.0
 python-editor==1.0.4
 pytz==2019.1
